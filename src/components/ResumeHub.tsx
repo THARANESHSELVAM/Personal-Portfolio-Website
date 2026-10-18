@@ -1,0 +1,398 @@
+"use client";
+
+import { useState } from "react";
+import { PROFILE, generatePlainTextResume } from "@/data/profile";
+import { 
+  FileText, 
+  Download, 
+  Printer, 
+  Copy, 
+  Check, 
+  Briefcase, 
+  GraduationCap, 
+  Award, 
+  Layers, 
+  LayoutList, 
+  FileCheck2,
+  ExternalLink,
+  Sparkles
+} from "lucide-react";
+
+export function ResumeHub() {
+  const [viewMode, setViewMode] = useState<"ats" | "timeline">("ats");
+  const [copied, setCopied] = useState(false);
+
+  const { resume, contact, name, title } = PROFILE;
+
+  // 1-Click Download Plain Text Resume (.txt)
+  const handleDownloadTxt = () => {
+    const textContent = generatePlainTextResume();
+    const blob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${name.replace(/\s+/g, "_")}_Principal_Engineer_ATS_Resume.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  // 1-Click Download / Print PDF
+  const handlePrintPdf = () => {
+    // If not already in ATS view, switch to it for printing
+    if (viewMode !== "ats") {
+      setViewMode("ats");
+      setTimeout(() => window.print(), 300);
+    } else {
+      window.print();
+    }
+  };
+
+  // Copy Plain Text ATS Resume
+  const handleCopyAtsText = () => {
+    const textContent = generatePlainTextResume();
+    navigator.clipboard.writeText(textContent);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  return (
+    <section id="resume" className="py-20 relative">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 mb-3">
+            <FileText className="w-3.5 h-3.5" />
+            <span>ATS-READY RESUME HUB</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Curated Career Milestones &amp; Resume
+          </h2>
+          <p className="mt-3 text-slate-600 dark:text-slate-400 text-sm sm:text-base">
+            Engineered for both machine readability (100% ATS score compliance) and human review. Preview on-screen or download in one click.
+          </p>
+        </div>
+
+        {/* View Mode Toggle & Dual 1-Click Actions Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl glass-panel border border-slate-200 dark:border-slate-800 mb-8 shadow-sm">
+          {/* Toggle between "Clean ATS Document View" and "Visual Timeline" */}
+          <div className="flex items-center bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200 dark:border-slate-700/60 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => setViewMode("ats")}
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+                viewMode === "ats"
+                  ? "bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400 shadow-sm"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <FileCheck2 className="w-4 h-4" />
+              <span>Clean ATS Document View</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("timeline")}
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+                viewMode === "timeline"
+                  ? "bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400 shadow-sm"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <LayoutList className="w-4 h-4" />
+              <span>Visual Timeline</span>
+            </button>
+          </div>
+
+          {/* Action Buttons: Download PDF, Download .txt, Copy text */}
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+            <button
+              type="button"
+              onClick={handlePrintPdf}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white shadow-sm transition-all"
+              title="Print or Save High-Resolution PDF"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Download / Print PDF</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleDownloadTxt}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold glass-panel text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700 transition-all"
+              title="Download clean plain-text resume for legacy ATS"
+            >
+              <Download className="w-3.5 h-3.5 text-cyan-500" />
+              <span>Download .txt</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCopyAtsText}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold glass-panel text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700 transition-all"
+              title="Copy plain-text to clipboard"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-500" />
+                  <span className="text-emerald-600 dark:text-emerald-400">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>Copy ATS Text</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* =========================================================================
+            VIEW 1: CLEAN ATS DOCUMENT VIEW (Gold-standard text-first single-column)
+            ========================================================================= */}
+        {viewMode === "ats" ? (
+          <div
+            id="resume-document-container"
+            className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-slate-900/90 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-xl space-y-8 font-sans"
+          >
+            {/* Resume Header */}
+            <div className="border-b border-slate-300 dark:border-slate-800 pb-6 text-center space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase text-slate-900 dark:text-white">
+                {name}
+              </h1>
+              <p className="text-base font-semibold text-cyan-600 dark:text-cyan-400">
+                {title}
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs text-slate-600 dark:text-slate-400 pt-1">
+                <span>{contact.location}</span>
+                <span>•</span>
+                <a href={`mailto:${contact.email}`} className="hover:underline text-cyan-600 dark:text-cyan-400">
+                  {contact.email}
+                </a>
+                <span>•</span>
+                <span>{contact.phone}</span>
+                <span>•</span>
+                <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  LinkedIn
+                </a>
+                <span>•</span>
+                <a href={contact.github} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  GitHub
+                </a>
+              </div>
+            </div>
+
+            {/* Section: Professional Summary */}
+            <div className="space-y-2">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
+                Professional Summary
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                {resume.summary}
+              </p>
+            </div>
+
+            {/* Section: Core Technical Competencies */}
+            <div className="space-y-2">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
+                Core Technical Competencies
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                <div>
+                  <span className="font-semibold text-slate-900 dark:text-white">Languages &amp; Runtimes: </span>
+                  TypeScript, JavaScript, Go, Python, Rust, SQL
+                </div>
+                <div>
+                  <span className="font-semibold text-slate-900 dark:text-white">Frontend Frameworks: </span>
+                  Next.js 16 (App Router), React 19, Tailwind CSS
+                </div>
+                <div>
+                  <span className="font-semibold text-slate-900 dark:text-white">Backend &amp; Distributed: </span>
+                  Kafka, gRPC, Redis, Event Sourcing, CQRS
+                </div>
+                <div>
+                  <span className="font-semibold text-slate-900 dark:text-white">Cloud &amp; DevOps: </span>
+                  AWS (EKS, Aurora, Lambda), Kubernetes, Terraform, Docker
+                </div>
+              </div>
+            </div>
+
+            {/* Section: Professional Experience */}
+            <div className="space-y-6">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
+                Professional Experience
+              </h2>
+
+              {resume.experience.map((exp, idx) => (
+                <div key={idx} className="space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                    <div>
+                      <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                        {exp.role}
+                      </h3>
+                      <div className="text-xs sm:text-sm font-semibold text-cyan-600 dark:text-cyan-400">
+                        {exp.company} — <span className="font-normal text-slate-500">{exp.location}</span>
+                      </div>
+                    </div>
+                    <span className="text-xs font-mono font-medium text-slate-500 dark:text-slate-400">
+                      {exp.period}
+                    </span>
+                  </div>
+
+                  <ul className="list-disc list-outside pl-4 space-y-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    {exp.bullets.map((bullet, bIdx) => (
+                      <li key={bIdx} className="leading-relaxed">
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="pt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                    <span className="font-semibold text-slate-600 dark:text-slate-300">Technologies: </span>
+                    {exp.technologies.join(" • ")}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Section: Education */}
+            <div className="space-y-3">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
+                Education
+              </h2>
+              <div className="space-y-2">
+                {resume.education.map((edu, idx) => (
+                  <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between text-xs sm:text-sm">
+                    <div>
+                      <span className="font-bold text-slate-900 dark:text-white">{edu.degree}</span>
+                      <span className="text-slate-600 dark:text-slate-400"> — {edu.institution}</span>
+                      {edu.honors && (
+                        <span className="text-xs text-emerald-600 dark:text-emerald-400 ml-2 font-medium">
+                          ({edu.honors})
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                      {edu.year}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Section: Certifications */}
+            <div className="space-y-2">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
+                Technical Certifications
+              </h2>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                {resume.certifications.map((cert, idx) => (
+                  <li key={idx} className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
+                    <span>{cert}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : (
+          /* =========================================================================
+             VIEW 2: VISUAL TIMELINE VIEW
+             ========================================================================= */
+          <div className="space-y-8 animate-in fade-in duration-300">
+            <div className="relative pl-6 sm:pl-8 border-l-2 border-cyan-500/30 dark:border-cyan-500/20 space-y-10">
+              {resume.experience.map((exp, idx) => (
+                <div key={idx} className="relative group">
+                  {/* Timeline Dot */}
+                  <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white dark:bg-slate-950 border-4 border-cyan-500 group-hover:scale-125 transition-transform" />
+
+                  <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-cyan-500/50 shadow-sm transition-all duration-300">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                      <div>
+                        <span className="text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400">
+                          {exp.period}
+                        </span>
+                        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
+                          {exp.role}
+                        </h3>
+                        <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+                          {exp.company} • <span className="font-normal text-slate-400">{exp.location}</span>
+                        </p>
+                      </div>
+
+                      <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 self-start">
+                        <Briefcase className="w-5 h-5" />
+                      </div>
+                    </div>
+
+                    <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-4">
+                      {exp.bullets.map((b, bIdx) => (
+                        <li key={bIdx} className="flex items-start gap-2">
+                          <span className="text-cyan-500 font-bold mt-0.5">•</span>
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="flex flex-wrap gap-1.5 pt-3 border-t border-slate-100 dark:border-slate-800">
+                      {exp.technologies.map((t) => (
+                        <span
+                          key={t}
+                          className="px-2.5 py-0.5 rounded-md text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Visual Education & Certifications Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+              <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
+                <div className="flex items-center gap-2 text-base font-bold text-slate-900 dark:text-white">
+                  <GraduationCap className="w-5 h-5 text-indigo-500" />
+                  <span>Academic Background</span>
+                </div>
+                <div className="space-y-4">
+                  {resume.education.map((edu, idx) => (
+                    <div key={idx} className="space-y-1">
+                      <div className="text-sm font-bold text-slate-900 dark:text-white">
+                        {edu.degree}
+                      </div>
+                      <div className="text-xs text-slate-600 dark:text-slate-400">
+                        {edu.institution} ({edu.year})
+                      </div>
+                      {edu.honors && (
+                        <span className="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                          {edu.honors}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
+                <div className="flex items-center gap-2 text-base font-bold text-slate-900 dark:text-white">
+                  <Award className="w-5 h-5 text-amber-500" />
+                  <span>Verified Certifications</span>
+                </div>
+                <div className="space-y-2.5">
+                  {resume.certifications.map((cert, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                      <span>{cert}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
