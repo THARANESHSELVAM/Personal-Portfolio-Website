@@ -180,8 +180,31 @@ export function ProjectGrid() {
         </div>
 
         {/* Projects Multi-Column Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project) => (
+        {filteredProjects.length === 0 ? (
+          <div className="text-center py-16 px-4 glass-panel rounded-3xl border border-slate-200 dark:border-slate-800 max-w-lg mx-auto space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mx-auto">
+              <Briefcase className="w-6 h-6" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-lg font-bold text-slate-900 dark:text-white">
+                No Projects Available
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
+                All projects in this view have been deleted. You can create a new project entry or reset your profile data anytime.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsAddModalOpen(true)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-semibold text-xs shadow-md transition-all"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>Add New Project</span>
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProjects.map((project) => (
             <div
               key={project.id}
               className="glass-panel rounded-3xl border border-slate-200/90 dark:border-slate-800/90 p-6 flex flex-col justify-between hover:border-cyan-500/50 dark:hover:border-cyan-500/50 hover:shadow-xl hover:shadow-cyan-500/5 transition-all duration-300 group"
@@ -200,20 +223,19 @@ export function ProjectGrid() {
                     )}
                   </div>
 
-                  {project.id.startsWith("proj-") && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (window.confirm(`Delete custom project "${project.title}"?`)) {
-                          deleteProject(project.id);
-                        }
-                      }}
-                      className="text-slate-400 hover:text-rose-500 p-1"
-                      title="Delete project"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm(`Are you sure you want to delete "${project.title}"?`)) {
+                        deleteProject(project.id);
+                      }
+                    }}
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-transparent hover:border-rose-200 dark:hover:border-rose-800/50 transition-all duration-200"
+                    title={`Delete "${project.title}"`}
+                    aria-label={`Delete "${project.title}"`}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
 
                 {/* Project Title */}
@@ -302,21 +324,38 @@ export function ProjectGrid() {
                   )}
                 </div>
 
-                {project.caseStudy && (
+                <div className="flex items-center gap-1.5">
+                  {project.caseStudy && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveCaseStudyProject(project)}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 transition-colors"
+                    >
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>Case Study</span>
+                    </button>
+                  )}
+
                   <button
                     type="button"
-                    onClick={() => setActiveCaseStudyProject(project)}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 transition-colors"
+                    onClick={() => {
+                      if (window.confirm(`Are you sure you want to delete "${project.title}" from your portfolio?`)) {
+                        deleteProject(project.id);
+                      }
+                    }}
+                    className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-transparent hover:border-rose-200 dark:hover:border-rose-800/50 transition-colors"
+                    title={`Delete "${project.title}"`}
                   >
-                    <BookOpen className="w-3.5 h-3.5" />
-                    <span>Case Study</span>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Delete</span>
                   </button>
-                )}
+                </div>
               </div>
             </div>
           ))}
         </div>
-      </div>
+      )}
+    </div>
 
       {/* Case Study Modal Drawer */}
       <CaseStudyModal
