@@ -1,3 +1,26 @@
+export type CompetencyArea =
+  | "Frontend"
+  | "Backend"
+  | "Cloud & DevOps"
+  | "Data & AI"
+  | "System Design";
+
+export type MasteryLevel =
+  | "Learned Concept"
+  | "Built Demo"
+  | "Production Ready";
+
+export interface LearningEntry {
+  id: string;
+  technology: string;
+  category: CompetencyArea;
+  keyTakeaway: string;
+  repoOrDemoUrl?: string;
+  dateLogged: string;
+  masteryLevel: MasteryLevel;
+  tags: string[];
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -18,14 +41,6 @@ export interface Project {
     challenges: string[];
     keyLearnings: string[];
   };
-}
-
-export interface SkillItem {
-  name: string;
-  category: "Frontend" | "Backend" | "Cloud & DevOps" | "System Design & Architecture";
-  proficiency: "Production-Ready" | "Proficient" | "Currently Exploring";
-  highlight: string;
-  tags: string[];
 }
 
 export interface GoalItem {
@@ -58,7 +73,7 @@ export interface ResumeData {
   certifications: string[];
 }
 
-export interface ProfileData {
+export interface ProfileState {
   name: string;
   preferredName: string;
   title: string;
@@ -83,13 +98,291 @@ export interface ProfileData {
     value: string;
     detail: string;
   }>;
-  skills: SkillItem[];
+  learnings: LearningEntry[];
   projects: Project[];
   resume: ResumeData;
   goals: GoalItem[];
 }
 
-export const PROFILE: ProfileData = {
+export const INITIAL_LEARNINGS: LearningEntry[] = [
+  {
+    id: "learn-1",
+    technology: "Next.js 16 & React 19 Server Actions",
+    category: "Frontend",
+    keyTakeaway: "Mastered React 19 Server Components, async transitions, and fine-grained partial pre-rendering (PPR) for sub-100ms LCP on dynamic routes.",
+    repoOrDemoUrl: "https://github.com/alexchen-eng/next-rsc-perf",
+    dateLogged: "2026-10-15",
+    masteryLevel: "Production Ready",
+    tags: ["Next.js", "React 19", "RSC", "WebPerf"],
+  },
+  {
+    id: "learn-2",
+    technology: "Distributed Event Streaming with Apache Kafka",
+    category: "Backend",
+    keyTakeaway: "Designed partition-aware consumer group rebalancing and idempotent producer guarantees that process 350k req/sec with zero message drop.",
+    repoOrDemoUrl: "https://github.com/alexchen-eng/nexus-mesh",
+    dateLogged: "2026-10-10",
+    masteryLevel: "Production Ready",
+    tags: ["Kafka", "DistributedSystems", "Go", "Backpressure"],
+  },
+  {
+    id: "learn-3",
+    technology: "Kubernetes Operator SDK & Custom Resource Definitions (CRDs)",
+    category: "Cloud & DevOps",
+    keyTakeaway: "Built a declarative Kubernetes operator in Go to automate zero-downtime canary rollouts and autoscaling based on custom Prometheus metrics.",
+    repoOrDemoUrl: "https://github.com/alexchen-eng/k8s-canary-operator",
+    dateLogged: "2026-09-28",
+    masteryLevel: "Production Ready",
+    tags: ["Kubernetes", "Go", "DevOps", "CRD"],
+  },
+  {
+    id: "learn-4",
+    technology: "Vector Search Indexing (HNSW & FAISS)",
+    category: "Data & AI",
+    keyTakeaway: "Benchmarked INT8 quantized vector recall against uncompressed FP32 embeddings, achieving 94% faster recall with a 72% RAM footprint drop.",
+    repoOrDemoUrl: "https://github.com/alexchen-eng/hyperscale-vector",
+    dateLogged: "2026-09-20",
+    masteryLevel: "Built Demo",
+    tags: ["VectorDB", "FAISS", "Python", "Quantization"],
+  },
+  {
+    id: "learn-5",
+    technology: "Raft Consensus Algorithm in Rust",
+    category: "System Design",
+    keyTakeaway: "Implemented leader election, log replication, and heartbeat lease safety in a 5-node cluster simulating network partitions and split-brain scenarios.",
+    repoOrDemoUrl: "https://github.com/alexchen-eng/rust-raft-engine",
+    dateLogged: "2026-09-12",
+    masteryLevel: "Learned Concept",
+    tags: ["Rust", "Raft", "Consensus", "FaultTolerance"],
+  },
+  {
+    id: "learn-6",
+    technology: "Conflict-Free Replicated Data Types (CRDTs & Yjs)",
+    category: "Frontend",
+    keyTakeaway: "Implemented real-time multi-cursor collaboration on 100k+ vector node canvases without locking or centralized merge conflict bottlenecks.",
+    repoOrDemoUrl: "https://github.com/alexchen-eng/quantum-canvas",
+    dateLogged: "2026-08-25",
+    masteryLevel: "Production Ready",
+    tags: ["CRDT", "Yjs", "WebSockets", "Collaboration"],
+  },
+  {
+    id: "learn-7",
+    technology: "Linux eBPF Network Packet Interception",
+    category: "Cloud & DevOps",
+    keyTakeaway: "Programmed kernel-level eBPF probes with Cilium to monitor microservice TCP latency and drop malformed packets before hitting userspace.",
+    repoOrDemoUrl: "https://github.com/alexchen-eng/ebpf-telemetry",
+    dateLogged: "2026-08-14",
+    masteryLevel: "Learned Concept",
+    tags: ["eBPF", "Cilium", "LinuxKernel", "Networking"],
+  },
+  {
+    id: "learn-8",
+    technology: "ClickHouse Columnar Storage for Real-Time Telemetry",
+    category: "Data & AI",
+    keyTakeaway: "Structured vectorized table schemas and sparse indices processing 1.2 billion events daily with sub-second aggregate analytical queries.",
+    repoOrDemoUrl: "https://github.com/alexchen-eng/streampulse",
+    dateLogged: "2026-07-30",
+    masteryLevel: "Production Ready",
+    tags: ["ClickHouse", "Analytics", "BigData", "SQL"],
+  },
+];
+
+export const INITIAL_PROJECTS: Project[] = [
+  {
+    id: "nexus-mesh",
+    title: "NexusMesh: Distributed Event Streaming & Edge Orchestrator",
+    category: "Distributed Systems",
+    domainTag: "Distributed Systems & Cloud",
+    featured: true,
+    problemSolved: "During Black Friday e-commerce surges, legacy monolithic ingress suffered severe message drops and 240ms p99 latency spikes, resulting in $450k in delayed orders.",
+    solution: "Engineered a partition-aware distributed event mesh in Go and Rust with eBPF-powered edge load balancing and automated Kafka topic backpressure rebalancing.",
+    techStack: ["Go", "Rust", "Apache Kafka", "Kubernetes", "eBPF", "Redis Cluster", "OpenTelemetry"],
+    metrics: [
+      "⚡ Slashed p99 latency by 68% (from 240ms down to 76ms)",
+      "📈 Scaled to 350,000 req/sec sustained peak without dropped packets",
+      "💰 Slashed cloud egress and compute costs by $140,000/year",
+    ],
+    liveUrl: "https://nexusmesh.io-demo.example",
+    repoUrl: "https://github.com/alexchen-eng/nexus-mesh",
+    caseStudy: {
+      overview: "NexusMesh was deployed across 6 AWS availability zones to act as the primary ingestion gateway for order processing, clickstream telemetry, and inventory state sync.",
+      architectureNotes: "Ingress Traffic -> Cloudflare Edge -> eBPF Layer 4 Router -> NexusMesh Go Workers -> Partitioned Kafka Ring -> Event Consumer Workers -> Distributed Redis / Aurora.",
+      architectureDiagram: `[Client Ingress] ──► [Edge eBPF L4 Router] ──► [NexusMesh Gateway Pool]
+                                                  │
+                           ┌──────────────────────┴──────────────────────┐
+                           ▼                                             ▼
+               [Kafka Partition Ring]                          [Redis Cluster Cache]
+                           │                                             │
+                           ▼                                             ▼
+             [Consumer Workers (Go/Rust)]                     [Aurora Multi-Region]`,
+      tradeoffs: [
+        "Selected Go for rapid concurrent worker orchestration and Rust for low-level memory-sensitive ring buffers.",
+        "Accepted eventual consistency (50ms sync window) for analytical events while maintaining strict linearizability for financial checkout payloads.",
+      ],
+      challenges: [
+        "Preventing head-of-line blocking under extreme backpressure when downstream databases reached temporary IOPS limits.",
+        "Performing zero-downtime rolling upgrades across 120 worker pods during active multi-million user traffic.",
+      ],
+      keyLearnings: [
+        "eBPF packet interception bypasses the Linux network stack overhead, yielding an immediate 35% CPU savings at 300k+ rps.",
+        "Adaptive backpressure queuing based on consumer lag metrics beats static rate limiting by preventing client-side timeouts.",
+      ],
+    },
+  },
+  {
+    id: "hyperscale-db",
+    title: "HyperScale Vector: Hybrid Semantic Retrieval Engine",
+    category: "AI & Distributed Systems",
+    domainTag: "AI Infrastructure",
+    featured: true,
+    problemSolved: "Semantic similarity search across 20M+ multi-modal embeddings suffered severe memory bottlenecks and query timeouts (>1.2s p95) under enterprise workloads.",
+    solution: "Architected an in-memory HNSW vector index partitioner with hybrid BM25 lexical + dense reranking and GPU-accelerated INT8 quantization.",
+    techStack: ["Python", "C++", "Next.js", "PyTorch", "FAISS", "gRPC", "Docker", "AWS Graviton3"],
+    metrics: [
+      "⚡ 94% faster vector recall (sub-42ms p95 across 20M vectors)",
+      "📈 Scaled to 45M indexed vectors across 8 distributed nodes",
+      "🎯 Achieved 99.4% top-5 retrieval accuracy with hybrid reranking",
+    ],
+    liveUrl: "https://hyperscale-vector.demo.example",
+    repoUrl: "https://github.com/alexchen-eng/hyperscale-vector",
+    caseStudy: {
+      overview: "An enterprise RAG retrieval accelerator built to handle high-concurrency document searches with sub-50ms latency guarantees.",
+      architectureNotes: "Query -> Embedding Service -> Hybrid Dispatcher (Lexical BM25 + HNSW Vector Ring) -> Cross-Encoder Reranker -> Context Assembly.",
+      architectureDiagram: `[Search Query] ──► [Query Embedding Service]
+                          │
+             ┌────────────┴────────────┐
+             ▼                         ▼
+    [BM25 Sparse Index]      [HNSW Vector Shards (C++)]
+             │                         │
+             └────────────┬────────────┘
+                          ▼
+            [Cross-Encoder Reranker] ──► [Synthesized Output]`,
+      tradeoffs: [
+        "INT8 quantization traded 0.3% retrieval precision for a 72% memory footprint reduction, enabling entire indexes to live in RAM.",
+        "Custom C++ binding via pybind11 yielded 4x throughput compared to pure Python wrappers.",
+      ],
+      challenges: [
+        "Managing dynamic index compaction without locking read queries during continuous real-time document ingestion.",
+      ],
+      keyLearnings: [
+        "Hybrid search (BM25 + Dense Vectors) solves the vocabulary mismatch problem that pure semantic embeddings struggle with in technical documentation.",
+      ],
+    },
+  },
+  {
+    id: "quantum-canvas",
+    title: "QuantumDesign: Real-Time Multi-Cursor Collaboration Engine",
+    category: "Full-Stack Web",
+    domainTag: "Full-Stack Web & CRDT",
+    featured: true,
+    problemSolved: "Real-time multi-cursor collaboration for complex 100k+ node vector diagrams caused constant UI thread freezes, packet storms, and desynchronized local states.",
+    solution: "Built a conflict-free replicated data type (CRDT) engine with WebAssembly-backed rendering via WebGL, decoupled Web Workers, and delta-compressed WebSocket synching.",
+    techStack: ["TypeScript", "Next.js", "React 19", "WebAssembly", "WebGL", "Yjs", "WebSockets", "Tailwind CSS"],
+    metrics: [
+      "⚡ Maintained rock-solid 60 FPS rendering on 100,000+ vector elements",
+      "👥 Supported 50+ concurrent live collaborators per room with zero state collisions",
+      "✨ Adopted by 2,400+ product designers across 18 enterprise teams",
+    ],
+    liveUrl: "https://quantumcanvas.demo.example",
+    repoUrl: "https://github.com/alexchen-eng/quantum-canvas",
+    caseStudy: {
+      overview: "A browser-based high-performance infinite canvas engine built for collaborative architecture diagramming and enterprise whiteboarding.",
+      architectureNotes: "Client UI Thread -> Web Worker (Yjs CRDT state resolution) -> SharedArrayBuffer -> WebGL Canvas Context. Server provides lightweight Ephemeral PubSub.",
+      tradeoffs: [
+        "Decoupled rendering from React reconciliation by managing canvas state in Web Workers, guaranteeing the main UI thread remains responsive.",
+      ],
+      challenges: [
+        "Handling browser tab hibernation and recovering connection state gracefully with minimal memory leak.",
+      ],
+      keyLearnings: [
+        "Offloading CRDT delta computation to Web Workers prevents main thread garbage collection pauses during heavy canvas dragging.",
+      ],
+    },
+  },
+  {
+    id: "cloud-shield",
+    title: "CloudShield Zero-Trust: Just-in-Time IAM & Policy Engine",
+    category: "Cloud Security",
+    domainTag: "Security & Cloud Governance",
+    featured: false,
+    problemSolved: "Standing administrator privileges across multi-cloud environments (AWS, GCP, Azure) exposed the organization to credential exfiltration and compliance audit failures.",
+    solution: "Engineered an automated Just-In-Time (JIT) ephemeral credential broker with biometric WebAuthn verification, Open Policy Agent (OPA) validation, and immutable audit trails.",
+    techStack: ["TypeScript", "Next.js", "Go", "HashiCorp Vault", "AWS IAM", "OPA", "Terraform", "PostgreSQL"],
+    metrics: [
+      "🛡️ Eliminated 100% of permanent static administrator credentials",
+      "⏱️ Slashed access approval latency from 4 hours down to 45 seconds",
+      "📜 100% flawless pass rate across SOC2 Type II and ISO 27001 annual audits",
+    ],
+    liveUrl: "https://cloudshield.demo.example",
+    repoUrl: "https://github.com/alexchen-eng/cloudshield-zero-trust",
+    caseStudy: {
+      overview: "CloudShield automates the lifecycle of temporary infrastructure access, auto-revoking tokens after 60 minutes and logging all terminal commands to tamper-proof S3 storage.",
+      architectureNotes: "Engineer CLI/Web -> CloudShield Gateway (FIDO2) -> OPA Evaluation Engine -> HashiCorp Vault Ephemeral STS Generator -> Cloud Provider STS -> Audited Session Recorder.",
+      challenges: [
+        "Ensuring high availability of the auth gateway even when target cloud providers undergo partial API degradation.",
+      ],
+      keyLearnings: [
+        "Declarative Rego policies provide transparent auditability for compliance officers without touching application code.",
+      ],
+    },
+  },
+  {
+    id: "streampulse-observability",
+    title: "StreamPulse: Real-Time Operational Analytics & Anomaly Detection",
+    category: "Data & Observability",
+    domainTag: "Big Data & Observability",
+    featured: false,
+    problemSolved: "Fragmented monitoring tools delayed critical incident detection (MTTD 38 minutes) for microservice outages, costing thousands per minute of downtime.",
+    solution: "Unified real-time telemetry stream pipeline using ClickHouse, custom time-series aggregations, and WebSockets live dashboard with dynamic threshold anomaly alerts.",
+    techStack: ["Next.js", "TypeScript", "ClickHouse", "Apache Flink", "Tailwind CSS", "Docker", "Prometheus"],
+    metrics: [
+      "📉 MTTD dropped from 38 minutes to 42 seconds across 65 microservices",
+      "📊 Processed 1.2 Billion daily telemetry events with sub-second dashboard refresh",
+      "🔔 Slashed alert fatigue by 82% via algorithmic noise suppression",
+    ],
+    liveUrl: "https://streampulse.demo.example",
+    repoUrl: "https://github.com/alexchen-eng/streampulse",
+    caseStudy: {
+      overview: "An operational intelligence suite that aggregates distributed logs, spans, and metrics into actionable real-time insight graphs.",
+      architectureNotes: "Collector Agents -> Apache Flink Stream Filter -> ClickHouse Columnar Cluster -> Next.js Streaming Dashboard.",
+      challenges: [
+        "Handling sudden 10x traffic spikes during network partition incidents without blowing up memory buffers.",
+      ],
+      keyLearnings: [
+        "ClickHouse columnar storage compression reduced raw logging storage expenses by 84% compared to Elasticsearch.",
+      ],
+    },
+  },
+  {
+    id: "omniflow-cicd",
+    title: "OmniFlow CI/CD: Intelligent Test Impact & Matrix Builder",
+    category: "Developer Tooling",
+    domainTag: "DevOps & Developer Velocity",
+    featured: false,
+    problemSolved: "Monorepo test execution took 48 minutes per PR across 35 packages, stalling engineering throughput and inducing frequent flaky test failures.",
+    solution: "Developed an AST-aware dependency graph analyzer that computes precise affected test blast radiuses and orchestrates dynamic container pools on Kubernetes.",
+    techStack: ["TypeScript", "Node.js", "Docker", "Kubernetes", "GitHub Actions API", "Redis", "Rust"],
+    metrics: [
+      "⚡ Slashed PR validation time by 72% (from 48m down to 13m)",
+      "🔍 Quarantined 99.1% of intermittent flaky tests with predictive analysis",
+      "🚀 Reclaimed over 1,400 engineering hours every month across 120 devs",
+    ],
+    liveUrl: "https://omniflow.demo.example",
+    repoUrl: "https://github.com/alexchen-eng/omniflow-cicd",
+    caseStudy: {
+      overview: "A developer velocity acceleration platform integrated into GitHub pull request workflows.",
+      architectureNotes: "Git Diff -> TypeScript AST Dependency Parser -> Targeted Test Selector -> Distributed K8s Test Pod Matrix -> Results Aggregator.",
+      challenges: [
+        "Accurately tracing implicit dependencies in dynamically loaded modules across package boundaries.",
+      ],
+      keyLearnings: [
+        "Executing only tests directly touched by a changeset retains 99.98% bug catch rates while cutting compute bills drastically.",
+      ],
+    },
+  },
+];
+
+export const INITIAL_PROFILE_STATE: ProfileState = {
   name: "Alex Morgan Chen",
   preferredName: "Alex Chen",
   title: "Principal Full-Stack Engineer & Cloud Architect",
@@ -115,241 +408,8 @@ export const PROFILE: ProfileData = {
     { label: "Cloud Cost Saved", value: "$320K+", detail: "Through compute and egress optimization" },
     { label: "Engineering Leadership", value: "10+ Years", detail: "Mentoring 25+ staff & senior engineers" },
   ],
-  skills: [
-    // Frontend
-    { name: "Next.js & React 19", category: "Frontend", proficiency: "Production-Ready", highlight: "Server Components, App Router, Streaming SSR & ISR", tags: ["Next.js", "React", "TypeScript"] },
-    { name: "TypeScript (Strict)", category: "Frontend", proficiency: "Production-Ready", highlight: "Complex generics, AST tooling & type-level safety", tags: ["TypeScript", "Tooling"] },
-    { name: "Tailwind CSS & Design Systems", category: "Frontend", proficiency: "Production-Ready", highlight: "Tokenized UI systems, headless accessibility & micro-interactions", tags: ["Tailwind", "Radix", "Framer Motion"] },
-    { name: "Web Performance & Core Web Vitals", category: "Frontend", proficiency: "Production-Ready", highlight: "Sub-second LCP, 0 CLS, code-splitting & tree-shaking", tags: ["Lighthouse", "Profiler", "Edge"] },
-    { name: "WebGL & Canvas Collaboration", category: "Frontend", proficiency: "Proficient", highlight: "CRDTs (Yjs), 60fps canvas rendering & WebSockets", tags: ["Canvas", "WebGL", "Yjs"] },
-    { name: "Microfrontends & Module Federation", category: "Frontend", proficiency: "Proficient", highlight: "Independent build/deploy pipelines for enterprise platforms", tags: ["Webpack", "Vite", "Turbopack"] },
-    { name: "WebAssembly (WASM)", category: "Frontend", proficiency: "Currently Exploring", highlight: "Rust-compiled modules for edge browser computing", tags: ["Wasm", "Rust"] },
-
-    // Backend
-    { name: "Node.js & Go Microservices", category: "Backend", proficiency: "Production-Ready", highlight: "High-throughput concurrent services, gRPC, REST & GraphQL", tags: ["Go", "Node.js", "gRPC"] },
-    { name: "Distributed Event Streaming (Kafka)", category: "Backend", proficiency: "Production-Ready", highlight: "Partitioning strategies, idempotency & backpressure control", tags: ["Kafka", "RabbitMQ", "EventMesh"] },
-    { name: "PostgreSQL & Query Optimization", category: "Backend", proficiency: "Production-Ready", highlight: "Sharding, multi-column indexing, EXPLAIN ANALYZE & connection pooling", tags: ["PostgreSQL", "Prisma", "pgBouncer"] },
-    { name: "Redis & Distributed Caching", category: "Backend", proficiency: "Production-Ready", highlight: "Cluster mode, distributed locks (Redlock), TTL strategies", tags: ["Redis", "Memcached"] },
-    { name: "Python & FastAPI", category: "Backend", proficiency: "Proficient", highlight: "Asynchronous API gateways and ML model inference serving", tags: ["Python", "FastAPI", "Pydantic"] },
-    { name: "Vector Databases & Search", category: "Backend", proficiency: "Proficient", highlight: "HNSW indexing, hybrid vector retrieval with Pinecone & pgvector", tags: ["pgvector", "Pinecone", "Milvus"] },
-    { name: "Rust Services", category: "Backend", proficiency: "Currently Exploring", highlight: "Memory-safe high-performance networking & low-latency brokers", tags: ["Rust", "Tokio", "Actix"] },
-
-    // Cloud & DevOps
-    { name: "Amazon Web Services (AWS)", category: "Cloud & DevOps", proficiency: "Production-Ready", highlight: "EKS, ECS, Lambda, CloudFront, S3, RDS Aurora, SQS/SNS", tags: ["AWS", "CloudArchitect"] },
-    { name: "Kubernetes & Docker Orchestration", category: "Cloud & DevOps", proficiency: "Production-Ready", highlight: "Helm, GitOps (ArgoCD), horizontal pod autoscaling & ingress controllers", tags: ["K8s", "Docker", "Helm"] },
-    { name: "Terraform & Infrastructure as Code", category: "Cloud & DevOps", proficiency: "Production-Ready", highlight: "Modular multi-account AWS architectures with state locking", tags: ["Terraform", "Terragrunt", "IaC"] },
-    { name: "CI/CD & Developer Platforms", category: "Cloud & DevOps", proficiency: "Production-Ready", highlight: "GitHub Actions, automated canary deployments & matrix testing", tags: ["CI/CD", "GitHub Actions"] },
-    { name: "Observability (OpenTelemetry & Datadog)", category: "Cloud & DevOps", proficiency: "Proficient", highlight: "Distributed tracing, SLO/SLA dashboards & alert routing", tags: ["Datadog", "Prometheus", "Grafana"] },
-    { name: "Cloudflare Workers & Edge Routing", category: "Cloud & DevOps", proficiency: "Proficient", highlight: "Edge caching, bot mitigation, and geo-distributed KV stores", tags: ["Cloudflare", "Edge"] },
-    { name: "eBPF Linux Observability", category: "Cloud & DevOps", proficiency: "Currently Exploring", highlight: "Kernel-level network latency monitoring and Cilium CNI", tags: ["eBPF", "Cilium"] },
-
-    // System Design & Architecture
-    { name: "High-Availability Distributed Systems", category: "System Design & Architecture", proficiency: "Production-Ready", highlight: "Multi-region active-active replication, consensus & CAP theorem trade-offs", tags: ["Architecture", "Resilience"] },
-    { name: "Zero-Trust Security & IAM", category: "System Design & Architecture", proficiency: "Production-Ready", highlight: "OAuth2 / OIDC, JWT key rotation, mTLS & role-based access control", tags: ["Security", "OAuth", "mTLS"] },
-    { name: "Event-Driven & CQRS Architecture", category: "System Design & Architecture", proficiency: "Production-Ready", highlight: "Command Query Responsibility Segregation & Event Sourcing patterns", tags: ["CQRS", "EventDriven"] },
-    { name: "Cost-Engineering (FinOps)", category: "System Design & Architecture", proficiency: "Production-Ready", highlight: "Graviton migration, auto-scaling thresholds & storage tiering", tags: ["FinOps", "CostReduction"] },
-    { name: "Fault-Tolerance & Circuit Breaking", category: "System Design & Architecture", proficiency: "Production-Ready", highlight: "Graceful degradation, exponential backoff with jitter & bulkhead pattern", tags: ["Reliability", "SRE"] },
-    { name: "Distributed Consensus Protocols", category: "System Design & Architecture", proficiency: "Currently Exploring", highlight: "Raft state machine replication and quorum leasing models", tags: ["Raft", "DistributedConsensus"] },
-  ],
-  projects: [
-    {
-      id: "nexus-mesh",
-      title: "NexusMesh: Distributed Event Streaming & Edge Orchestrator",
-      category: "Distributed Systems",
-      domainTag: "Distributed Systems & Cloud",
-      featured: true,
-      problemSolved: "During Black Friday e-commerce surges, legacy monolithic ingress suffered severe message drops and 240ms p99 latency spikes, resulting in $450k in delayed orders.",
-      solution: "Engineered a partition-aware distributed event mesh in Go and Rust with eBPF-powered edge load balancing and automated Kafka topic backpressure rebalancing.",
-      techStack: ["Go", "Rust", "Apache Kafka", "Kubernetes", "eBPF", "Redis Cluster", "OpenTelemetry"],
-      metrics: [
-        "⚡ Slashed p99 latency by 68% (from 240ms down to 76ms)",
-        "📈 Scaled to 350,000 req/sec sustained peak without dropped packets",
-        "💰 Slashed cloud egress and compute costs by $140,000/year",
-      ],
-      liveUrl: "https://nexusmesh.io-demo.example",
-      repoUrl: "https://github.com/alexchen-eng/nexus-mesh",
-      caseStudy: {
-        overview: "NexusMesh was deployed across 6 AWS availability zones to act as the primary ingestion gateway for order processing, clickstream telemetry, and inventory state sync.",
-        architectureNotes: "Ingress Traffic -> Cloudflare Edge -> eBPF Layer 4 Router -> NexusMesh Go Workers -> Partitioned Kafka Ring -> Event Consumer Workers -> Distributed Redis / Aurora.",
-        architectureDiagram: `[Client Ingress] ──► [Edge eBPF L4 Router] ──► [NexusMesh Gateway Pool]
-                                                    │
-                             ┌──────────────────────┴──────────────────────┐
-                             ▼                                             ▼
-                 [Kafka Partition Ring]                          [Redis Cluster Cache]
-                             │                                             │
-                             ▼                                             ▼
-               [Consumer Workers (Go/Rust)]                     [Aurora Multi-Region]`,
-        tradeoffs: [
-          "Selected Go for rapid concurrent worker orchestration and Rust for low-level memory-sensitive ring buffers.",
-          "Accepted eventual consistency (50ms sync window) for analytical events while maintaining strict linearizability for financial checkout payloads.",
-        ],
-        challenges: [
-          "Preventing head-of-line blocking under extreme backpressure when downstream databases reached temporary IOPS limits.",
-          "Performing zero-downtime rolling upgrades across 120 worker pods during active multi-million user traffic.",
-        ],
-        keyLearnings: [
-          "eBPF packet interception bypasses the Linux network stack overhead, yielding an immediate 35% CPU savings at 300k+ rps.",
-          "Adaptive backpressure queuing based on consumer lag metrics beats static rate limiting by preventing client-side timeouts.",
-        ],
-      },
-    },
-    {
-      id: "hyperscale-db",
-      title: "HyperScale Vector: Hybrid Semantic Retrieval Engine",
-      category: "AI & Distributed Systems",
-      domainTag: "AI Infrastructure",
-      featured: true,
-      problemSolved: "Semantic similarity search across 20M+ multi-modal embeddings suffered severe memory bottlenecks and query timeouts (>1.2s p95) under enterprise workloads.",
-      solution: "Architected an in-memory HNSW vector index partitioner with hybrid BM25 lexical + dense reranking and GPU-accelerated INT8 quantization.",
-      techStack: ["Python", "C++", "Next.js", "PyTorch", "FAISS", "gRPC", "Docker", "AWS Graviton3"],
-      metrics: [
-        "⚡ 94% faster vector recall (sub-42ms p95 across 20M vectors)",
-        "📈 Scaled to 45M indexed vectors across 8 distributed nodes",
-        "🎯 Achieved 99.4% top-5 retrieval accuracy with hybrid reranking",
-      ],
-      liveUrl: "https://hyperscale-vector.demo.example",
-      repoUrl: "https://github.com/alexchen-eng/hyperscale-vector",
-      caseStudy: {
-        overview: "An enterprise RAG retrieval accelerator built to handle high-concurrency document searches with sub-50ms latency guarantees.",
-        architectureNotes: "Query -> Embedding Service -> Hybrid Dispatcher (Lexical BM25 + HNSW Vector Ring) -> Cross-Encoder Reranker -> Context Assembly.",
-        architectureDiagram: `[Search Query] ──► [Query Embedding Service]
-                            │
-               ┌────────────┴────────────┐
-               ▼                         ▼
-      [BM25 Sparse Index]      [HNSW Vector Shards (C++)]
-               │                         │
-               └────────────┬────────────┘
-                            ▼
-              [Cross-Encoder Reranker] ──► [Synthesized Output]`,
-        tradeoffs: [
-          "INT8 quantization traded 0.3% retrieval precision for a 72% memory footprint reduction, enabling entire indexes to live in RAM.",
-          "Custom C++ binding via pybind11 yielded 4x throughput compared to pure Python wrappers.",
-        ],
-        challenges: [
-          "Managing dynamic index compaction without locking read queries during continuous real-time document ingestion.",
-        ],
-        keyLearnings: [
-          "Hybrid search (BM25 + Dense Vectors) solves the vocabulary mismatch problem that pure semantic embeddings struggle with in technical documentation.",
-        ],
-      },
-    },
-    {
-      id: "quantum-canvas",
-      title: "QuantumDesign: Real-Time Multi-Cursor Collaboration Engine",
-      category: "Full-Stack Web",
-      domainTag: "Full-Stack Web & CRDT",
-      featured: true,
-      problemSolved: "Real-time multi-cursor collaboration for complex 100k+ node vector diagrams caused constant UI thread freezes, packet storms, and desynchronized local states.",
-      solution: "Built a conflict-free replicated data type (CRDT) engine with WebAssembly-backed rendering via WebGL, decoupled Web Workers, and delta-compressed WebSocket synching.",
-      techStack: ["TypeScript", "Next.js", "React 19", "WebAssembly", "WebGL", "Yjs", "WebSockets", "Tailwind CSS"],
-      metrics: [
-        "⚡ Maintained rock-solid 60 FPS rendering on 100,000+ vector elements",
-        "👥 Supported 50+ concurrent live collaborators per room with zero state collisions",
-        "✨ Adopted by 2,400+ product designers across 18 enterprise teams",
-      ],
-      liveUrl: "https://quantumcanvas.demo.example",
-      repoUrl: "https://github.com/alexchen-eng/quantum-canvas",
-      caseStudy: {
-        overview: "A browser-based high-performance infinite canvas engine built for collaborative architecture diagramming and enterprise whiteboarding.",
-        architectureNotes: "Client UI Thread -> Web Worker (Yjs CRDT state resolution) -> SharedArrayBuffer -> WebGL Canvas Context. Server provides lightweight Ephemeral PubSub.",
-        architectureDiagram: `[User Input] ──► [Web Worker: Yjs State Engine] ──► [WebSocket Delta Sync]
-                            │                                  │
-                            ▼                                  ▼
-                [WebGL Hardware Canvas]              [Distributed PubSub Node]`,
-        tradeoffs: [
-          "Decoupled rendering from React reconciliation by managing canvas state in Web Workers, guaranteeing the main UI thread remains responsive.",
-          "Stored local state in IndexedDB for instant offline-first load times with optimistic updates.",
-        ],
-        challenges: [
-          "Handling browser tab hibernation and recovering connection state gracefully with minimal memory leak.",
-        ],
-        keyLearnings: [
-          "Offloading CRDT delta computation to Web Workers prevents main thread garbage collection pauses during heavy canvas dragging.",
-        ],
-      },
-    },
-    {
-      id: "cloud-shield",
-      title: "CloudShield Zero-Trust: Just-in-Time IAM & Policy Engine",
-      category: "Cloud Security",
-      domainTag: "Security & Cloud Governance",
-      featured: false,
-      problemSolved: "Standing administrator privileges across multi-cloud environments (AWS, GCP, Azure) exposed the organization to credential exfiltration and compliance audit failures.",
-      solution: "Engineered an automated Just-In-Time (JIT) ephemeral credential broker with biometric WebAuthn verification, Open Policy Agent (OPA) validation, and immutable audit trails.",
-      techStack: ["TypeScript", "Next.js", "Go", "HashiCorp Vault", "AWS IAM", "OPA", "Terraform", "PostgreSQL"],
-      metrics: [
-        "🛡️ Eliminated 100% of permanent static administrator credentials",
-        "⏱️ Slashed access approval latency from 4 hours down to 45 seconds",
-        "📜 100% flawless pass rate across SOC2 Type II and ISO 27001 annual audits",
-      ],
-      liveUrl: "https://cloudshield.demo.example",
-      repoUrl: "https://github.com/alexchen-eng/cloudshield-zero-trust",
-      caseStudy: {
-        overview: "CloudShield automates the lifecycle of temporary infrastructure access, auto-revoking tokens after 60 minutes and logging all terminal commands to tamper-proof S3 storage.",
-        architectureNotes: "Engineer CLI/Web -> CloudShield Gateway (FIDO2) -> OPA Evaluation Engine -> HashiCorp Vault Ephemeral STS Generator -> Cloud Provider STS -> Audited Session Recorder.",
-        challenges: [
-          "Ensuring high availability of the auth gateway even when target cloud providers undergo partial API degradation.",
-        ],
-        keyLearnings: [
-          "Declarative Rego policies provide transparent auditability for compliance officers without touching application code.",
-        ],
-      },
-    },
-    {
-      id: "streampulse-observability",
-      title: "StreamPulse: Real-Time Operational Analytics & Anomaly Detection",
-      category: "Data & Observability",
-      domainTag: "Big Data & Observability",
-      featured: false,
-      problemSolved: "Fragmented monitoring tools delayed critical incident detection (MTTD 38 minutes) for microservice outages, costing thousands per minute of downtime.",
-      solution: "Unified real-time telemetry stream pipeline using ClickHouse, custom time-series aggregations, and WebSockets live dashboard with dynamic threshold anomaly alerts.",
-      techStack: ["Next.js", "TypeScript", "ClickHouse", "Apache Flink", "Tailwind CSS", "Docker", "Prometheus"],
-      metrics: [
-        "📉 MTTD dropped from 38 minutes to 42 seconds across 65 microservices",
-        "📊 Processed 1.2 Billion daily telemetry events with sub-second dashboard refresh",
-        "🔔 Slashed alert fatigue by 82% via algorithmic noise suppression",
-      ],
-      liveUrl: "https://streampulse.demo.example",
-      repoUrl: "https://github.com/alexchen-eng/streampulse",
-      caseStudy: {
-        overview: "An operational intelligence suite that aggregates distributed logs, spans, and metrics into actionable real-time insight graphs.",
-        architectureNotes: "Collector Agents -> Apache Flink Stream Filter -> ClickHouse Columnar Cluster -> Next.js Streaming Dashboard.",
-        challenges: [
-          "Handling sudden 10x traffic spikes during network partition incidents without blowing up memory buffers.",
-        ],
-        keyLearnings: [
-          "ClickHouse columnar storage compression reduced raw logging storage expenses by 84% compared to Elasticsearch.",
-        ],
-      },
-    },
-    {
-      id: "omniflow-cicd",
-      title: "OmniFlow CI/CD: Intelligent Test Impact & Matrix Builder",
-      category: "Developer Tooling",
-      domainTag: "DevOps & Developer Velocity",
-      featured: false,
-      problemSolved: "Monorepo test execution took 48 minutes per PR across 35 packages, stalling engineering throughput and inducing frequent flaky test failures.",
-      solution: "Developed an AST-aware dependency graph analyzer that computes precise affected test blast radiuses and orchestrates dynamic container pools on Kubernetes.",
-      techStack: ["TypeScript", "Node.js", "Docker", "Kubernetes", "GitHub Actions API", "Redis", "Rust"],
-      metrics: [
-        "⚡ Slashed PR validation time by 72% (from 48m down to 13m)",
-        "🔍 Quarantined 99.1% of intermittent flaky tests with predictive analysis",
-        "🚀 Reclaimed over 1,400 engineering hours every month across 120 devs",
-      ],
-      liveUrl: "https://omniflow.demo.example",
-      repoUrl: "https://github.com/alexchen-eng/omniflow-cicd",
-      caseStudy: {
-        overview: "A developer velocity acceleration platform integrated into GitHub pull request workflows.",
-        architectureNotes: "Git Diff -> TypeScript AST Dependency Parser -> Targeted Test Selector -> Distributed K8s Test Pod Matrix -> Results Aggregator.",
-        challenges: [
-          "Accurately tracing implicit dependencies in dynamically loaded modules across package boundaries.",
-        ],
-        keyLearnings: [
-          "Executing only tests directly touched by a changeset retains 99.98% bug catch rates while cutting compute bills drastically.",
-        ],
-      },
-    },
-  ],
+  learnings: INITIAL_LEARNINGS,
+  projects: INITIAL_PROJECTS,
   resume: {
     summary: "Strategic, impact-driven Principal Full-Stack Engineer and Cloud Architect with over a decade of success designing and scaling distributed systems, microfrontends, and high-throughput cloud infrastructure. Proven history of leading engineering teams of 20+ through complex zero-to-one initiatives and hyperscale migrations (50M+ MAU, 99.995% SLA). Deep expertise in Next.js, TypeScript, Go, Kubernetes, AWS, and event-driven architectures with a relentless focus on performance optimization and operational cost reduction.",
     experience: [
@@ -489,9 +549,61 @@ export const PROFILE: ProfileData = {
   ],
 };
 
-// Plain text resume generator for 1-click ATS downloads
-export function generatePlainTextResume(): string {
-  const { name, title, contact, resume } = PROFILE;
+// Backwards-compatibility alias for initial renders
+export const PROFILE = INITIAL_PROFILE_STATE;
+
+/**
+ * Dynamically extract categorized skills from verified learning logs and project tech stacks
+ */
+export function extractSkillsFromState(state: ProfileState): Record<CompetencyArea, string[]> {
+  const result: Record<CompetencyArea, Set<string>> = {
+    Frontend: new Set<string>(),
+    Backend: new Set<string>(),
+    "Cloud & DevOps": new Set<string>(),
+    "Data & AI": new Set<string>(),
+    "System Design": new Set<string>(),
+  };
+
+  // 1. Ingest from verified learning entries
+  state.learnings.forEach((entry) => {
+    if (result[entry.category]) {
+      result[entry.category].add(entry.technology);
+    }
+  });
+
+  // 2. Ingest from project tech stacks intelligently
+  state.projects.forEach((proj) => {
+    proj.techStack.forEach((tech) => {
+      const lower = tech.toLowerCase();
+      if (lower.includes("react") || lower.includes("next") || lower.includes("tailwind") || lower.includes("webassembly") || lower.includes("webgl") || lower.includes("canvas") || lower.includes("typescript")) {
+        result["Frontend"].add(tech);
+      } else if (lower.includes("kafka") || lower.includes("redis") || lower.includes("postgres") || lower.includes("grpc") || lower.includes("go") || lower.includes("rust") || lower.includes("node") || lower.includes("python")) {
+        result["Backend"].add(tech);
+      } else if (lower.includes("kubernetes") || lower.includes("docker") || lower.includes("terraform") || lower.includes("aws") || lower.includes("ebpf") || lower.includes("opentelemetry") || lower.includes("vault")) {
+        result["Cloud & DevOps"].add(tech);
+      } else if (lower.includes("clickhouse") || lower.includes("faiss") || lower.includes("pytorch") || lower.includes("flink") || lower.includes("vector") || lower.includes("ai")) {
+        result["Data & AI"].add(tech);
+      } else {
+        result["System Design"].add(tech);
+      }
+    });
+  });
+
+  return {
+    Frontend: Array.from(result["Frontend"]),
+    Backend: Array.from(result["Backend"]),
+    "Cloud & DevOps": Array.from(result["Cloud & DevOps"]),
+    "Data & AI": Array.from(result["Data & AI"]),
+    "System Design": Array.from(result["System Design"]),
+  };
+}
+
+/**
+ * Generate dynamically compiled plain text resume for legacy ATS systems
+ */
+export function generateDynamicPlainTextResume(state: ProfileState): string {
+  const { name, title, contact, resume } = state;
+  const categorizedSkills = extractSkillsFromState(state);
   
   return `================================================================================
 ${name.toUpperCase()}
@@ -507,15 +619,18 @@ PROFESSIONAL SUMMARY
 ${resume.summary}
 
 --------------------------------------------------------------------------------
-CORE TECHNICAL COMPETENCIES
+DYNAMICALLY EXTRACTED TECHNICAL COMPETENCIES (Derived from Logs & Projects)
 --------------------------------------------------------------------------------
-* Languages & Runtimes: TypeScript, JavaScript, Go, Python, Rust, SQL, HTML5/CSS3
-* Frontend Frameworks: Next.js (App Router, Server Components), React 19, Tailwind CSS
-* Backend & Distributed: Microservices, Apache Kafka, gRPC, REST, GraphQL, Redis
-* Cloud & Infrastructure: AWS (EKS, Lambda, S3, Aurora, CloudFront), Kubernetes, Docker
-* DevOps & CI/CD: Terraform, GitHub Actions, ArgoCD, Helm, Datadog, OpenTelemetry
-* Databases: PostgreSQL (Sharding, Partitioning), ClickHouse, Redis, pgvector
-* Architecture: High-Availability, Microfrontends, CQRS, Zero-Trust IAM, FinOps
+* Frontend: ${categorizedSkills.Frontend.length > 0 ? categorizedSkills.Frontend.join(", ") : "Modern Web Frameworks, TypeScript"}
+* Backend: ${categorizedSkills.Backend.length > 0 ? categorizedSkills.Backend.join(", ") : "Microservices, Distributed Streaming"}
+* Cloud & DevOps: ${categorizedSkills["Cloud & DevOps"].length > 0 ? categorizedSkills["Cloud & DevOps"].join(", ") : "AWS, Kubernetes, CI/CD"}
+* Data & AI: ${categorizedSkills["Data & AI"].length > 0 ? categorizedSkills["Data & AI"].join(", ") : "Columnar DBs, Vector Search"}
+* System Design: ${categorizedSkills["System Design"].length > 0 ? categorizedSkills["System Design"].join(", ") : "High Availability, Event-Driven Architecture"}
+
+--------------------------------------------------------------------------------
+RECENT VERIFIED LEARNING MILESTONES
+--------------------------------------------------------------------------------
+${state.learnings.slice(0, 5).map((l) => `* [${l.masteryLevel.toUpperCase()}] ${l.technology} (${l.category}): ${l.keyTakeaway}`).join("\n")}
 
 --------------------------------------------------------------------------------
 PROFESSIONAL EXPERIENCE
@@ -525,11 +640,24 @@ ${resume.experience
     (exp) => `
 ${exp.role.toUpperCase()}
 ${exp.company} | ${exp.location} | ${exp.period}
-Key Technologies: ${exp.technologies.join(", ")}
+Technologies: ${exp.technologies.join(", ")}
 ${exp.bullets.map((b) => `* ${b}`).join("\n")}
 `
   )
   .join("\n")}
+
+--------------------------------------------------------------------------------
+KEY IMPACT PROJECTS
+--------------------------------------------------------------------------------
+${state.projects
+  .slice(0, 4)
+  .map(
+    (p) => `* ${p.title} (${p.domainTag})
+  Problem: ${p.problemSolved}
+  Solution: ${p.solution}
+  Metrics: ${p.metrics.join("; ")}`
+  )
+  .join("\n\n")}
 
 --------------------------------------------------------------------------------
 EDUCATION
@@ -544,7 +672,8 @@ CERTIFICATIONS
 ${resume.certifications.map((c) => `* ${c}`).join("\n")}
 
 ================================================================================
-Document generated from MYRESUME ATS Hub (${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" })})
+Document auto-generated from MYRESUME Engine (${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" })})
+Total Verified Milestones Logged: ${state.learnings.length}
 ================================================================================
 `;
 }

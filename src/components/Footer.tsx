@@ -19,10 +19,10 @@ export function Footer() {
 
   const links = [
     { name: "About", href: "#about" },
-    { name: "Skills", href: "#skills" },
+    { name: "What I Learnt", href: "#learning-log" },
     { name: "Projects", href: "#projects" },
-    { name: "Resume", href: "#resume" },
-    { name: "Goals", href: "#goals" },
+    { name: "Enhancer", href: "#enhancer" },
+    { name: "Live Resume", href: "#resume" },
     { name: "Contact", href: "#contact" },
   ];
 

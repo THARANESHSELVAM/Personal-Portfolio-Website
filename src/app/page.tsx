@@ -1,9 +1,9 @@
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
-import { SkillsMatrix } from "@/components/SkillsMatrix";
+import { LearningLog } from "@/components/LearningLog";
 import { ProjectGrid } from "@/components/ProjectGrid";
+import { ProfileEnhancer } from "@/components/ProfileEnhancer";
 import { ResumeHub } from "@/components/ResumeHub";
-import { GoalRoadmap } from "@/components/GoalRoadmap";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 
@@ -13,10 +13,10 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <Hero />
-        <SkillsMatrix />
+        <LearningLog />
         <ProjectGrid />
+        <ProfileEnhancer />
         <ResumeHub />
-        <GoalRoadmap />
         <ContactSection />
       </main>
       <Footer />
