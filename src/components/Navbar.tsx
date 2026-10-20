@@ -14,8 +14,7 @@ import {
   User, 
   Terminal,
   Sparkles,
-  BookOpen,
-  Activity
+  BookOpen
 } from "lucide-react";
 
 export function Navbar() {
@@ -27,7 +26,6 @@ export function Navbar() {
     { name: "About", href: "#about", icon: User },
     { name: "What I Learnt", href: "#learning-log", icon: BookOpen },
     { name: "Projects", href: "#projects", icon: Briefcase },
-    { name: "Enhancer", href: "#enhancer", icon: Activity },
     { name: "Live Resume", href: "#resume", icon: FileText },
     { name: "Contact", href: "#contact", icon: Mail },
   ];
@@ -37,7 +35,7 @@ export function Navbar() {
       setIsScrolled(window.scrollY > 20);
 
       // Section spy
-      const sections = ["about", "learning-log", "projects", "enhancer", "resume", "contact"];
+      const sections = ["about", "learning-log", "projects", "resume", "contact"];
       const scrollPosition = window.scrollY + 200;
 
       for (const section of sections) {

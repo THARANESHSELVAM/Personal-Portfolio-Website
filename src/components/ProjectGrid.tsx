@@ -16,7 +16,9 @@ import {
   X, 
   Check, 
   Trash2,
-  Sparkles
+  Sparkles,
+  Target,
+  ArrowRight
 } from "lucide-react";
 import { GithubIcon } from "@/components/Icons";
 
@@ -31,15 +33,16 @@ export function ProjectGrid() {
     title: "",
     category: "Full-Stack Web",
     domainTag: "Full-Stack & Cloud",
+    projectUse: "",
     problemSolved: "",
     solution: "",
+    novelty: "",
     techStackInput: "",
     metric1: "⚡ Slashed latency by 45%",
     metric2: "📈 Scaled to 100k+ active users",
     metric3: "💰 Reduced infrastructure costs by 30%",
     liveUrl: "",
     repoUrl: "",
-    overview: "",
     challenges: "",
     keyLearnings: "",
   });
@@ -86,6 +89,7 @@ export function ProjectGrid() {
       title: newProject.title.trim(),
       category: newProject.category,
       domainTag: newProject.domainTag.trim() || newProject.category,
+      noveltySnippet: newProject.novelty.trim() || undefined,
       problemSolved: newProject.problemSolved.trim(),
       solution: newProject.solution.trim(),
       techStack: techStack.length > 0 ? techStack : ["TypeScript", "Next.js", "Docker"],
@@ -93,18 +97,29 @@ export function ProjectGrid() {
       liveUrl: newProject.liveUrl.trim() || undefined,
       repoUrl: newProject.repoUrl.trim() || undefined,
       featured: true,
-      caseStudy: newProject.overview
-        ? {
-            overview: newProject.overview.trim(),
-            architectureNotes: "Dynamic architectural implementation.",
-            challenges: newProject.challenges
-              ? newProject.challenges.split(";").map((c) => c.trim())
-              : ["Maintaining low latency under peak concurrency."],
-            keyLearnings: newProject.keyLearnings
-              ? newProject.keyLearnings.split(";").map((l) => l.trim())
-              : ["Decoupled microservices improve fault isolation."],
-          }
-        : undefined,
+      caseStudy: {
+        overview: newProject.solution.trim(),
+        projectUse: newProject.projectUse.trim() || newProject.domainTag.trim() || newProject.category,
+        targetUsers: "Software Architects & Engineers",
+        problemStatement: newProject.problemSolved.trim(),
+        expertSolution: newProject.solution.trim(),
+        novelty: newProject.novelty.trim() || `Engineered a custom architectural solution using ${(techStack.length > 0 ? techStack : ["Modern Web Tech"]).slice(0, 3).join(", ")}.`,
+        noveltyHighlights: newProject.novelty.trim() 
+          ? [newProject.novelty.trim()] 
+          : ["Custom high-throughput architecture", "Decoupled state synchronization"],
+        keyFeatures: [
+          "Enterprise high availability",
+          "Scalable concurrent throughput",
+          "Real-time telemetry integration"
+        ],
+        architectureNotes: "Dynamic architectural implementation.",
+        challenges: newProject.challenges
+          ? newProject.challenges.split(";").map((c) => c.trim())
+          : ["Maintaining low latency under peak concurrency."],
+        keyLearnings: newProject.keyLearnings
+          ? newProject.keyLearnings.split(";").map((l) => l.trim())
+          : ["Decoupled microservices improve fault isolation."],
+      },
     });
 
     setIsAddModalOpen(false);
@@ -112,15 +127,16 @@ export function ProjectGrid() {
       title: "",
       category: "Full-Stack Web",
       domainTag: "Full-Stack & Cloud",
+      projectUse: "",
       problemSolved: "",
       solution: "",
+      novelty: "",
       techStackInput: "",
       metric1: "⚡ Slashed latency by 45%",
       metric2: "📈 Scaled to 100k+ active users",
       metric3: "💰 Reduced infrastructure costs by 30%",
       liveUrl: "",
       repoUrl: "",
-      overview: "",
       challenges: "",
       keyLearnings: "",
     });
@@ -140,7 +156,7 @@ export function ProjectGrid() {
             Impact-Driven Engineering Projects
           </h2>
           <p className="mt-3 text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
-            Every project demonstrates a tangible bottleneck solved, measurable business/performance impact, and enterprise-grade reliability.
+            Click on any project to explore its <strong>practical use</strong>, <strong>problem statement</strong>, <strong>solved expert architecture</strong>, and <strong>novelty (how I solved it)</strong> with verified benchmarks.
           </p>
         </div>
 
@@ -190,7 +206,7 @@ export function ProjectGrid() {
                 No Projects Available
               </h4>
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
-                All projects in this view have been deleted. You can create a new project entry or reset your profile data anytime.
+                No projects found for the selected category. You can add a new project entry or reset data anytime.
               </p>
             </div>
             <button
@@ -205,163 +221,196 @@ export function ProjectGrid() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="glass-panel rounded-3xl border border-slate-200/90 dark:border-slate-800/90 p-6 flex flex-col justify-between hover:border-cyan-500/50 dark:hover:border-cyan-500/50 hover:shadow-xl hover:shadow-cyan-500/5 transition-all duration-300 group"
-            >
-              <div className="space-y-4">
-                {/* Domain Tag, Featured Badge & Delete Action */}
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
-                      {project.domainTag}
-                    </span>
-                    {project.featured && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-                        ★ Featured
+              <div
+                key={project.id}
+                onClick={() => setActiveCaseStudyProject(project)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setActiveCaseStudyProject(project);
+                  }
+                }}
+                className="cursor-pointer glass-panel rounded-3xl border border-slate-200/90 dark:border-slate-800/90 p-6 flex flex-col justify-between hover:border-cyan-500/60 dark:hover:border-cyan-400/60 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300 group relative text-left"
+              >
+                <div className="space-y-4">
+                  {/* Domain Tag, Featured Badge & Delete Action */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                        {project.domainTag}
                       </span>
+                      {project.featured && (
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                          ★ Featured
+                        </span>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm(`Are you sure you want to delete "${project.title}"?`)) {
+                          deleteProject(project.id);
+                        }
+                      }}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-transparent hover:border-rose-200 dark:hover:border-rose-800/50 transition-all duration-200"
+                      title={`Delete "${project.title}"`}
+                      aria-label={`Delete "${project.title}"`}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* Project Title with Interactive Arrow Cue */}
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors flex items-start justify-between gap-2">
+                      <span>{project.title}</span>
+                      <ArrowRight className="w-4 h-4 text-cyan-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                    </h3>
+                    <div className="text-[11px] text-cyan-600/90 dark:text-cyan-400/90 font-mono font-medium mt-1">
+                      Click to inspect deep dive &amp; architecture ↗
+                    </div>
+                  </div>
+
+                  {/* Practical Use Case Snip */}
+                  {project.caseStudy?.projectUse && (
+                    <div className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 font-mono text-[10px] uppercase block mb-0.5">
+                        Practical Use:
+                      </span>
+                      {project.caseStudy.projectUse}
+                    </div>
+                  )}
+
+                  {/* Problem Solved Framing */}
+                  <div className="p-3.5 rounded-xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-800">
+                    <div className="text-[11px] font-mono uppercase tracking-wider text-rose-600 dark:text-rose-400 font-semibold mb-1">
+                      Problem Bottleneck
+                    </div>
+                    <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed line-clamp-3">
+                      {project.problemSolved}
+                    </p>
+                  </div>
+
+                  {/* Novelty Highlight Chip ("How I Solved It") */}
+                  {(project.noveltySnippet || project.caseStudy?.noveltyHighlights?.[0]) && (
+                    <div className="p-2.5 rounded-xl bg-gradient-to-r from-indigo-500/10 via-purple-500/5 to-transparent border border-indigo-500/20 flex items-start gap-2">
+                      <Sparkles className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0 mt-0.5" />
+                      <div className="text-[11px] text-slate-800 dark:text-slate-200 leading-snug">
+                        <span className="font-bold text-indigo-600 dark:text-indigo-400 font-mono">Novelty: </span>
+                        <span>{project.noveltySnippet || project.caseStudy?.noveltyHighlights?.[0]}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Solution Summary */}
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2">
+                    {project.solution}
+                  </p>
+
+                  {/* Tech Stack Pills */}
+                  <div>
+                    <div className="text-[10px] font-mono uppercase text-slate-400 dark:text-slate-500 mb-1.5">
+                      Stack &amp; Tools (Synchronized to Resume)
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.techStack.slice(0, 5).map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {project.techStack.length > 5 && (
+                        <span className="px-2 py-0.5 rounded-md text-[10px] font-mono text-slate-400 bg-slate-100 dark:bg-slate-800/40">
+                          +{project.techStack.length - 5}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* High-Contrast Dedicated Metrics Callout Block */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 text-white shadow-md border border-slate-800 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-cyan-400 font-bold">
+                      <TrendingUp className="w-3.5 h-3.5" />
+                      <span>Quantifiable Impact</span>
+                    </div>
+                    <div className="space-y-1">
+                      {project.metrics.map((metric, i) => (
+                        <div
+                          key={i}
+                          className="text-xs font-medium text-slate-200 flex items-start gap-1.5 leading-snug"
+                        >
+                          <span>{metric}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Links Bar */}
+                <div className="pt-5 mt-4 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white shadow-sm transition-colors"
+                        title="View Live Demo"
+                      >
+                        <span>Live</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
+
+                    {project.repoUrl && (
+                      <a
+                        href={project.repoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg glass-panel text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-colors"
+                        title="View GitHub Repository"
+                      >
+                        <GithubIcon className="w-3 h-3" />
+                        <span>Code</span>
+                      </a>
                     )}
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (window.confirm(`Are you sure you want to delete "${project.title}"?`)) {
-                        deleteProject(project.id);
-                      }
-                    }}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-transparent hover:border-rose-200 dark:hover:border-rose-800/50 transition-all duration-200"
-                    title={`Delete "${project.title}"`}
-                    aria-label={`Delete "${project.title}"`}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-
-                {/* Project Title */}
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                  {project.title}
-                </h3>
-
-                {/* Problem Solved Framing */}
-                <div className="p-3.5 rounded-xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-800">
-                  <div className="text-[11px] font-mono uppercase tracking-wider text-rose-600 dark:text-rose-400 font-semibold mb-1">
-                    Problem Bottleneck
-                  </div>
-                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                    {project.problemSolved}
-                  </p>
-                </div>
-
-                {/* Solution Summary */}
-                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                  {project.solution}
-                </p>
-
-                {/* Tech Stack Pills */}
-                <div>
-                  <div className="text-[10px] font-mono uppercase text-slate-400 dark:text-slate-500 mb-1.5">
-                    Stack &amp; Tools (Synchronized to Resume)
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.techStack.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* High-Contrast Dedicated Metrics Callout Block */}
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 text-white shadow-md border border-slate-800 space-y-1.5">
-                  <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-cyan-400 font-bold">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    <span>Quantifiable Impact</span>
-                  </div>
-                  <div className="space-y-1">
-                    {project.metrics.map((metric, i) => (
-                      <div
-                        key={i}
-                        className="text-xs font-medium text-slate-200 flex items-start gap-1.5 leading-snug"
-                      >
-                        <span>{metric}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Links Bar */}
-              <div className="pt-6 mt-4 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  {project.liveUrl && (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white shadow-sm transition-colors"
-                      title="View Live Demo"
-                    >
-                      <span>Live</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
-
-                  {project.repoUrl && (
-                    <a
-                      href={project.repoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg glass-panel text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-colors"
-                      title="View GitHub Repository"
-                    >
-                      <GithubIcon className="w-3 h-3" />
-                      <span>Code</span>
-                    </a>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  {project.caseStudy && (
+                  <div className="flex items-center gap-1.5">
                     <button
                       type="button"
-                      onClick={() => setActiveCaseStudyProject(project)}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveCaseStudyProject(project);
+                      }}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 transition-all group-hover:bg-indigo-600 group-hover:text-white dark:group-hover:bg-indigo-500"
                     >
                       <BookOpen className="w-3.5 h-3.5" />
-                      <span>Case Study</span>
+                      <span>Case Study &amp; Novelty</span>
                     </button>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (window.confirm(`Are you sure you want to delete "${project.title}" from your portfolio?`)) {
-                        deleteProject(project.id);
-                      }
-                    }}
-                    className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-transparent hover:border-rose-200 dark:hover:border-rose-800/50 transition-colors"
-                    title={`Delete "${project.title}"`}
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Delete</span>
-                  </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+            ))}
+          </div>
+        )}
+      </div>
 
-      {/* Case Study Modal Drawer */}
+      {/* Case Study Detailed Explanation Modal Drawer */}
       <CaseStudyModal
         project={activeCaseStudyProject}
+        projects={filteredProjects}
         isOpen={!!activeCaseStudyProject}
         onClose={() => setActiveCaseStudyProject(null)}
+        onSelectProject={setActiveCaseStudyProject}
       />
 
       {/* Add Project Modal */}
@@ -382,7 +431,7 @@ export function ProjectGrid() {
                     Add Applied Project Entry
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Connects applied systems into your portfolio and updates the ATS resume technical stack.
+                    Add detailed explanations for practical use, problem statement, expert solution, and novelty.
                   </p>
                 </div>
               </div>
@@ -434,14 +483,28 @@ export function ProjectGrid() {
                 </div>
               </div>
 
-              {/* Problem Solved */}
+              {/* Practical Use */}
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  Problem Solved (Bottleneck Framing) <span className="text-rose-500">*</span>
+                  Project Practical Use &amp; Target Audience
                 </label>
                 <textarea
                   rows={2}
-                  placeholder="Describe the production bottleneck or latency/scale failure..."
+                  placeholder="What is this project used for in production, and who uses it?"
+                  value={newProject.projectUse}
+                  onChange={(e) => setNewProject({ ...newProject, projectUse: e.target.value })}
+                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 resize-none"
+                />
+              </div>
+
+              {/* Problem Solved */}
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Problem Statement (Bottleneck Framing) <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="Describe the production bottleneck, legacy failure mode, or latency/scale failure..."
                   value={newProject.problemSolved}
                   onChange={(e) => setNewProject({ ...newProject, problemSolved: e.target.value })}
                   className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 resize-none"
@@ -451,14 +514,14 @@ export function ProjectGrid() {
                 )}
               </div>
 
-              {/* Solution */}
+              {/* Solved Expert Solution */}
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  Architected Solution <span className="text-rose-500">*</span>
+                  Solved Expert Solution &amp; Architecture <span className="text-rose-500">*</span>
                 </label>
                 <textarea
                   rows={2}
-                  placeholder="How did you solve it? (Architecture, protocols, algorithms)..."
+                  placeholder="Architectural design, step-by-step pipeline, and engineering patterns..."
                   value={newProject.solution}
                   onChange={(e) => setNewProject({ ...newProject, solution: e.target.value })}
                   className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 resize-none"
@@ -466,6 +529,21 @@ export function ProjectGrid() {
                 {formErrors.solution && (
                   <p className="text-[11px] text-rose-500">{formErrors.solution}</p>
                 )}
+              </div>
+
+              {/* Novelty ("How I Solved This Problem") */}
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Novelty &amp; Breakthrough: How I Solved This Problem</span>
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="The secret sauce, custom algorithms, non-obvious optimizations, or unique techniques you invented..."
+                  value={newProject.novelty}
+                  onChange={(e) => setNewProject({ ...newProject, novelty: e.target.value })}
+                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-indigo-300 dark:border-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
+                />
               </div>
 
               {/* Tech Stack Input */}

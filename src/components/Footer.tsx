@@ -21,7 +21,6 @@ export function Footer() {
     { name: "About", href: "#about" },
     { name: "What I Learnt", href: "#learning-log" },
     { name: "Projects", href: "#projects" },
-    { name: "Enhancer", href: "#enhancer" },
     { name: "Live Resume", href: "#resume" },
     { name: "Contact", href: "#contact" },
   ];

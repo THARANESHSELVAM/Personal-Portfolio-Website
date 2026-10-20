@@ -2,7 +2,6 @@ import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { LearningLog } from "@/components/LearningLog";
 import { ProjectGrid } from "@/components/ProjectGrid";
-import { ProfileEnhancer } from "@/components/ProfileEnhancer";
 import { ResumeHub } from "@/components/ResumeHub";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
@@ -15,7 +14,6 @@ export default function Home() {
         <Hero />
         <LearningLog />
         <ProjectGrid />
-        <ProfileEnhancer />
         <ResumeHub />
         <ContactSection />
       </main>

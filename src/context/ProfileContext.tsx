@@ -8,6 +8,7 @@ import {
   GoalItem,
   CompetencyArea,
   INITIAL_PROFILE_STATE,
+  INITIAL_PROJECTS,
   extractSkillsFromState,
   generateDynamicPlainTextResume,
 } from "@/data/profile";
@@ -51,7 +52,39 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && Array.isArray(parsed.learnings) && Array.isArray(parsed.projects)) {
-          setState(parsed);
+          // Merge initial project case studies if saved project has old schema or lacks novelty/useCase
+          const mergedProjects = parsed.projects.map((proj: Project) => {
+            const initial = INITIAL_PROJECTS.find((p: Project) => p.id === proj.id);
+            if (initial && initial.caseStudy) {
+              return {
+                ...initial,
+                ...proj,
+                noveltySnippet: initial.noveltySnippet || proj.noveltySnippet,
+                caseStudy: {
+                  ...initial.caseStudy,
+                  ...(proj.caseStudy || {}),
+                  projectUse: proj.caseStudy?.projectUse || initial.caseStudy.projectUse,
+                  problemStatement: proj.caseStudy?.problemStatement || initial.caseStudy.problemStatement,
+                  expertSolution: proj.caseStudy?.expertSolution || initial.caseStudy.expertSolution,
+                  novelty: proj.caseStudy?.novelty || initial.caseStudy.novelty,
+                  noveltyHighlights: (proj.caseStudy?.noveltyHighlights && proj.caseStudy.noveltyHighlights.length > 0)
+                    ? proj.caseStudy.noveltyHighlights
+                    : initial.caseStudy.noveltyHighlights,
+                  keyFeatures: (proj.caseStudy?.keyFeatures && proj.caseStudy.keyFeatures.length > 0)
+                    ? proj.caseStudy.keyFeatures
+                    : initial.caseStudy.keyFeatures,
+                  benchmarks: (proj.caseStudy?.benchmarks && proj.caseStudy.benchmarks.length > 0)
+                    ? proj.caseStudy.benchmarks
+                    : initial.caseStudy.benchmarks,
+                  techStackRationale: (proj.caseStudy?.techStackRationale && proj.caseStudy.techStackRationale.length > 0)
+                    ? proj.caseStudy.techStackRationale
+                    : initial.caseStudy.techStackRationale,
+                },
+              };
+            }
+            return proj;
+          });
+          setState({ ...parsed, projects: mergedProjects });
         }
       }
     } catch (e) {
