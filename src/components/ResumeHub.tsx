@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useProfile } from "@/context/ProfileContext";
+import { LearningEntry } from "@/data/profile";
 import { 
   FileText, 
   Download, 
@@ -15,15 +16,18 @@ import {
   LayoutList, 
   FileCheck2,
   Sparkles,
-  Zap
+  Zap,
+  TrendingUp,
+  ExternalLink,
+  BookOpen
 } from "lucide-react";
 
 export function ResumeHub() {
-  const { state, extractedSkills, getPlainTextResume } = useProfile();
+  const { state, extractedSkills, getPlainTextResume, currentUser } = useProfile();
   const [viewMode, setViewMode] = useState<"ats" | "timeline">("ats");
   const [copied, setCopied] = useState(false);
 
-  const { resume, contact, name, title, learnings } = state;
+  const { resume, contact, name, title, learnings, projects } = state;
 
   // 1-Click Download Plain Text Resume (.txt)
   const handleDownloadTxt = () => {
@@ -57,6 +61,8 @@ export function ResumeHub() {
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const totalExtractedSkills = Object.values(extractedSkills).flat().length;
+
   return (
     <section id="resume" className="py-20 relative">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -70,7 +76,7 @@ export function ResumeHub() {
             Dynamically Synchronized ATS Resume
           </h2>
           <p className="mt-3 text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
-            Skills and highlights below are extracted in real time from your verified learning logs and project stacks.
+            Compiled strictly from <strong>{name}</strong>&apos;s active learning diary entries, engineering projects, and verified production benchmarks.
           </p>
         </div>
 
@@ -100,7 +106,7 @@ export function ResumeHub() {
               }`}
             >
               <LayoutList className="w-4 h-4" />
-              <span>Visual Timeline</span>
+              <span>Visual Engineering Timeline</span>
             </button>
           </div>
 
@@ -164,21 +170,33 @@ export function ResumeHub() {
                 {title}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs text-slate-600 dark:text-slate-400 pt-1">
-                <span>{contact.location}</span>
-                <span>•</span>
+                {contact.location && <span>{contact.location}</span>}
+                {contact.location && <span>•</span>}
                 <a href={`mailto:${contact.email}`} className="hover:underline text-cyan-600 dark:text-cyan-400">
                   {contact.email}
                 </a>
-                <span>•</span>
-                <span>{contact.phone}</span>
-                <span>•</span>
-                <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                  LinkedIn
-                </a>
-                <span>•</span>
-                <a href={contact.github} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                  GitHub
-                </a>
+                {contact.phone && (
+                  <>
+                    <span>•</span>
+                    <span>{contact.phone}</span>
+                  </>
+                )}
+                {contact.linkedin && (
+                  <>
+                    <span>•</span>
+                    <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="hover:underline text-cyan-600 dark:text-cyan-400">
+                      LinkedIn
+                    </a>
+                  </>
+                )}
+                {contact.github && (
+                  <>
+                    <span>•</span>
+                    <a href={contact.github} target="_blank" rel="noopener noreferrer" className="hover:underline text-cyan-600 dark:text-cyan-400">
+                      GitHub
+                    </a>
+                  </>
+                )}
               </div>
             </div>
 
@@ -188,7 +206,7 @@ export function ResumeHub() {
                 Professional Summary
               </h2>
               <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                {resume.summary}
+                {resume.summary || `${title} with proven engineering experience across ${projects.length} production projects and ${learnings.length} verified technical diary milestones.`}
               </p>
             </div>
 
@@ -202,7 +220,7 @@ export function ResumeHub() {
                   </span>
                 </h2>
                 <span className="text-[10px] font-mono text-slate-400">
-                  {Object.values(extractedSkills).flat().length} Unique Skills Extracted
+                  {totalExtractedSkills} Unique Skills Extracted
                 </span>
               </div>
 
@@ -211,43 +229,106 @@ export function ResumeHub() {
                   <span className="font-semibold text-slate-900 dark:text-white">Frontend: </span>
                   {extractedSkills.Frontend.length > 0
                     ? extractedSkills.Frontend.join(", ")
-                    : "Modern Web Frameworks, TypeScript"}
+                    : "TypeScript, React, Next.js, Modern Web"}
                 </div>
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Backend: </span>
                   {extractedSkills.Backend.length > 0
                     ? extractedSkills.Backend.join(", ")
-                    : "Microservices, Distributed Streaming"}
+                    : "Go, Node.js, REST APIs, Microservices"}
                 </div>
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Cloud &amp; DevOps: </span>
                   {extractedSkills["Cloud & DevOps"].length > 0
                     ? extractedSkills["Cloud & DevOps"].join(", ")
-                    : "Kubernetes, Cloud Infrastructure, CI/CD"}
+                    : "Docker, Kubernetes, CI/CD, Cloud Architecture"}
                 </div>
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Data &amp; AI: </span>
                   {extractedSkills["Data & AI"].length > 0
                     ? extractedSkills["Data & AI"].join(", ")
-                    : "Columnar Storage, Vector Retrieval"}
+                    : "PostgreSQL, Redis, Vector Databases"}
                 </div>
                 <div className="sm:col-span-2">
                   <span className="font-semibold text-slate-900 dark:text-white">System Design &amp; Architecture: </span>
                   {extractedSkills["System Design"].length > 0
                     ? extractedSkills["System Design"].join(", ")
-                    : "High Availability, Event-Driven, FinOps"}
+                    : "High Availability, Event-Driven Architecture, Fault Tolerance"}
                 </div>
               </div>
             </div>
 
+            {/* Selected Applied Engineering Projects & Impact */}
+            <div className="space-y-6">
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
+                <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>Selected Engineering Projects &amp; Impact</span>
+                  <span className="text-[10px] font-mono lowercase px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-normal">
+                    from projects lab ({projects.length})
+                  </span>
+                </h2>
+              </div>
+
+              {projects.length === 0 ? (
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-center text-xs text-slate-500">
+                  No projects added yet. Add projects in the Projects Lab tab to automatically compile them here.
+                </div>
+              ) : (
+                projects.map((project) => (
+                  <div key={project.id} className="space-y-2">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                      <div>
+                        <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                          {project.title}
+                        </h3>
+                        <div className="text-xs sm:text-sm font-semibold text-cyan-600 dark:text-cyan-400">
+                          {project.domainTag || project.category}
+                          {project.caseStudy?.projectUse && (
+                            <span className="font-normal text-slate-500 dark:text-slate-400">
+                              {" "}— {project.caseStudy.projectUse}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono font-medium text-slate-500 dark:text-slate-400">
+                        {project.techStack.slice(0, 4).join(" • ")}
+                      </span>
+                    </div>
+
+                    <ul className="list-disc list-outside pl-4 space-y-1 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                      <li className="leading-relaxed">
+                        <span className="font-semibold text-slate-900 dark:text-white">Problem Solved: </span>
+                        {project.problemSolved}
+                      </li>
+                      <li className="leading-relaxed">
+                        <span className="font-semibold text-slate-900 dark:text-white">Architecture &amp; Novelty: </span>
+                        {project.noveltySnippet || project.solution}
+                      </li>
+                      {project.metrics && project.metrics.length > 0 && (
+                        <li className="leading-relaxed">
+                          <span className="font-semibold text-slate-900 dark:text-white">Production Impact: </span>
+                          {project.metrics.join(" | ")}
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                ))
+              )}
+            </div>
+
             {/* Recent Verified Milestones from Ingestion Engine */}
             {learnings.length > 0 && (
-              <div className="space-y-2">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
-                  Recent Verified Milestones &amp; Proof of Work
-                </h2>
-                <ul className="list-disc list-outside pl-4 space-y-1 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                  {learnings.slice(0, 4).map((l) => (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
+                  <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
+                    <span>Verified Learning Diary Milestones</span>
+                    <span className="text-[10px] font-mono lowercase px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-normal">
+                      from diary ({learnings.length})
+                    </span>
+                  </h2>
+                </div>
+                <ul className="list-disc list-outside pl-4 space-y-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                  {learnings.slice(0, 6).map((l: LearningEntry) => (
                     <li key={l.id} className="leading-relaxed">
                       <span className="font-bold text-slate-900 dark:text-white">{l.technology}</span>{" "}
                       <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400">
@@ -260,106 +341,115 @@ export function ResumeHub() {
               </div>
             )}
 
-            {/* Professional Experience */}
-            <div className="space-y-6">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
-                Professional Experience
-              </h2>
+            {/* Optional Prior Professional Experience (if provided in dataset) */}
+            {resume.experience && resume.experience.length > 0 && (
+              <div className="space-y-6">
+                <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
+                  Professional Experience
+                </h2>
 
-              {resume.experience.map((exp, idx) => (
-                <div key={idx} className="space-y-2">
-                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                        {exp.role}
-                      </h3>
-                      <div className="text-xs sm:text-sm font-semibold text-cyan-600 dark:text-cyan-400">
-                        {exp.company} — <span className="font-normal text-slate-500">{exp.location}</span>
+                {resume.experience.map((exp, idx) => (
+                  <div key={idx} className="space-y-2">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                      <div>
+                        <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                          {exp.role}
+                        </h3>
+                        <div className="text-xs sm:text-sm font-semibold text-cyan-600 dark:text-cyan-400">
+                          {exp.company} — <span className="font-normal text-slate-500">{exp.location}</span>
+                        </div>
                       </div>
+                      <span className="text-xs font-mono font-medium text-slate-500 dark:text-slate-400">
+                        {exp.period}
+                      </span>
                     </div>
-                    <span className="text-xs font-mono font-medium text-slate-500 dark:text-slate-400">
-                      {exp.period}
-                    </span>
-                  </div>
 
-                  <ul className="list-disc list-outside pl-4 space-y-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                    {exp.bullets.map((bullet, bIdx) => (
-                      <li key={bIdx} className="leading-relaxed">
-                        {bullet}
-                      </li>
-                    ))}
-                  </ul>
+                    <ul className="list-disc list-outside pl-4 space-y-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                      {exp.bullets.map((bullet, bIdx) => (
+                        <li key={bIdx} className="leading-relaxed">
+                          {bullet}
+                        </li>
+                      ))}
+                    </ul>
 
-                  <div className="pt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                    <span className="font-semibold text-slate-600 dark:text-slate-300">Technologies: </span>
-                    {exp.technologies.join(" • ")}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Education */}
-            <div className="space-y-3">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
-                Education
-              </h2>
-              <div className="space-y-2">
-                {resume.education.map((edu, idx) => (
-                  <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between text-xs sm:text-sm">
-                    <div>
-                      <span className="font-bold text-slate-900 dark:text-white">{edu.degree}</span>
-                      <span className="text-slate-600 dark:text-slate-400"> — {edu.institution}</span>
-                      {edu.honors && (
-                        <span className="text-xs text-emerald-600 dark:text-emerald-400 ml-2 font-medium">
-                          ({edu.honors})
-                        </span>
-                      )}
+                    <div className="pt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                      <span className="font-semibold text-slate-600 dark:text-slate-300">Technologies: </span>
+                      {exp.technologies.join(" • ")}
                     </div>
-                    <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
-                      {edu.year}
-                    </span>
                   </div>
                 ))}
               </div>
-            </div>
+            )}
+
+            {/* Education */}
+            {resume.education && resume.education.length > 0 && (
+              <div className="space-y-3">
+                <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
+                  Education &amp; Credentials
+                </h2>
+                <div className="space-y-2">
+                  {resume.education.map((edu, idx) => (
+                    <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between text-xs sm:text-sm">
+                      <div>
+                        <span className="font-bold text-slate-900 dark:text-white">{edu.degree}</span>
+                        <span className="text-slate-600 dark:text-slate-400"> — {edu.institution}</span>
+                        {edu.honors && (
+                          <span className="text-xs text-emerald-600 dark:text-emerald-400 ml-2 font-medium">
+                            ({edu.honors})
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                        {edu.year}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Certifications */}
-            <div className="space-y-2">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
-                Technical Certifications
-              </h2>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                {resume.certifications.map((cert, idx) => (
-                  <li key={idx} className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
-                    <span>{cert}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {resume.certifications && resume.certifications.length > 0 && (
+              <div className="space-y-2">
+                <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
+                  Technical Certifications
+                </h2>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                  {resume.certifications.map((cert, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
+                      <span>{cert}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         ) : (
           /* =========================================================================
-             VIEW 2: VISUAL TIMELINE VIEW
+             VIEW 2: VISUAL TIMELINE VIEW (Chronological Learning & Project Feed)
              ========================================================================= */
           <div className="space-y-8 animate-in fade-in duration-300">
             <div className="relative pl-6 sm:pl-8 border-l-2 border-cyan-500/30 dark:border-cyan-500/20 space-y-10">
-              {resume.experience.map((exp, idx) => (
-                <div key={idx} className="relative group">
+              {/* Projects in Timeline */}
+              {projects.map((project) => (
+                <div key={project.id} className="relative group">
                   <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white dark:bg-slate-950 border-4 border-cyan-500 group-hover:scale-125 transition-transform" />
 
                   <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-cyan-500/50 shadow-sm transition-all duration-300">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                       <div>
-                        <span className="text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400">
-                          {exp.period}
-                        </span>
-                        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
-                          {exp.role}
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400">
+                            {project.category}
+                          </span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 font-mono">
+                            Applied Project
+                          </span>
+                        </div>
+                        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mt-1">
+                          {project.title}
                         </h3>
-                        <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">
-                          {exp.company} • <span className="font-normal text-slate-400">{exp.location}</span>
-                        </p>
                       </div>
 
                       <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 self-start">
@@ -367,17 +457,24 @@ export function ResumeHub() {
                       </div>
                     </div>
 
-                    <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-4">
-                      {exp.bullets.map((b, bIdx) => (
-                        <li key={bIdx} className="flex items-start gap-2">
-                          <span className="text-cyan-500 font-bold mt-0.5">•</span>
-                          <span>{b}</span>
-                        </li>
+                    <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
+                      {project.solution}
+                    </p>
+
+                    {/* Metrics Callout */}
+                    <div className="space-y-1 mb-4 p-3 rounded-xl bg-slate-900 text-white text-xs">
+                      <div className="text-[10px] font-mono text-cyan-400 uppercase font-semibold">
+                        Quantifiable Impact
+                      </div>
+                      {project.metrics.map((m, i) => (
+                        <div key={i} className="text-slate-200 font-mono">
+                          {m}
+                        </div>
                       ))}
-                    </ul>
+                    </div>
 
                     <div className="flex flex-wrap gap-1.5 pt-3 border-t border-slate-100 dark:border-slate-800">
-                      {exp.technologies.map((t) => (
+                      {project.techStack.map((t) => (
                         <span
                           key={t}
                           className="px-2.5 py-0.5 rounded-md text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
@@ -386,6 +483,32 @@ export function ResumeHub() {
                         </span>
                       ))}
                     </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Diary Milestones in Timeline */}
+              {learnings.map((log: LearningEntry) => (
+                <div key={log.id} className="relative group">
+                  <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white dark:bg-slate-950 border-4 border-indigo-500 group-hover:scale-125 transition-transform" />
+
+                  <div className="glass-panel p-5 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500/50 shadow-sm transition-all duration-300">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-bold text-slate-900 dark:text-white">
+                          {log.technology}
+                        </span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-700 dark:text-indigo-300">
+                          {log.category}
+                        </span>
+                      </div>
+                      <span className="text-[11px] font-mono text-slate-400">
+                        {log.dateLogged} • {log.masteryLevel}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {log.keyTakeaway}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -433,3 +556,4 @@ export function ResumeHub() {
     </section>
   );
 }
+

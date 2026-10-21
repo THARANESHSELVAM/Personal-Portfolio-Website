@@ -1,12 +1,12 @@
 "use client";
 
-import { ArrowUp, Terminal, Heart, Mail } from "lucide-react";
-import { LinkedinIcon, TwitterIcon, GithubIcon } from "@/components/Icons";
-import { PROFILE } from "@/data/profile";
-
+import { ArrowUp, Terminal, Mail } from "lucide-react";
+import { LinkedinIcon, GithubIcon } from "@/components/Icons";
+import { useProfile, WorkspaceTab } from "@/context/ProfileContext";
 import { useState, useEffect } from "react";
 
 export function Footer() {
+  const { state, setActiveTab } = useProfile();
   const [currentYear, setCurrentYear] = useState(2026);
 
   useEffect(() => {
@@ -17,12 +17,11 @@ export function Footer() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const links = [
-    { name: "About", href: "#about" },
-    { name: "What I Learnt", href: "#learning-log" },
-    { name: "Projects", href: "#projects" },
-    { name: "Live Resume", href: "#resume" },
-    { name: "Contact", href: "#contact" },
+  const navTabs: { id: WorkspaceTab; name: string }[] = [
+    { id: "profile", name: "Profile & Identity" },
+    { id: "diary", name: "Learning Diary" },
+    { id: "projects", name: "Projects Lab" },
+    { id: "resume", name: "Live ATS Resume" },
   ];
 
   return (
@@ -40,20 +39,24 @@ export function Footer() {
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
-              Engineered with Next.js 16 (App Router), React 19, TypeScript, and Tailwind CSS. Built for performance and precision.
+              Personal Engineering Diary &amp; Auto-Updating ATS Resume Engine. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS.
             </p>
           </div>
 
-          {/* Quick Nav Links */}
+          {/* Quick Tab Links */}
           <nav className="flex flex-wrap items-center justify-center gap-6 text-xs font-semibold text-slate-600 dark:text-slate-400">
-            {links.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
+            {navTabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  scrollToTop();
+                }}
                 className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
               >
-                {link.name}
-              </a>
+                {tab.name}
+              </button>
             ))}
           </nav>
 
@@ -74,47 +77,45 @@ export function Footer() {
         {/* Bottom Bar: Copyright & Socials */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
           <div>
-            &copy; {currentYear} {PROFILE.name}. All rights reserved.
+            &copy; {currentYear} {state.name}. All rights reserved.
           </div>
 
           <div className="flex items-center gap-4">
-            <a
-              href={PROFILE.contact.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-cyan-500 transition-colors"
-              aria-label="GitHub"
-            >
-              <GithubIcon className="w-4 h-4" />
-            </a>
-            <a
-              href={PROFILE.contact.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-cyan-500 transition-colors"
-              aria-label="LinkedIn"
-            >
-              <LinkedinIcon className="w-4 h-4" />
-            </a>
-            <a
-              href={PROFILE.contact.twitter}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-cyan-500 transition-colors"
-              aria-label="Twitter"
-            >
-              <TwitterIcon className="w-4 h-4" />
-            </a>
-            <a
-              href={`mailto:${PROFILE.contact.email}`}
-              className="hover:text-cyan-500 transition-colors"
-              aria-label="Email"
-            >
-              <Mail className="w-4 h-4" />
-            </a>
+            {state.contact.github && (
+              <a
+                href={state.contact.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-cyan-500 transition-colors"
+                aria-label="GitHub"
+              >
+                <GithubIcon className="w-4 h-4" />
+              </a>
+            )}
+            {state.contact.linkedin && (
+              <a
+                href={state.contact.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-cyan-500 transition-colors"
+                aria-label="LinkedIn"
+              >
+                <LinkedinIcon className="w-4 h-4" />
+              </a>
+            )}
+            {state.contact.email && (
+              <a
+                href={`mailto:${state.contact.email}`}
+                className="hover:text-cyan-500 transition-colors"
+                aria-label="Email"
+              >
+                <Mail className="w-4 h-4" />
+              </a>
+            )}
           </div>
         </div>
       </div>
     </footer>
   );
 }
+

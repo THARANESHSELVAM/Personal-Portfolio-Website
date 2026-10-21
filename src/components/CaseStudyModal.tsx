@@ -23,7 +23,8 @@ import {
   ShieldAlert,
   ShieldCheck,
   Code2,
-  Workflow
+  Workflow,
+  Edit3
 } from "lucide-react";
 import { GithubIcon } from "@/components/Icons";
 
@@ -33,6 +34,7 @@ interface CaseStudyModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectProject?: (project: Project) => void;
+  onEditProject?: (project: Project) => void;
 }
 
 export function CaseStudyModal({ 
@@ -40,7 +42,8 @@ export function CaseStudyModal({
   projects = [], 
   isOpen, 
   onClose,
-  onSelectProject 
+  onSelectProject,
+  onEditProject 
 }: CaseStudyModalProps) {
   const [activeTab, setActiveTab] = useState<string>("all");
   const [copiedSummary, setCopiedSummary] = useState(false);
@@ -222,6 +225,19 @@ ${project.metrics.join("\n")}
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
+              )}
+
+              {/* Edit Project Action Button */}
+              {onEditProject && (
+                <button
+                  type="button"
+                  onClick={() => onEditProject(project)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 border border-cyan-200 dark:border-cyan-800/60 shadow-sm transition-colors"
+                  title="Edit this project's architecture, problem statement, metrics, and tech stack"
+                >
+                  <Edit3 className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                  <span>Edit Project</span>
+                </button>
               )}
 
               {/* Copy Interview Summary Button */}

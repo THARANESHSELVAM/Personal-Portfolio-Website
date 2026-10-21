@@ -655,106 +655,40 @@ export const INITIAL_PROJECTS: Project[] = [
 ];
 
 export const INITIAL_PROFILE_STATE: ProfileState = {
-  name: "Alex Morgan Chen",
-  preferredName: "Alex Chen",
-  title: "Principal Full-Stack Engineer & Cloud Architect",
-  tagline: "Architecting high-concurrency systems, edge-native microfrontends, and mission-critical cloud platforms.",
-  elevatorPitch: "Principal engineer with 10+ years of experience leading cross-functional teams from zero to scaled distributed architectures. Specializing in high-throughput data pipelines, resilient web applications, and developer productivity tooling that cut operational costs and drive measurable enterprise business impact.",
+  name: "Tharanesh Selvam",
+  preferredName: "Tharanesh",
+  title: "Full-Stack Software Engineer & Cloud Architect",
+  tagline: "Personal Engineering & Learning Diary | Architecting high-concurrency systems and resilient cloud platforms.",
+  elevatorPitch: "Full-stack engineer and distributed systems builder with a relentless focus on continuous technical mastery, high-throughput architectures, and measurable business impact. This platform is my personal engineering diary where I log what I learn and what I build—and my ATS resume is dynamically generated and updated from my actual entries, never from random placeholder text.",
   availability: {
     status: "available",
-    type: "Full-Time & Advisory",
+    type: "Full-Time & High-Impact Opportunities",
     badgeText: "Open to New Opportunities",
   },
   contact: {
-    email: "alex.chen.eng@gmail.com",
-    location: "San Francisco, CA (Open to Remote / Hybrid)",
-    phone: "+1 (415) 890-3412",
-    github: "https://github.com/alexchen-eng",
-    linkedin: "https://linkedin.com/in/alexchen-principal-eng",
-    twitter: "https://twitter.com/alexchen_arch",
-    calendlyUrl: "https://calendly.com",
+    email: "tharanesh.selvam@gmail.com",
+    location: "Remote / Hybrid",
+    phone: "",
+    github: "https://github.com/THARANESHSELVAM",
+    linkedin: "https://linkedin.com/in/tharanesh-selvam",
+    twitter: "",
+    calendlyUrl: "",
   },
   stats: [
-    { label: "Production Scale", value: "50M+ MAU", detail: "Distributed across multi-region clusters" },
-    { label: "Reliability & Uptime", value: "99.995%", detail: "Mission-critical enterprise SLA" },
-    { label: "Cloud Cost Saved", value: "$320K+", detail: "Through compute and egress optimization" },
-    { label: "Engineering Leadership", value: "10+ Years", detail: "Mentoring 25+ staff & senior engineers" },
+    { label: "Engineering Milestones", value: "Verified Log", detail: "Concept, prototype & production entries" },
+    { label: "Applied Projects", value: "Architectural Work", detail: "Deep-dive case studies with novelty" },
+    { label: "Competency Areas", value: "5 Domains", detail: "Frontend, Backend, Cloud, AI, Systems" },
+    { label: "Resume Status", value: "100% Dynamic", detail: "Synchronized to verified diary logs" },
   ],
   learnings: INITIAL_LEARNINGS,
   projects: INITIAL_PROJECTS,
   resume: {
-    summary: "Strategic, impact-driven Principal Full-Stack Engineer and Cloud Architect with over a decade of success designing and scaling distributed systems, microfrontends, and high-throughput cloud infrastructure. Proven history of leading engineering teams of 20+ through complex zero-to-one initiatives and hyperscale migrations (50M+ MAU, 99.995% SLA). Deep expertise in Next.js, TypeScript, Go, Kubernetes, AWS, and event-driven architectures with a relentless focus on performance optimization and operational cost reduction.",
-    experience: [
-      {
-        role: "Principal Full-Stack Engineer & Platform Architect",
-        company: "Stratos Cloud Systems (Enterprise SaaS)",
-        period: "2022 - Present",
-        location: "San Francisco, CA",
-        bullets: [
-          "Architected global multi-region event mesh serving 50M+ monthly active users, sustaining 350k peak req/sec with 99.995% uptime.",
-          "Directed architecture modernization from monolithic Rails/React stack to Next.js App Router, Go microservices, and Kubernetes, slashing p99 latency by 68%.",
-          "Spearheaded FinOps cloud optimization initiative across AWS infrastructure, reducing annual compute and egress expenditures by $320,000.",
-          "Established company-wide engineering standards, RFC review council, and mentored 12 senior/staff engineers toward promotion.",
-        ],
-        technologies: ["Next.js", "TypeScript", "Go", "Kubernetes", "AWS EKS", "Kafka", "PostgreSQL", "Terraform", "OpenTelemetry"],
-      },
-      {
-        role: "Staff Software Engineer - Infrastructure & Core Web",
-        company: "HyperScale Data Labs",
-        period: "2019 - 2022",
-        location: "San Francisco, CA",
-        bullets: [
-          "Designed and delivered real-time analytics engine in ClickHouse and Node.js processing 1.2 billion events daily with sub-second query latency.",
-          "Implemented microfrontend architecture with module federation across 7 product teams, reducing build times from 35m to 4m.",
-          "Pioneered automated canary deployment pipeline on ArgoCD with automated rollbacks, reducing production incidents by 74%.",
-          "Authored core web performance guidelines, boosting Core Web Vitals pass rates across all customer properties from 58% to 98%.",
-        ],
-        technologies: ["React", "TypeScript", "Node.js", "ClickHouse", "Docker", "GraphQL", "Redis", "ArgoCD", "Datadog"],
-      },
-      {
-        role: "Senior Full-Stack Engineer",
-        company: "Vanguard Tech Innovations",
-        period: "2016 - 2019",
-        location: "Seattle, WA",
-        bullets: [
-          "Engineered high-concurrency payment gateway handling $85M+ in annual transactional volume with zero data loss or security breaches.",
-          "Built full-stack React and Go analytics dashboards with WebSockets, delivering live transaction tracking to 15,000+ active merchants.",
-          "Implemented automated test suite and CI pipeline with 92% code coverage, cutting release cycle time from 2 weeks to twice daily.",
-        ],
-        technologies: ["React", "Go", "PostgreSQL", "Docker", "AWS", "Stripe API", "WebSockets", "Jest"],
-      },
-      {
-        role: "Software Engineer",
-        company: "AcroSoft Solutions",
-        period: "2014 - 2016",
-        location: "Boston, MA",
-        bullets: [
-          "Developed customer-facing responsive web applications and RESTful APIs in JavaScript and Python.",
-          "Migrated legacy on-premise relational database systems to AWS RDS PostgreSQL with zero scheduled downtime.",
-          "Collaborated with product and UI/UX designers to implement pixel-perfect, accessible web interfaces adhering to WCAG 2.1 AA.",
-        ],
-        technologies: ["JavaScript", "Python", "Django", "PostgreSQL", "AWS S3/EC2", "HTML5/CSS3"],
-      },
-    ],
-    education: [
-      {
-        degree: "Master of Science in Computer Science (Distributed Systems)",
-        institution: "University of Washington",
-        year: "2014",
-        honors: "Dean's Graduate Honor Scholar",
-      },
-      {
-        degree: "Bachelor of Science in Computer Science & Engineering",
-        institution: "Boston University",
-        year: "2012",
-        honors: "Summa Cum Laude",
-      },
-    ],
+    summary: "",
+    experience: [],
+    education: [],
     certifications: [
-      "AWS Certified Solutions Architect - Professional (SAP-C02)",
-      "Certified Kubernetes Administrator (CKA - Linux Foundation)",
-      "HashiCorp Certified: Terraform Associate",
-      "Google Cloud Certified Professional Cloud Architect",
+      "AWS Certified Solutions Architect",
+      "Certified Kubernetes Administrator (CKA)",
     ],
   },
   goals: [
@@ -877,34 +811,15 @@ export function generateDynamicPlainTextResume(state: ProfileState): string {
   const { name, title, contact, resume } = state;
   const categorizedSkills = extractSkillsFromState(state);
   
-  return `================================================================================
-${name.toUpperCase()}
-${title.toUpperCase()}
-================================================================================
-Email: ${contact.email} | Phone: ${contact.phone}
-Location: ${contact.location}
-GitHub: ${contact.github} | LinkedIn: ${contact.linkedin}
+  const activeDomains = (Object.keys(categorizedSkills) as CompetencyArea[]).filter(
+    (k) => categorizedSkills[k].length > 0
+  );
+  
+  const autoSummary = resume.summary?.trim() || 
+    `${title} with verified engineering competencies across ${activeDomains.length > 0 ? activeDomains.join(", ") : "Full-Stack Software Engineering"}. Actively maintaining ${state.learnings.length} verified technical diary milestones and ${state.projects.length} architectural projects demonstrating tangible performance optimizations and enterprise scalability.`;
 
---------------------------------------------------------------------------------
-PROFESSIONAL SUMMARY
---------------------------------------------------------------------------------
-${resume.summary}
-
---------------------------------------------------------------------------------
-DYNAMICALLY EXTRACTED TECHNICAL COMPETENCIES (Derived from Logs & Projects)
---------------------------------------------------------------------------------
-* Frontend: ${categorizedSkills.Frontend.length > 0 ? categorizedSkills.Frontend.join(", ") : "Modern Web Frameworks, TypeScript"}
-* Backend: ${categorizedSkills.Backend.length > 0 ? categorizedSkills.Backend.join(", ") : "Microservices, Distributed Streaming"}
-* Cloud & DevOps: ${categorizedSkills["Cloud & DevOps"].length > 0 ? categorizedSkills["Cloud & DevOps"].join(", ") : "AWS, Kubernetes, CI/CD"}
-* Data & AI: ${categorizedSkills["Data & AI"].length > 0 ? categorizedSkills["Data & AI"].join(", ") : "Columnar DBs, Vector Search"}
-* System Design: ${categorizedSkills["System Design"].length > 0 ? categorizedSkills["System Design"].join(", ") : "High Availability, Event-Driven Architecture"}
-
---------------------------------------------------------------------------------
-RECENT VERIFIED LEARNING MILESTONES
---------------------------------------------------------------------------------
-${state.learnings.slice(0, 5).map((l) => `* [${l.masteryLevel.toUpperCase()}] ${l.technology} (${l.category}): ${l.keyTakeaway}`).join("\n")}
-
---------------------------------------------------------------------------------
+  const experienceText = resume.experience && resume.experience.length > 0
+    ? `--------------------------------------------------------------------------------
 PROFESSIONAL EXPERIENCE
 --------------------------------------------------------------------------------
 ${resume.experience
@@ -916,35 +831,64 @@ Technologies: ${exp.technologies.join(", ")}
 ${exp.bullets.map((b) => `* ${b}`).join("\n")}
 `
   )
-  .join("\n")}
+  .join("\n")}`
+    : `--------------------------------------------------------------------------------
+VERIFIED ENGINEERING DIARY MILESTONES (Hands-on Technical Proof-of-Work)
+--------------------------------------------------------------------------------
+${state.learnings.map((l) => `* [${l.masteryLevel.toUpperCase()}] ${l.technology} (${l.category}) [Logged ${l.dateLogged}]:
+  ${l.keyTakeaway}${l.tags.length > 0 ? ` (Tags: ${l.tags.join(", ")})` : ""}`).join("\n\n")}`;
+
+  return `================================================================================
+${name.toUpperCase()}
+${title.toUpperCase()}
+================================================================================
+Email: ${contact.email} | Phone: ${contact.phone || "Available Upon Request"}
+Location: ${contact.location}
+GitHub: ${contact.github} | LinkedIn: ${contact.linkedin}
 
 --------------------------------------------------------------------------------
-KEY IMPACT PROJECTS
+PROFESSIONAL SUMMARY
 --------------------------------------------------------------------------------
-${state.projects
-  .slice(0, 4)
+${autoSummary}
+
+--------------------------------------------------------------------------------
+DYNAMICALLY EXTRACTED TECHNICAL COMPETENCIES (Derived from Logs & Projects)
+--------------------------------------------------------------------------------
+* Frontend: ${categorizedSkills.Frontend.length > 0 ? categorizedSkills.Frontend.join(", ") : "Modern Web Frameworks, TypeScript"}
+* Backend: ${categorizedSkills.Backend.length > 0 ? categorizedSkills.Backend.join(", ") : "Microservices, Distributed Streaming"}
+* Cloud & DevOps: ${categorizedSkills["Cloud & DevOps"].length > 0 ? categorizedSkills["Cloud & DevOps"].join(", ") : "AWS, Kubernetes, CI/CD"}
+* Data & AI: ${categorizedSkills["Data & AI"].length > 0 ? categorizedSkills["Data & AI"].join(", ") : "Columnar DBs, Vector Search"}
+* System Design: ${categorizedSkills["System Design"].length > 0 ? categorizedSkills["System Design"].join(", ") : "High Availability, Event-Driven Architecture"}
+
+${experienceText}
+
+--------------------------------------------------------------------------------
+APPLIED ARCHITECTURAL PROJECTS & IMPACT
+--------------------------------------------------------------------------------
+${state.projects.length > 0 ? state.projects
   .map(
-    (p) => `* ${p.title} (${p.domainTag})
-  Problem: ${p.problemSolved}
-  Solution: ${p.solution}
-  Metrics: ${p.metrics.join("; ")}`
+    (p) => `* ${p.title.toUpperCase()} (${p.domainTag})
+  Problem Solved: ${p.problemSolved}
+  Architecture: ${p.solution}
+  Stack: ${p.techStack.join(", ")}
+  Quantifiable Metrics: ${p.metrics.join("; ")}`
   )
-  .join("\n\n")}
+  .join("\n\n") : "* No projects logged yet."}
 
---------------------------------------------------------------------------------
+${resume.education.length > 0 ? `--------------------------------------------------------------------------------
 EDUCATION
 --------------------------------------------------------------------------------
 ${resume.education
   .map((edu) => `* ${edu.degree} - ${edu.institution} (${edu.year})${edu.honors ? ` [${edu.honors}]` : ""}`)
   .join("\n")}
-
---------------------------------------------------------------------------------
+` : ""}
+${resume.certifications.length > 0 ? `--------------------------------------------------------------------------------
 CERTIFICATIONS
 --------------------------------------------------------------------------------
 ${resume.certifications.map((c) => `* ${c}`).join("\n")}
-
+` : ""}
 ================================================================================
-Document auto-generated from MYRESUME Engine (${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" })})
+Document auto-generated from MYRESUME Personal Engineering Diary (${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" })})
 Total Verified Milestones Logged: ${state.learnings.length}
 ================================================================================
 `;

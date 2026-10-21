@@ -18,15 +18,41 @@ import {
   Trash2,
   Sparkles,
   Target,
-  ArrowRight
+  ArrowRight,
+  Edit3
 } from "lucide-react";
 import { GithubIcon } from "@/components/Icons";
 
 export function ProjectGrid() {
-  const { state, addProject, deleteProject } = useProfile();
+  const { state, addProject, updateProject, deleteProject } = useProfile();
   const [selectedFilter, setSelectedFilter] = useState<string>("All");
   const [activeCaseStudyProject, setActiveCaseStudyProject] = useState<Project | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+
+  // Edit Project Form State
+  const [editProjectData, setEditProjectData] = useState({
+    id: "",
+    title: "",
+    category: "Full-Stack Web",
+    domainTag: "Full-Stack & Cloud",
+    projectUse: "",
+    targetUsers: "",
+    problemSolved: "",
+    solution: "",
+    architectureNotes: "",
+    novelty: "",
+    tagInput: "",
+    techStackList: [] as string[],
+    metric1: "",
+    metric2: "",
+    metric3: "",
+    liveUrl: "",
+    repoUrl: "",
+    challenges: "",
+    keyLearnings: "",
+  });
 
   // New Project Form State
   const [newProject, setNewProject] = useState({
@@ -143,6 +169,115 @@ export function ProjectGrid() {
     setFormErrors({});
   };
 
+  const handleOpenEditModal = (project: Project) => {
+    setEditingProject(project);
+    setEditProjectData({
+      id: project.id,
+      title: project.title,
+      category: project.category,
+      domainTag: project.domainTag || project.category,
+      projectUse: project.caseStudy?.projectUse || "",
+      targetUsers: project.caseStudy?.targetUsers || "Engineers & Architects",
+      problemSolved: project.problemSolved || project.caseStudy?.problemStatement || "",
+      solution: project.solution || project.caseStudy?.overview || "",
+      architectureNotes: project.caseStudy?.architectureNotes || "",
+      novelty: project.noveltySnippet || project.caseStudy?.novelty || (project.caseStudy?.noveltyHighlights?.[0] || ""),
+      tagInput: "",
+      techStackList: [...project.techStack],
+      metric1: project.metrics[0] || "",
+      metric2: project.metrics[1] || "",
+      metric3: project.metrics[2] || "",
+      liveUrl: project.liveUrl || "",
+      repoUrl: project.repoUrl || "",
+      challenges: project.caseStudy?.challenges?.join("; ") || "",
+      keyLearnings: project.caseStudy?.keyLearnings?.join("; ") || "",
+    });
+    setFormErrors({});
+    setIsEditModalOpen(true);
+  };
+
+  const handleAddEditTag = () => {
+    if (!editProjectData.tagInput.trim()) return;
+    const newTags = editProjectData.tagInput
+      .split(",")
+      .map((t) => t.trim())
+      .filter((t) => t.length > 0 && !editProjectData.techStackList.includes(t));
+    if (newTags.length > 0) {
+      setEditProjectData((prev) => ({
+        ...prev,
+        techStackList: [...prev.techStackList, ...newTags],
+        tagInput: "",
+      }));
+    }
+  };
+
+  const handleRemoveEditTag = (tagToRemove: string) => {
+    setEditProjectData((prev) => ({
+      ...prev,
+      techStackList: prev.techStackList.filter((t) => t !== tagToRemove),
+    }));
+  };
+
+  const handleUpdateProjectSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProject) return;
+
+    const errs: Record<string, string> = {};
+    if (!editProjectData.title.trim()) errs.title = "Project title is required.";
+    if (!editProjectData.problemSolved.trim()) errs.problemSolved = "Problem statement is required.";
+    if (!editProjectData.solution.trim()) errs.solution = "Solution description is required.";
+
+    if (Object.keys(errs).length > 0) {
+      setFormErrors(errs);
+      return;
+    }
+
+    const metrics = [editProjectData.metric1, editProjectData.metric2, editProjectData.metric3].filter(
+      (m) => m && m.trim().length > 0
+    );
+
+    const updatedData: Partial<Project> = {
+      title: editProjectData.title.trim(),
+      category: editProjectData.category,
+      domainTag: editProjectData.domainTag.trim() || editProjectData.category,
+      problemSolved: editProjectData.problemSolved.trim(),
+      solution: editProjectData.solution.trim(),
+      noveltySnippet: editProjectData.novelty.trim() || undefined,
+      techStack: editProjectData.techStackList.length > 0 ? editProjectData.techStackList : ["TypeScript", "Next.js"],
+      metrics: metrics.length > 0 ? metrics : ["⚡ Measurable enterprise performance impact"],
+      liveUrl: editProjectData.liveUrl.trim() || undefined,
+      repoUrl: editProjectData.repoUrl.trim() || undefined,
+      caseStudy: {
+        ...(editingProject.caseStudy || {}),
+        overview: editProjectData.solution.trim(),
+        projectUse: editProjectData.projectUse.trim() || editProjectData.domainTag.trim() || editProjectData.category,
+        targetUsers: editProjectData.targetUsers.trim() || "Engineers & Architects",
+        problemStatement: editProjectData.problemSolved.trim(),
+        expertSolution: editProjectData.solution.trim(),
+        architectureNotes: editProjectData.architectureNotes.trim() || editProjectData.solution.trim(),
+        novelty: editProjectData.novelty.trim() || `Optimized implementation utilizing ${editProjectData.techStackList.slice(0, 3).join(", ")}.`,
+        noveltyHighlights: editProjectData.novelty.trim()
+          ? [editProjectData.novelty.trim()]
+          : (editingProject.caseStudy?.noveltyHighlights || ["Engineered custom decoupled pipeline"]),
+        challenges: editProjectData.challenges ? editProjectData.challenges.split(";").map((c) => c.trim()) : (editingProject.caseStudy?.challenges || []),
+        keyLearnings: editProjectData.keyLearnings ? editProjectData.keyLearnings.split(";").map((l) => l.trim()) : (editingProject.caseStudy?.keyLearnings || []),
+      },
+    };
+
+    updateProject(editingProject.id, updatedData);
+
+    if (activeCaseStudyProject?.id === editingProject.id) {
+      setActiveCaseStudyProject({
+        ...editingProject,
+        ...updatedData,
+        caseStudy: updatedData.caseStudy as any,
+      });
+    }
+
+    setIsEditModalOpen(false);
+    setEditingProject(null);
+  };
+
   return (
     <section id="projects" className="py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -248,20 +383,35 @@ export function ProjectGrid() {
                       )}
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (window.confirm(`Are you sure you want to delete "${project.title}"?`)) {
-                          deleteProject(project.id);
-                        }
-                      }}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-transparent hover:border-rose-200 dark:hover:border-rose-800/50 transition-all duration-200"
-                      title={`Delete "${project.title}"`}
-                      aria-label={`Delete "${project.title}"`}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenEditModal(project);
+                        }}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 border border-cyan-200 dark:border-cyan-800/60 shadow-sm transition-colors"
+                        title={`Edit "${project.title}"`}
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Edit</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm(`Are you sure you want to delete "${project.title}"?`)) {
+                            deleteProject(project.id);
+                          }
+                        }}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-transparent hover:border-rose-200 dark:hover:border-rose-800/50 transition-all duration-200"
+                        title={`Delete "${project.title}"`}
+                        aria-label={`Delete "${project.title}"`}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Project Title with Interactive Arrow Cue */}
@@ -389,6 +539,19 @@ export function ProjectGrid() {
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
+                        handleOpenEditModal(project);
+                      }}
+                      className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:border-cyan-500/40 transition-colors"
+                      title="Edit project details"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Edit</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setActiveCaseStudyProject(project);
                       }}
                       className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 transition-all group-hover:bg-indigo-600 group-hover:text-white dark:group-hover:bg-indigo-500"
@@ -411,6 +574,7 @@ export function ProjectGrid() {
         isOpen={!!activeCaseStudyProject}
         onClose={() => setActiveCaseStudyProject(null)}
         onSelectProject={setActiveCaseStudyProject}
+        onEditProject={handleOpenEditModal}
       />
 
       {/* Add Project Modal */}
@@ -633,6 +797,296 @@ export function ProjectGrid() {
                 >
                   <Check className="w-4 h-4" />
                   <span>Save Project &amp; Sync Resume</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Project Modal */}
+      {isEditModalOpen && editingProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div
+            className="fixed inset-0 bg-slate-950/70 backdrop-blur-md"
+            onClick={() => setIsEditModalOpen(false)}
+          />
+          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto glass-panel bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 z-10 space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
+                  <Edit3 className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-lg text-slate-900 dark:text-white">
+                      Edit Applied Project
+                    </h3>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                      ID: {editingProject.id}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Modify problem statement, architectural solution, novelty, tech stack, and impact metrics.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditModalOpen(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateProjectSubmit} className="space-y-5">
+              {/* Title & Category */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Project Title <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Distributed Task Queue"
+                    value={editProjectData.title}
+                    onChange={(e) => setEditProjectData({ ...editProjectData, title: e.target.value })}
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                  />
+                  {formErrors.title && (
+                    <p className="text-[11px] text-rose-500">{formErrors.title}</p>
+                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Category Domain
+                  </label>
+                  <select
+                    value={editProjectData.category}
+                    onChange={(e) =>
+                      setEditProjectData({ ...editProjectData, category: e.target.value, domainTag: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white dark:bg-slate-900"
+                  >
+                    <option value="Distributed Systems">Distributed Systems</option>
+                    <option value="Full-Stack Web">Full-Stack Web</option>
+                    <option value="AI & Distributed Systems">AI &amp; Distributed Systems</option>
+                    <option value="Cloud Security">Cloud Security</option>
+                    <option value="Data & Observability">Data &amp; Observability</option>
+                    <option value="Developer Tooling">Developer Tooling</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Practical Use & Target Users */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Practical Use &amp; Purpose
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="What is this project used for in production?"
+                    value={editProjectData.projectUse}
+                    onChange={(e) => setEditProjectData({ ...editProjectData, projectUse: e.target.value })}
+                    className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 resize-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Target Users / Audience
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="Who uses this project?"
+                    value={editProjectData.targetUsers}
+                    onChange={(e) => setEditProjectData({ ...editProjectData, targetUsers: e.target.value })}
+                    className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 resize-none"
+                  />
+                </div>
+              </div>
+
+              {/* Problem Solved */}
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Problem Statement (Bottleneck, Failure Mode, Cost) <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Describe the production bottleneck, legacy failure mode, or latency/scale failure..."
+                  value={editProjectData.problemSolved}
+                  onChange={(e) => setEditProjectData({ ...editProjectData, problemSolved: e.target.value })}
+                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 resize-none"
+                />
+                {formErrors.problemSolved && (
+                  <p className="text-[11px] text-rose-500">{formErrors.problemSolved}</p>
+                )}
+              </div>
+
+              {/* Solved Expert Solution */}
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Solved Expert Solution &amp; Architecture <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Architectural design, step-by-step pipeline, and engineering patterns..."
+                  value={editProjectData.solution}
+                  onChange={(e) => setEditProjectData({ ...editProjectData, solution: e.target.value })}
+                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 resize-none"
+                />
+                {formErrors.solution && (
+                  <p className="text-[11px] text-rose-500">{formErrors.solution}</p>
+                )}
+              </div>
+
+              {/* Novelty ("How I Solved This Problem") */}
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Novelty &amp; Breakthrough: How I Solved This Problem</span>
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="The secret sauce, custom algorithms, non-obvious optimizations, or unique techniques you invented..."
+                  value={editProjectData.novelty}
+                  onChange={(e) => setEditProjectData({ ...editProjectData, novelty: e.target.value })}
+                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-indigo-300 dark:border-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
+                />
+              </div>
+
+              {/* Tech Stack Pills Manager */}
+              <div className="space-y-2 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                  <span>Tech Stack Pills (Syncs to Resume Engine)</span>
+                  <span className="text-[11px] font-mono text-slate-400">
+                    {editProjectData.techStackList.length} technologies
+                  </span>
+                </label>
+
+                {/* Current Tag Pills */}
+                <div className="flex flex-wrap gap-1.5 min-h-[32px] p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                  {editProjectData.techStackList.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800/60"
+                    >
+                      <span>{tag}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveEditTag(tag)}
+                        className="hover:text-rose-500 rounded p-0.5"
+                        title={`Remove ${tag}`}
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  ))}
+                  {editProjectData.techStackList.length === 0 && (
+                    <span className="text-xs text-slate-400 italic">No tags added yet. Add below.</span>
+                  )}
+                </div>
+
+                {/* Add Tag Input */}
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Type technology name (e.g. Kafka, Redis, WebAssembly) and click Add"
+                    value={editProjectData.tagInput}
+                    onChange={(e) => setEditProjectData({ ...editProjectData, tagInput: e.target.value })}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddEditTag();
+                      }
+                    }}
+                    className="flex-1 px-3 py-2 text-xs rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddEditTag}
+                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-200 dark:bg-slate-700 hover:bg-cyan-500 hover:text-white text-slate-800 dark:text-slate-200 transition-colors"
+                  >
+                    + Add Tag
+                  </button>
+                </div>
+              </div>
+
+              {/* Quantifiable Impact Metrics */}
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Quantifiable Telemetry Benchmarks &amp; Impact Metrics
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <input
+                    type="text"
+                    placeholder="⚡ Slashed latency by 45%"
+                    value={editProjectData.metric1}
+                    onChange={(e) => setEditProjectData({ ...editProjectData, metric1: e.target.value })}
+                    className="px-3 py-2 text-xs rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700"
+                  />
+                  <input
+                    type="text"
+                    placeholder="📈 Scaled to 100k+ active users"
+                    value={editProjectData.metric2}
+                    onChange={(e) => setEditProjectData({ ...editProjectData, metric2: e.target.value })}
+                    className="px-3 py-2 text-xs rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700"
+                  />
+                  <input
+                    type="text"
+                    placeholder="💰 Saved $40k/yr compute"
+                    value={editProjectData.metric3}
+                    onChange={(e) => setEditProjectData({ ...editProjectData, metric3: e.target.value })}
+                    className="px-3 py-2 text-xs rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700"
+                  />
+                </div>
+              </div>
+
+              {/* URLs */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Live Demo URL (Optional)
+                  </label>
+                  <input
+                    type="url"
+                    placeholder="https://..."
+                    value={editProjectData.liveUrl}
+                    onChange={(e) => setEditProjectData({ ...editProjectData, liveUrl: e.target.value })}
+                    className="w-full px-4 py-2 text-xs rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    GitHub Code Repository (Optional)
+                  </label>
+                  <input
+                    type="url"
+                    placeholder="https://github.com/..."
+                    value={editProjectData.repoUrl}
+                    onChange={(e) => setEditProjectData({ ...editProjectData, repoUrl: e.target.value })}
+                    className="w-full px-4 py-2 text-xs rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700"
+                  />
+                </div>
+              </div>
+
+              {/* Submit Buttons */}
+              <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-200 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-semibold text-xs sm:text-sm shadow-md transition-all"
+                >
+                  <Check className="w-4 h-4" />
+                  <span>Save Changes &amp; Recompute Resume</span>
                 </button>
               </div>
             </form>
