@@ -80,7 +80,7 @@ export function ProfileView({ initialSection }: ProfileViewProps) {
     {
       title: "Frontend Engineering",
       icon: Code2,
-      skills: ["React 19", "Next.js 16", "TypeScript", "Tailwind CSS", "HTML5 & CSS3", "State Management", "Responsive UI"],
+      skills: ["React 19", "Next.js", "TypeScript", "Tailwind CSS", "HTML5 & CSS3", "State Management", "Responsive UI"],
     },
     {
       title: "Backend & Systems",
@@ -153,7 +153,7 @@ export function ProfileView({ initialSection }: ProfileViewProps) {
                         <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mx-auto">
                           <Globe className="w-4 h-4" />
                         </div>
-                        <span className="text-[10px] font-mono text-cyan-300 block">Next.js 16 + React</span>
+                        <span className="text-[10px] font-mono text-cyan-300 block">Next.js + React</span>
                       </div>
                     )}
                     {idx === 1 && (
@@ -424,7 +424,7 @@ export function ProfileView({ initialSection }: ProfileViewProps) {
                 Hello! I am <strong className="text-white font-semibold">Tharanesh Selvam</strong>, a Full-Stack Software Engineer &amp; Cloud Architect pursuing an M.Tech in Computer Science and Engineering. I build scalable, high-performance web applications and cloud architectures with clean code principles.
               </p>
               <p>
-                My technical foundation spans React 19, Next.js 16, TypeScript, Node.js, and cloud systems like AWS. I love tackling complex software engineering challenges, integrating geospatial pipelines (Land Stack), designing machine learning experiments, and building accessible UI systems.
+                My technical foundation spans React 19, TypeScript, Node.js, and cloud systems like AWS. I love tackling complex software engineering challenges, integrating geospatial pipelines (Land Stack), designing machine learning experiments, and building accessible UI systems.
               </p>
               <p>
                 I am actively open to <strong className="text-cyan-300 font-semibold">software engineering internships, full-stack development, and cloud architecture opportunities</strong>.

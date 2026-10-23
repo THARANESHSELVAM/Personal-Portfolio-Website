@@ -132,7 +132,7 @@ export interface ProfileState {
 export const INITIAL_LEARNINGS: LearningEntry[] = [
   {
     id: "learn-1",
-    technology: "Next.js 16 & React 19 App Router",
+    technology: "Next.js & React 19 App Router",
     category: "Frontend",
     keyTakeaway: "Built dynamic client and server component hierarchies, understanding React 19 transitions, action hooks, and streaming SSR for fast LCP.",
     repoOrDemoUrl: "https://github.com/THARANESHSELVAM/Personal-Portfolio-Website",
@@ -199,7 +199,7 @@ export const INITIAL_PROJECTS: Project[] = [
     category: "Full-Stack Web",
     domainTag: "Full-Stack Web",
     featured: true,
-    noveltySnippet: "Next.js 16 App Router, 1-Click GitHub API Importer, and Accessible Design Tokens",
+    noveltySnippet: "Next.js App Router, 1-Click GitHub API Importer, and Accessible Design Tokens",
     problemSolved: "Traditional developer resumes are static and fail to demonstrate actual hands-on coding proficiency or live repository integration.",
     solution: "A modern, responsive portfolio built with Next.js, React and Tailwind CSS featuring dynamic GitHub sync and accessible UI.",
     techStack: ["Next.js", "React", "Tailwind"],
@@ -215,7 +215,7 @@ export const INITIAL_PROJECTS: Project[] = [
       projectUse: "Primary portfolio and technical demonstration platform for recruiting teams, hiring managers, and engineering peer reviews.",
       targetUsers: "Technical Recruiters, Engineering Hiring Managers, Peer Developers.",
       problemStatement: "Developers need a clean, high-performance portfolio to showcase real projects, verified skills, and technical depth.",
-      expertSolution: "Built a bespoke application utilizing Next.js 16 App Router, React 19 hooks, and TypeScript with clean cyber-cyan glass design tokens.",
+      expertSolution: "Built a bespoke application utilizing Next.js App Router, React 19 hooks, and TypeScript with clean cyber-cyan glass design tokens.",
       novelty: "1-Click GitHub REST API Integration auto-populating projects and diary entries with verified repository metadata.",
       noveltyHighlights: [
         "Client-side GitHub REST API repository auto-importer with language parsing",

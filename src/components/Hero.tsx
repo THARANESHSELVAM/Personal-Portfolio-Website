@@ -192,7 +192,7 @@ export function Hero() {
                       <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-ping" />
                       <span>READY</span>
                     </span>
-                    <span className="text-slate-500">Next.js 16 + React 19</span>
+                    <span className="text-slate-500">Next.js + React 19</span>
                   </div>
                 </div>
 

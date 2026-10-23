@@ -39,7 +39,7 @@ export function Footer() {
               </span>
             </div>
             <p className="text-xs text-slate-400 max-w-sm">
-              Full-Stack Software Engineer &amp; Cloud Architect. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS.
+              Full-Stack Software Engineer &amp; Cloud Architect. Built with Next.js, React 19, TypeScript, and Tailwind CSS.
             </p>
           </div>
 
