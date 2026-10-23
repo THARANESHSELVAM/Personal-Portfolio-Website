@@ -23,7 +23,7 @@ import {
   createStarterWorkspace,
 } from "@/lib/datasetLoader";
 
-export type WorkspaceTab = "profile" | "diary" | "projects" | "resume";
+export type WorkspaceTab = "profile" | "diary" | "projects" | "skills" | "resume" | "live-ats";
 
 export interface SkillGapInsight {
   type: "tip" | "warning" | "achievement";

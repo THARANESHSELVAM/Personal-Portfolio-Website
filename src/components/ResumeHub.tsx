@@ -22,7 +22,7 @@ import {
   BookOpen
 } from "lucide-react";
 
-export function ResumeHub() {
+export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean } = {}) {
   const { state, extractedSkills, getPlainTextResume, currentUser } = useProfile();
   const [viewMode, setViewMode] = useState<"ats" | "timeline">("ats");
   const [copied, setCopied] = useState(false);
@@ -68,7 +68,7 @@ export function ResumeHub() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-lime-400 bg-lime-500/10 border border-lime-500/20 mb-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 mb-3">
             <FileText className="w-3.5 h-3.5" />
             <span>LIVE AUTO-GENERATED ATS ENGINE</span>
           </div>
@@ -89,7 +89,7 @@ export function ResumeHub() {
               onClick={() => setViewMode("ats")}
               className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
                 viewMode === "ats"
-                  ? "bg-white dark:bg-slate-900 text-lime-400 shadow-sm"
+                  ? "bg-white dark:bg-slate-900 text-cyan-400 shadow-sm"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -101,7 +101,7 @@ export function ResumeHub() {
               onClick={() => setViewMode("timeline")}
               className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
                 viewMode === "timeline"
-                  ? "bg-white dark:bg-slate-900 text-lime-400 shadow-sm"
+                  ? "bg-white dark:bg-slate-900 text-cyan-400 shadow-sm"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -115,7 +115,7 @@ export function ResumeHub() {
             <button
               type="button"
               onClick={handlePrintPdf}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold shadow-md shadow-lime-400/20 transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-cyan-400 hover:bg-lime-300 text-slate-950 font-bold shadow-md shadow-lime-400/20 transition-all"
               title="Print or Save High-Resolution PDF"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -128,7 +128,7 @@ export function ResumeHub() {
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold glass-panel text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700 transition-all"
               title="Download clean plain-text resume for legacy ATS"
             >
-              <Download className="w-3.5 h-3.5 text-lime-400" />
+              <Download className="w-3.5 h-3.5 text-cyan-400" />
               <span>Download .txt</span>
             </button>
 
@@ -166,13 +166,13 @@ export function ResumeHub() {
               <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase text-slate-900 dark:text-white">
                 {name}
               </h1>
-              <p className="text-base font-semibold text-lime-400">
+              <p className="text-base font-semibold text-cyan-400">
                 {title}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs text-slate-600 dark:text-slate-400 pt-1">
                 {contact.location && <span>{contact.location}</span>}
                 {contact.location && <span>•</span>}
-                <a href={`mailto:${contact.email}`} className="hover:underline text-lime-400">
+                <a href={`mailto:${contact.email}`} className="hover:underline text-cyan-400">
                   {contact.email}
                 </a>
                 {contact.phone && (
@@ -184,7 +184,7 @@ export function ResumeHub() {
                 {contact.linkedin && (
                   <>
                     <span>•</span>
-                    <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="hover:underline text-lime-400">
+                    <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="hover:underline text-cyan-400">
                       LinkedIn
                     </a>
                   </>
@@ -192,7 +192,7 @@ export function ResumeHub() {
                 {contact.github && (
                   <>
                     <span>•</span>
-                    <a href={contact.github} target="_blank" rel="noopener noreferrer" className="hover:underline text-lime-400">
+                    <a href={contact.github} target="_blank" rel="noopener noreferrer" className="hover:underline text-cyan-400">
                       GitHub
                     </a>
                   </>
@@ -215,7 +215,7 @@ export function ResumeHub() {
               <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
                 <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
                   <span>Core Technical Competencies</span>
-                  <span className="text-[10px] font-mono lowercase px-2 py-0.5 rounded bg-lime-500/10 text-lime-400 font-normal">
+                  <span className="text-[10px] font-mono lowercase px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 font-normal">
                     auto-synchronized
                   </span>
                 </h2>
@@ -281,7 +281,7 @@ export function ResumeHub() {
                         <h3 className="text-base font-bold text-slate-900 dark:text-white">
                           {project.title}
                         </h3>
-                        <div className="text-xs sm:text-sm font-semibold text-lime-400">
+                        <div className="text-xs sm:text-sm font-semibold text-cyan-400">
                           {project.domainTag || project.category}
                           {project.caseStudy?.projectUse && (
                             <span className="font-normal text-slate-500 dark:text-slate-400">
@@ -322,7 +322,7 @@ export function ResumeHub() {
                 <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
                   <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
                     <span>Verified Learning Diary Milestones</span>
-                    <span className="text-[10px] font-mono lowercase px-2 py-0.5 rounded bg-lime-500/10 text-lime-400 font-normal">
+                    <span className="text-[10px] font-mono lowercase px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 font-normal">
                       from diary ({learnings.length})
                     </span>
                   </h2>
@@ -331,7 +331,7 @@ export function ResumeHub() {
                   {learnings.slice(0, 6).map((l: LearningEntry) => (
                     <li key={l.id} className="leading-relaxed">
                       <span className="font-bold text-slate-900 dark:text-white">{l.technology}</span>{" "}
-                      <span className="text-xs font-mono text-lime-400">
+                      <span className="text-xs font-mono text-cyan-400">
                         [{l.masteryLevel}]
                       </span>
                       : {l.keyTakeaway}
@@ -355,7 +355,7 @@ export function ResumeHub() {
                         <h3 className="text-base font-bold text-slate-900 dark:text-white">
                           {exp.role}
                         </h3>
-                        <div className="text-xs sm:text-sm font-semibold text-lime-400">
+                        <div className="text-xs sm:text-sm font-semibold text-cyan-400">
                           {exp.company} — <span className="font-normal text-slate-500">{exp.location}</span>
                         </div>
                       </div>
@@ -417,7 +417,7 @@ export function ResumeHub() {
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
                   {resume.certifications.map((cert, idx) => (
                     <li key={idx} className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-lime-400" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
                       <span>{cert}</span>
                     </li>
                   ))}
@@ -430,20 +430,20 @@ export function ResumeHub() {
              VIEW 2: VISUAL TIMELINE VIEW (Chronological Learning & Project Feed)
              ========================================================================= */
           <div className="space-y-8 animate-in fade-in duration-300">
-            <div className="relative pl-6 sm:pl-8 border-l-2 border-lime-500/30 space-y-10">
+            <div className="relative pl-6 sm:pl-8 border-l-2 border-cyan-500/30 space-y-10">
               {/* Projects in Timeline */}
               {projects.map((project) => (
                 <div key={project.id} className="relative group">
-                  <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white dark:bg-slate-950 border-4 border-lime-400 group-hover:scale-125 transition-transform" />
+                  <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white dark:bg-slate-950 border-4 border-cyan-400 group-hover:scale-125 transition-transform" />
 
-                  <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-lime-400/50 shadow-sm transition-all duration-300">
+                  <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-cyan-400/50 shadow-sm transition-all duration-300">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-mono font-semibold text-lime-400">
+                          <span className="text-xs font-mono font-semibold text-cyan-400">
                             {project.category}
                           </span>
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-lime-500/10 text-lime-300 font-mono">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 font-mono">
                             Applied Project
                           </span>
                         </div>
@@ -452,7 +452,7 @@ export function ResumeHub() {
                         </h3>
                       </div>
 
-                      <div className="p-2 rounded-xl bg-lime-500/10 text-lime-400 self-start">
+                      <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 self-start">
                         <Briefcase className="w-5 h-5" />
                       </div>
                     </div>
@@ -463,7 +463,7 @@ export function ResumeHub() {
 
                     {/* Metrics Callout */}
                     <div className="space-y-1 mb-4 p-3 rounded-xl bg-slate-900 text-white text-xs">
-                      <div className="text-[10px] font-mono text-lime-400 uppercase font-semibold">
+                      <div className="text-[10px] font-mono text-cyan-400 uppercase font-semibold">
                         Quantifiable Impact
                       </div>
                       {project.metrics.map((m, i) => (
@@ -490,9 +490,9 @@ export function ResumeHub() {
               {/* Diary Milestones in Timeline */}
               {learnings.map((log: LearningEntry) => (
                 <div key={log.id} className="relative group">
-                  <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white dark:bg-slate-950 border-4 border-lime-400 group-hover:scale-125 transition-transform" />
+                  <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white dark:bg-slate-950 border-4 border-cyan-400 group-hover:scale-125 transition-transform" />
 
-                  <div className="glass-panel p-5 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-lime-400/50 shadow-sm transition-all duration-300">
+                  <div className="glass-panel p-5 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-cyan-400/50 shadow-sm transition-all duration-300">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-bold text-slate-900 dark:text-white">
@@ -518,7 +518,7 @@ export function ResumeHub() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
               <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
                 <div className="flex items-center gap-2 text-base font-bold text-slate-900 dark:text-white">
-                  <GraduationCap className="w-5 h-5 text-lime-400" />
+                  <GraduationCap className="w-5 h-5 text-cyan-400" />
                   <span>Academic Credentials</span>
                 </div>
                 <div className="space-y-4">

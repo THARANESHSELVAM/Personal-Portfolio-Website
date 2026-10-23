@@ -549,7 +549,7 @@ export function ProjectGrid() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-lime-400 bg-lime-500/10 border border-lime-500/20 mb-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 mb-3">
             <Briefcase className="w-3.5 h-3.5" />
             <span>APPLIED WORK &amp; IMPACT</span>
           </div>
@@ -576,7 +576,7 @@ export function ProjectGrid() {
                 onClick={() => setSelectedFilter(cat)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 border ${
                   selectedFilter === cat
-                    ? "bg-lime-400 text-slate-950 border-lime-400 font-bold shadow-sm shadow-lime-400/20"
+                    ? "bg-gradient-to-r from-teal-400 to-cyan-500 text-slate-950 border-cyan-400 font-bold shadow-sm shadow-cyan-500/25"
                     : "glass-panel text-slate-400 hover:text-white border-slate-800 hover:border-slate-700"
                 }`}
               >
@@ -590,10 +590,10 @@ export function ProjectGrid() {
             <button
               type="button"
               onClick={() => setIsGitHubBrowserOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white font-medium text-xs border border-slate-800 hover:border-lime-500/40 shadow-sm transition-all active:scale-95 whitespace-nowrap"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white font-medium text-xs border border-slate-800 hover:border-cyan-400/40 shadow-sm transition-all active:scale-95 whitespace-nowrap"
               title="Browse public GitHub repos and 1-click import into portfolio"
             >
-              <GithubIcon className="w-4 h-4 text-lime-400" />
+              <GithubIcon className="w-4 h-4 text-cyan-400" />
               <span>Browse GitHub Repos</span>
             </button>
 
@@ -606,7 +606,7 @@ export function ProjectGrid() {
                 setPendingDiscoveredSkills([]);
                 setIsAddModalOpen(true);
               }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs shadow-md shadow-lime-400/20 transition-all active:scale-95 whitespace-nowrap"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/25 transition-all active:scale-95 whitespace-nowrap"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Add Project Entry</span>
@@ -616,15 +616,15 @@ export function ProjectGrid() {
 
         {/* Real-time Status Notification Toast */}
         {statusToast && (
-          <div className="mb-8 p-4 rounded-2xl bg-lime-950/60 border border-lime-500/30 text-lime-200 flex items-center justify-between gap-3 shadow-lg shadow-lime-500/5 animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="mb-8 p-4 rounded-2xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-200 flex items-center justify-between gap-3 shadow-lg shadow-cyan-500/10 animate-in fade-in slide-in-from-top-2 duration-300">
             <div className="flex items-center gap-2.5 text-xs sm:text-sm font-medium">
-              <CheckCircle2 className="w-4 h-4 text-lime-400 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
               <span>{statusToast.message}</span>
             </div>
             <button
               type="button"
               onClick={() => setStatusToast(null)}
-              className="p-1 rounded-lg hover:bg-lime-500/20 text-lime-400 transition-colors"
+              className="p-1 rounded-lg hover:bg-cyan-500/20 text-cyan-400 transition-colors"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -634,7 +634,7 @@ export function ProjectGrid() {
         {/* Projects Multi-Column Grid */}
         {filteredProjects.length === 0 ? (
           <div className="text-center py-16 px-4 glass-panel rounded-3xl border border-slate-200 dark:border-slate-800 max-w-lg mx-auto space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-lime-500/10 text-lime-400 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mx-auto">
               <Briefcase className="w-6 h-6" />
             </div>
             <div className="space-y-1">
@@ -648,7 +648,7 @@ export function ProjectGrid() {
             <button
               type="button"
               onClick={() => setIsAddModalOpen(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs shadow-md shadow-lime-400/20 transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/25 transition-all"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Add New Project</span>
@@ -668,13 +668,13 @@ export function ProjectGrid() {
                     setActiveCaseStudyProject(project);
                   }
                 }}
-                className="cursor-pointer glass-panel rounded-3xl border border-slate-800/90 p-6 flex flex-col justify-between hover:border-lime-400/50 hover:shadow-2xl hover:shadow-lime-400/10 hover:-translate-y-1 transition-all duration-300 group relative text-left bg-[#0e1320]/80"
+                className="cursor-pointer glass-panel rounded-3xl border border-slate-800/90 p-6 flex flex-col justify-between hover:border-cyan-400/50 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300 group relative text-left bg-[#090f1d]/90 border-cyan-900/30"
               >
                 <div className="space-y-4">
                   {/* Domain Tag, Featured Badge & Delete Action */}
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-lime-500/10 text-lime-400 border border-lime-500/20">
+                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                         {project.domainTag}
                       </span>
                       {project.featured && (
@@ -717,11 +717,11 @@ export function ProjectGrid() {
 
                   {/* Project Title with Interactive Arrow Cue */}
                   <div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-lime-400 transition-colors flex items-start justify-between gap-2">
+                    <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors flex items-start justify-between gap-2">
                       <span>{project.title}</span>
-                      <ArrowRight className="w-4 h-4 text-lime-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                      <ArrowRight className="w-4 h-4 text-cyan-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
                     </h3>
-                    <div className="text-[11px] text-lime-400/80 font-mono font-medium mt-1">
+                    <div className="text-[11px] text-cyan-400/80 font-mono font-medium mt-1">
                       Click to inspect deep dive &amp; architecture ↗
                     </div>
                   </div>
@@ -749,9 +749,9 @@ export function ProjectGrid() {
                   {/* Novelty Highlight Chip ("How I Solved It") */}
                   {(project.noveltySnippet || project.caseStudy?.noveltyHighlights?.[0]) && (
                     <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-lime-400 shrink-0 mt-0.5" />
+                      <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
                       <div className="text-[11px] text-slate-300 leading-snug">
-                        <span className="font-bold text-lime-400 font-mono">Novelty: </span>
+                        <span className="font-bold text-cyan-400 font-mono">Novelty: </span>
                         <span>{project.noveltySnippet || project.caseStudy?.noveltyHighlights?.[0]}</span>
                       </div>
                     </div>
@@ -786,7 +786,7 @@ export function ProjectGrid() {
 
                   {/* High-Contrast Dedicated Metrics Callout Block */}
                   <div className="p-4 rounded-2xl bg-slate-900/90 text-white shadow-md border border-slate-800/90 space-y-1.5">
-                    <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-lime-400 font-bold">
+                    <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-cyan-400 font-bold">
                       <TrendingUp className="w-3.5 h-3.5" />
                       <span>Key Benchmarks &amp; Impact</span>
                     </div>
@@ -812,7 +812,7 @@ export function ProjectGrid() {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg bg-lime-400 hover:bg-lime-300 text-slate-950 shadow-sm transition-colors"
+                        className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 text-slate-950 shadow-sm transition-colors"
                         title="View Live Demo"
                       >
                         <span>Live</span>
@@ -842,7 +842,7 @@ export function ProjectGrid() {
                         e.stopPropagation();
                         handleOpenEditModal(project);
                       }}
-                      className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-lime-400 hover:border-lime-500/40 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-cyan-400 hover:border-cyan-400/40 transition-colors"
                       title="Edit project details"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
@@ -855,7 +855,7 @@ export function ProjectGrid() {
                         e.stopPropagation();
                         setActiveCaseStudyProject(project);
                       }}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:text-lime-400 border border-slate-800 hover:border-lime-500/40 transition-all"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:text-cyan-400 border border-slate-800 hover:border-cyan-400/40 transition-all"
                     >
                       <BookOpen className="w-3.5 h-3.5" />
                       <span>Case Study &amp; Novelty</span>
@@ -888,7 +888,7 @@ export function ProjectGrid() {
           <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto glass-panel bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 z-10 space-y-6">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-lime-500/10 text-lime-400">
+                <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
@@ -913,13 +913,13 @@ export function ProjectGrid() {
             <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white border border-slate-800 shadow-xl space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-lime-500/20 text-lime-400 border border-lime-500/30">
+                  <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
                     <GithubIcon className="w-4 h-4" />
                   </div>
                   <div>
                     <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
                       <span>Quick Import from GitHub</span>
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-lime-500/20 text-lime-300 border border-lime-500/30">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                         1-Click Fetch
                       </span>
                     </h4>
@@ -935,7 +935,7 @@ export function ProjectGrid() {
                     type="checkbox"
                     checked={autoLogToDiary}
                     onChange={(e) => setAutoLogToDiary(e.target.checked)}
-                    className="w-3.5 h-3.5 rounded text-lime-400 focus:ring-lime-400/40 border-slate-600"
+                    className="w-3.5 h-3.5 rounded text-cyan-400 focus:ring-cyan-500/40 border-slate-600"
                   />
                   <span>Auto-log new skills to Diary</span>
                 </label>
@@ -958,14 +958,14 @@ export function ProjectGrid() {
                       }
                     }}
                     placeholder="https://github.com/THARANESHSELVAM/your-repo or owner/repo"
-                    className="w-full px-3.5 py-2 text-xs font-mono rounded-xl bg-slate-950/80 border border-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                    className="w-full px-3.5 py-2 text-xs font-mono rounded-xl bg-slate-950/80 border border-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={handleFetchQuickRepo}
                   disabled={isFetchingRepo || !quickRepoUrl.trim()}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs shadow-md shadow-lime-400/20 transition-all disabled:opacity-50 shrink-0"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/25 transition-all disabled:opacity-50 shrink-0"
                 >
                   {isFetchingRepo ? (
                     <>
@@ -1016,7 +1016,7 @@ export function ProjectGrid() {
                     placeholder="e.g. Distributed Task Queue"
                     value={newProject.title}
                     onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
-                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                   />
                   {formErrors.title && (
                     <p className="text-[11px] text-rose-500">{formErrors.title}</p>
@@ -1032,7 +1032,7 @@ export function ProjectGrid() {
                     onChange={(e) =>
                       setNewProject({ ...newProject, category: e.target.value, domainTag: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50 bg-white dark:bg-slate-900"
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white dark:bg-slate-900"
                   >
                     <option value="Distributed Systems">Distributed Systems</option>
                     <option value="Full-Stack Web">Full-Stack Web</option>
@@ -1094,7 +1094,7 @@ export function ProjectGrid() {
 
               {/* Novelty ("How I Solved This Problem") */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-lime-400 flex items-center gap-1.5">
+                <label className="text-xs font-semibold text-cyan-400 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Novelty &amp; Breakthrough: How I Solved This Problem</span>
                 </label>
@@ -1103,7 +1103,7 @@ export function ProjectGrid() {
                   placeholder="The secret sauce, custom algorithms, non-obvious optimizations, or unique techniques you invented..."
                   value={newProject.novelty}
                   onChange={(e) => setNewProject({ ...newProject, novelty: e.target.value })}
-                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50 resize-none"
+                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-none"
                 />
               </div>
 
@@ -1117,7 +1117,7 @@ export function ProjectGrid() {
                   placeholder="e.g. Go, Redis, Docker, gRPC, React"
                   value={newProject.techStackInput}
                   onChange={(e) => setNewProject({ ...newProject, techStackInput: e.target.value })}
-                  className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                  className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 />
               </div>
 
@@ -1190,7 +1190,7 @@ export function ProjectGrid() {
                 </button>
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold font-semibold text-xs sm:text-sm shadow-md transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 text-slate-950 font-bold font-semibold text-xs sm:text-sm shadow-md transition-all"
                 >
                   <Check className="w-4 h-4" />
                   <span>Save Project &amp; Sync Resume</span>
@@ -1211,7 +1211,7 @@ export function ProjectGrid() {
           <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto glass-panel bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 z-10 space-y-6">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-lime-500/10 text-lime-400">
+                <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400">
                   <Edit3 className="w-5 h-5" />
                 </div>
                 <div>
@@ -1219,7 +1219,7 @@ export function ProjectGrid() {
                     <h3 className="font-bold text-lg text-slate-900 dark:text-white">
                       Edit Applied Project
                     </h3>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-lime-500/10 text-lime-400 border border-lime-500/20">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                       ID: {editingProject.id}
                     </span>
                   </div>
@@ -1241,13 +1241,13 @@ export function ProjectGrid() {
             <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2.5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-lg bg-lime-500/10 text-lime-400">
+                  <div className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">
                     <GithubIcon className="w-4 h-4" />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                       <span>Sync Latest from GitHub</span>
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-lime-500/10 text-lime-400 border border-lime-500/20">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                         Safe Re-Sync
                       </span>
                     </h4>
@@ -1262,7 +1262,7 @@ export function ProjectGrid() {
                     type="checkbox"
                     checked={editAutoLogToDiary}
                     onChange={(e) => setEditAutoLogToDiary(e.target.checked)}
-                    className="w-3.5 h-3.5 rounded text-lime-400 focus:ring-lime-400/30"
+                    className="w-3.5 h-3.5 rounded text-cyan-400 focus:ring-cyan-500/30"
                   />
                   <span>Auto-log new skills to Diary</span>
                 </label>
@@ -1277,7 +1277,7 @@ export function ProjectGrid() {
                     if (editFetchError) setEditFetchError(null);
                   }}
                   placeholder="https://github.com/THARANESHSELVAM/your-repo"
-                  className="flex-1 px-3 py-1.5 text-xs font-mono rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                  className="flex-1 px-3 py-1.5 text-xs font-mono rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 />
                 <button
                   type="button"
@@ -1326,7 +1326,7 @@ export function ProjectGrid() {
                     placeholder="e.g. Distributed Task Queue"
                     value={editProjectData.title}
                     onChange={(e) => setEditProjectData({ ...editProjectData, title: e.target.value })}
-                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                   />
                   {formErrors.title && (
                     <p className="text-[11px] text-rose-500">{formErrors.title}</p>
@@ -1342,7 +1342,7 @@ export function ProjectGrid() {
                     onChange={(e) =>
                       setEditProjectData({ ...editProjectData, category: e.target.value, domainTag: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50 bg-white dark:bg-slate-900"
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white dark:bg-slate-900"
                   >
                     <option value="Distributed Systems">Distributed Systems</option>
                     <option value="Full-Stack Web">Full-Stack Web</option>
@@ -1418,7 +1418,7 @@ export function ProjectGrid() {
 
               {/* Novelty ("How I Solved This Problem") */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-lime-400 flex items-center gap-1.5">
+                <label className="text-xs font-semibold text-cyan-400 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Novelty &amp; Breakthrough: How I Solved This Problem</span>
                 </label>
@@ -1427,7 +1427,7 @@ export function ProjectGrid() {
                   placeholder="The secret sauce, custom algorithms, non-obvious optimizations, or unique techniques you invented..."
                   value={editProjectData.novelty}
                   onChange={(e) => setEditProjectData({ ...editProjectData, novelty: e.target.value })}
-                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50 resize-none"
+                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-none"
                 />
               </div>
 
@@ -1476,12 +1476,12 @@ export function ProjectGrid() {
                         handleAddEditTag();
                       }
                     }}
-                    className="flex-1 px-3 py-2 text-xs rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                    className="flex-1 px-3 py-2 text-xs rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                   />
                   <button
                     type="button"
                     onClick={handleAddEditTag}
-                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-200 dark:bg-slate-700 hover:bg-lime-400 hover:text-slate-950 text-slate-800 dark:text-slate-200 transition-colors"
+                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-200 dark:bg-slate-700 hover:bg-gradient-to-r from-teal-400 to-cyan-500 hover:text-slate-950 text-slate-800 dark:text-slate-200 transition-colors"
                   >
                     + Add Tag
                   </button>
@@ -1557,7 +1557,7 @@ export function ProjectGrid() {
                 </button>
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold font-semibold text-xs sm:text-sm shadow-md transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 text-slate-950 font-bold font-semibold text-xs sm:text-sm shadow-md transition-all"
                 >
                   <Check className="w-4 h-4" />
                   <span>Save Changes &amp; Recompute Resume</span>

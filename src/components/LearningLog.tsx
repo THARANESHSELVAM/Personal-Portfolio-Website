@@ -259,8 +259,8 @@ export function LearningLog() {
         );
       case "Built Demo":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-lime-500/10 text-lime-300 border border-lime-500/30">
-            <Zap className="w-3 h-3 text-lime-400" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+            <Zap className="w-3 h-3 text-cyan-400" />
             <span>Built Demo</span>
           </span>
         );
@@ -279,7 +279,7 @@ export function LearningLog() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-lime-400 bg-lime-500/10 border border-lime-500/20 mb-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 mb-3">
             <BookOpen className="w-3.5 h-3.5" />
             <span>DYNAMIC INGESTION ENGINE</span>
           </div>
@@ -293,15 +293,15 @@ export function LearningLog() {
 
         {/* Global Toast Notification */}
         {statusMessage && (
-          <div className="mb-6 p-4 rounded-2xl bg-lime-950/60 border border-lime-500/30 text-lime-200 text-xs sm:text-sm font-semibold flex items-center justify-between shadow-lg animate-in fade-in slide-in-from-top-2">
+          <div className="mb-6 p-4 rounded-2xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-200 text-xs sm:text-sm font-semibold flex items-center justify-between shadow-lg animate-in fade-in slide-in-from-top-2">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-lime-400" />
+              <Sparkles className="w-4 h-4 text-cyan-400" />
               <span>{statusMessage}</span>
             </div>
             <button
               type="button"
               onClick={() => setStatusMessage(null)}
-              className="text-lime-400 hover:opacity-75"
+              className="text-cyan-400 hover:opacity-75"
             >
               <X className="w-4 h-4" />
             </button>
@@ -314,7 +314,7 @@ export function LearningLog() {
             <button
               type="button"
               onClick={() => setIsFormOpen(!isFormOpen)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs sm:text-sm shadow-md shadow-lime-400/20 transition-all active:scale-95"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 text-slate-950 font-bold text-xs sm:text-sm shadow-md shadow-cyan-500/25 transition-all active:scale-95"
             >
               <PlusCircle className="w-4 h-4" />
               <span>{isFormOpen ? "Close Quick-Entry" : "Log New Learning Milestone"}</span>
@@ -326,7 +326,7 @@ export function LearningLog() {
               className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700/80 shadow-sm transition-all active:scale-95 whitespace-nowrap"
               title="Browse public GitHub repositories to auto-import proof-of-work into diary"
             >
-              <GithubIcon className="w-3.5 h-3.5 text-lime-400" />
+              <GithubIcon className="w-3.5 h-3.5 text-cyan-400" />
               <span>Browse GitHub</span>
             </button>
 
@@ -343,7 +343,7 @@ export function LearningLog() {
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold glass-panel text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-colors"
               title="Export complete profile state as JSON"
             >
-              <Download className="w-3.5 h-3.5 text-lime-400" />
+              <Download className="w-3.5 h-3.5 text-cyan-400" />
               <span>Export JSON</span>
             </button>
 
@@ -385,10 +385,10 @@ export function LearningLog() {
 
         {/* Quick-Entry Ingestion Form Drawer/Card */}
         {isFormOpen && (
-          <div className="mb-10 p-6 sm:p-8 rounded-3xl glass-panel bg-white/95 dark:bg-slate-900/95 border border-lime-500/40 shadow-xl animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="mb-10 p-6 sm:p-8 rounded-3xl glass-panel bg-white/95 dark:bg-slate-900/95 border border-cyan-500/40 shadow-xl animate-in fade-in slide-in-from-top-4 duration-300">
             <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-lime-500/10 text-lime-400">
+                <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
@@ -414,13 +414,13 @@ export function LearningLog() {
             <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white border border-slate-800 shadow-md space-y-2.5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <div className="p-1 rounded-lg bg-lime-500/20 text-lime-400">
+                  <div className="p-1 rounded-lg bg-cyan-500/20 text-cyan-400">
                     <GithubIcon className="w-4 h-4" />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
                       <span>Auto-Fill Milestone from GitHub</span>
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-lime-500/20 text-lime-300 border border-lime-500/30">
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                         1-Click Sync
                       </span>
                     </h4>
@@ -435,7 +435,7 @@ export function LearningLog() {
                   onClick={() => setIsGitHubModalOpen(true)}
                   className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-white/10 hover:bg-white/20 text-white transition-colors self-start sm:self-auto"
                 >
-                  <Search className="w-3 h-3 text-lime-400" />
+                  <Search className="w-3 h-3 text-cyan-400" />
                   <span>Browse My Repos</span>
                 </button>
               </div>
@@ -455,13 +455,13 @@ export function LearningLog() {
                     }
                   }}
                   placeholder="https://github.com/THARANESHSELVAM/your-repo or owner/repo"
-                  className="flex-1 px-3 py-1.5 text-xs font-mono rounded-xl bg-slate-950/80 border border-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                  className="flex-1 px-3 py-1.5 text-xs font-mono rounded-xl bg-slate-950/80 border border-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 />
                 <button
                   type="button"
                   onClick={handleQuickFetchRepoForDiary}
                   disabled={isFetchingRepo || !repoFetchUrl.trim()}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs transition-all disabled:opacity-50 shrink-0 shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 text-slate-950 font-bold text-xs transition-all disabled:opacity-50 shrink-0 shadow-sm"
                 >
                   {isFetchingRepo ? (
                     <>
@@ -510,7 +510,7 @@ export function LearningLog() {
                     className={`w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border focus:outline-none focus:ring-2 ${
                       formErrors.technology
                         ? "border-rose-500 focus:ring-rose-500/50"
-                        : "border-slate-200 dark:border-slate-700 focus:ring-lime-400/50"
+                        : "border-slate-200 dark:border-slate-700 focus:ring-cyan-500/50"
                     }`}
                   />
                   {formErrors.technology && (
@@ -528,7 +528,7 @@ export function LearningLog() {
                     onChange={(e) =>
                       setFormState({ ...formState, category: e.target.value as CompetencyArea })
                     }
-                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50 bg-white dark:bg-slate-900"
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white dark:bg-slate-900"
                   >
                     <option value="Frontend">Frontend</option>
                     <option value="Backend">Backend</option>
@@ -548,7 +548,7 @@ export function LearningLog() {
                     onChange={(e) =>
                       setFormState({ ...formState, masteryLevel: e.target.value as MasteryLevel })
                     }
-                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50 bg-white dark:bg-slate-900"
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white dark:bg-slate-900"
                   >
                     <option value="Production Ready">Production Ready (Deployed / Battle-Tested)</option>
                     <option value="Built Demo">Built Demo (Working PoC)</option>
@@ -573,7 +573,7 @@ export function LearningLog() {
                   className={`w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border focus:outline-none focus:ring-2 resize-none ${
                     formErrors.keyTakeaway
                       ? "border-rose-500 focus:ring-rose-500/50"
-                      : "border-slate-200 dark:border-slate-700 focus:ring-lime-400/50"
+                      : "border-slate-200 dark:border-slate-700 focus:ring-cyan-500/50"
                   }`}
                 />
                 {formErrors.keyTakeaway && (
@@ -592,7 +592,7 @@ export function LearningLog() {
                     placeholder="https://github.com/..."
                     value={formState.repoOrDemoUrl}
                     onChange={(e) => setFormState({ ...formState, repoOrDemoUrl: e.target.value })}
-                    className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                    className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                   />
                 </div>
 
@@ -605,7 +605,7 @@ export function LearningLog() {
                     placeholder="e.g. Redis, DistributedLocks, Cache"
                     value={formState.tagsInput}
                     onChange={(e) => setFormState({ ...formState, tagsInput: e.target.value })}
-                    className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                    className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                   />
                 </div>
               </div>
@@ -621,7 +621,7 @@ export function LearningLog() {
                 </button>
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs sm:text-sm shadow-md shadow-lime-400/20 transition-all active:scale-95"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 text-slate-950 font-bold text-xs sm:text-sm shadow-md shadow-cyan-500/25 transition-all active:scale-95"
                 >
                   <Check className="w-4 h-4" />
                   <span>Log Milestone &amp; Sync Resume</span>
@@ -658,7 +658,7 @@ export function LearningLog() {
                 placeholder="Search technologies, concepts, tags..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
               />
             </div>
 
@@ -673,7 +673,7 @@ export function LearningLog() {
                   onClick={() => setSelectedMastery(lvl)}
                   className={`text-xs px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors border ${
                     selectedMastery === lvl
-                      ? "bg-lime-500/20 text-lime-300 border-lime-500/40"
+                      ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
                       : "text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800"
                   }`}
                 >
@@ -698,7 +698,7 @@ export function LearningLog() {
                 setSelectedMastery("All");
                 setSearchQuery("");
               }}
-              className="mt-4 text-xs font-semibold text-lime-400 hover:underline"
+              className="mt-4 text-xs font-semibold text-cyan-400 hover:underline"
             >
               Reset Filters
             </button>
@@ -708,7 +708,7 @@ export function LearningLog() {
             {filteredLearnings.map((entry) => (
               <div
                 key={entry.id}
-                className="glass-panel p-5 sm:p-6 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 hover:border-lime-400/50 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between group"
+                className="glass-panel p-5 sm:p-6 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 hover:border-cyan-400/50 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between group"
               >
                 <div className="space-y-3">
                   {/* Top Bar: Category, Mastery, Date */}
@@ -727,7 +727,7 @@ export function LearningLog() {
                   </div>
 
                   {/* Technology / Concept Title */}
-                  <h3 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white group-hover:text-lime-400 transition-colors">
+                  <h3 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white group-hover:text-cyan-400 transition-colors">
                     {entry.technology}
                   </h3>
 
@@ -756,7 +756,7 @@ export function LearningLog() {
                         href={entry.repoOrDemoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-1.5 rounded-lg text-slate-500 hover:text-lime-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        className="p-1.5 rounded-lg text-slate-500 hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         title="View Proof of Work / Repository"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />

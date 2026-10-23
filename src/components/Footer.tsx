@@ -25,21 +25,21 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t border-slate-800/80 bg-[#070b12] pt-16 pb-12 transition-colors">
+    <footer className="border-t border-cyan-950/40 bg-[#040711] pt-14 pb-12 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-12 border-b border-slate-800/60">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-10 border-b border-cyan-900/20">
           {/* Brand Info */}
-          <div className="space-y-3 text-center md:text-left">
+          <div className="space-y-2 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-lime-400 text-slate-950 flex items-center justify-center font-bold shadow-sm shadow-lime-400/20">
-                <Terminal className="w-3.5 h-3.5 stroke-[2.5]" />
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/10 border border-cyan-400/40 flex items-center justify-center text-cyan-400 font-extrabold text-xs shadow-md shadow-cyan-500/10">
+                TS
               </div>
-              <span className="font-extrabold text-base tracking-wider text-white">
-                THARANESH<span className="text-lime-400">.</span>
+              <span className="font-extrabold text-sm tracking-wider text-white uppercase">
+                THARANESH SELVAM
               </span>
             </div>
             <p className="text-xs text-slate-400 max-w-sm">
-              Personal Engineering Portfolio &amp; Technical Showcase. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS.
+              Full-Stack Software Engineer &amp; Cloud Architect. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS.
             </p>
           </div>
 
@@ -53,7 +53,7 @@ export function Footer() {
                   setActiveTab(tab.id);
                   scrollToTop();
                 }}
-                className="hover:text-lime-400 transition-colors"
+                className="hover:text-cyan-400 transition-colors"
               >
                 {tab.name}
               </button>
@@ -65,7 +65,7 @@ export function Footer() {
             <button
               type="button"
               onClick={scrollToTop}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl glass-panel text-xs font-semibold text-slate-300 hover:text-lime-400 hover:border-lime-500/50 shadow-sm transition-all duration-200 active:scale-95"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#090f1d] text-xs font-semibold text-slate-300 hover:text-cyan-400 border border-cyan-900/30 hover:border-cyan-400/40 shadow-sm transition-all duration-200 active:scale-95"
               aria-label="Back to top"
             >
               <span>Back to Top</span>
@@ -86,7 +86,7 @@ export function Footer() {
                 href={state.contact.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-lime-400 transition-colors"
+                className="hover:text-cyan-400 transition-colors"
                 aria-label="GitHub"
               >
                 <GithubIcon className="w-4 h-4" />
@@ -97,7 +97,7 @@ export function Footer() {
                 href={state.contact.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-lime-400 transition-colors"
+                className="hover:text-cyan-400 transition-colors"
                 aria-label="LinkedIn"
               >
                 <LinkedinIcon className="w-4 h-4" />
@@ -106,7 +106,7 @@ export function Footer() {
             {state.contact.email && (
               <a
                 href={`mailto:${state.contact.email}`}
-                className="hover:text-lime-400 transition-colors"
+                className="hover:text-cyan-400 transition-colors"
                 aria-label="Email"
               >
                 <Mail className="w-4 h-4" />
