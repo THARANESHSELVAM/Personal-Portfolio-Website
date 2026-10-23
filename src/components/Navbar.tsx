@@ -6,12 +6,10 @@ import { useProfile, WorkspaceTab } from "@/context/ProfileContext";
 import { 
   Menu, 
   X, 
-  Briefcase, 
   FileText, 
   Home, 
   BookOpen, 
   Code2, 
-  Activity, 
   ChevronDown, 
   LogOut,
   FolderKanban

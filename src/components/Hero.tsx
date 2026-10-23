@@ -148,10 +148,10 @@ export function Hero() {
               </div>
 
               <a
-                href="#contact"
+                href="#resume-contact-settings"
                 className="text-[11px] font-mono text-slate-500 hover:text-cyan-600 dark:text-slate-400 dark:hover:text-cyan-300 transition-colors flex items-center gap-1 group font-medium"
               >
-                <span>Let&apos;s build something great together</span>
+                <span>Resume Header Settings</span>
                 <span className="group-hover:translate-x-0.5 transition-transform text-cyan-600 dark:text-cyan-400">→</span>
               </a>
             </div>

@@ -5,7 +5,7 @@ import { useProfile } from "@/context/ProfileContext";
 import { Hero } from "@/components/Hero";
 import { CaseStudyModal } from "./CaseStudyModal";
 import { GitHubRepoBrowserModal } from "./GitHubRepoBrowserModal";
-import { ContactSection } from "./ContactSection";
+import { ResumeContactSettings } from "./ResumeContactSettings";
 import { Project } from "@/data/profile";
 import { 
   User, 
@@ -50,6 +50,7 @@ export function ProfileView({ initialSection }: ProfileViewProps) {
     name: state.name,
     title: state.title,
     email: state.contact?.email || "",
+    phone: state.contact?.phone || "",
     location: state.contact?.location || "",
     github: state.contact?.github || "",
     linkedin: state.contact?.linkedin || "",
@@ -67,6 +68,7 @@ export function ProfileView({ initialSection }: ProfileViewProps) {
       contact: {
         ...state.contact,
         email: profileForm.email.trim(),
+        phone: profileForm.phone.trim(),
         location: profileForm.location.trim(),
         github: profileForm.github.trim(),
         linkedin: profileForm.linkedin.trim(),
@@ -403,6 +405,7 @@ export function ProfileView({ initialSection }: ProfileViewProps) {
                   name: state.name,
                   title: state.title,
                   email: state.contact?.email || "",
+                  phone: state.contact?.phone || "",
                   location: state.contact?.location || "",
                   github: state.contact?.github || "",
                   linkedin: state.contact?.linkedin || "",
@@ -456,8 +459,8 @@ export function ProfileView({ initialSection }: ProfileViewProps) {
           </div>
         </section>
 
-        {/* 5. Contact Section */}
-        <ContactSection />
+        {/* 5. Resume Contact Header Settings */}
+        <ResumeContactSettings />
 
       </div>
 
