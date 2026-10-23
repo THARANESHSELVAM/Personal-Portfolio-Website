@@ -68,8 +68,8 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 mb-3">
-            <FileText className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-cyan-700 bg-cyan-50 border border-cyan-200 dark:text-cyan-400 dark:bg-cyan-500/10 dark:border-cyan-500/20 mb-3">
+            <FileText className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             <span>LIVE AUTO-GENERATED ATS ENGINE</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -81,7 +81,7 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
         </div>
 
         {/* View Mode Toggle & Actions Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl glass-panel border border-slate-200 dark:border-slate-800 mb-8 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 mb-8 shadow-sm">
           {/* Toggle Button */}
           <div className="flex items-center bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200 dark:border-slate-700/60 w-full sm:w-auto">
             <button
@@ -89,7 +89,7 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
               onClick={() => setViewMode("ats")}
               className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
                 viewMode === "ats"
-                  ? "bg-white dark:bg-slate-900 text-cyan-400 shadow-sm"
+                  ? "bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400 font-bold shadow-sm"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -101,7 +101,7 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
               onClick={() => setViewMode("timeline")}
               className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
                 viewMode === "timeline"
-                  ? "bg-white dark:bg-slate-900 text-cyan-400 shadow-sm"
+                  ? "bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400 font-bold shadow-sm"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -115,7 +115,7 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
             <button
               type="button"
               onClick={handlePrintPdf}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-cyan-400 hover:bg-lime-300 text-slate-950 font-bold shadow-md shadow-lime-400/20 transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white dark:text-slate-950 font-bold shadow-md shadow-cyan-500/20 transition-all"
               title="Print or Save High-Resolution PDF"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -125,10 +125,10 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
             <button
               type="button"
               onClick={handleDownloadTxt}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold glass-panel text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700 transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700 transition-all"
               title="Download clean plain-text resume for legacy ATS"
             >
-              <Download className="w-3.5 h-3.5 text-cyan-400" />
+              <Download className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
               <span>Download .txt</span>
             </button>
 

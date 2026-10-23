@@ -22,6 +22,12 @@ import {
   createBlankWorkspace,
   createStarterWorkspace,
 } from "@/lib/datasetLoader";
+import {
+  AUTH_SESSION_KEY,
+  createSessionToken,
+  validateSessionToken,
+  clearAuthSession,
+} from "@/lib/authConfig";
 
 export type WorkspaceTab = "profile" | "diary" | "projects" | "skills" | "resume" | "live-ats";
 
@@ -114,7 +120,21 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      // 2. Load active user (defaults immediately to tharanesh-selvam for recruiters & visitors)
+      // 2. Strict Session Validation: verify active session against authorized credentials
+      const sessionToken = localStorage.getItem(AUTH_SESSION_KEY);
+      const isSessionValid = validateSessionToken(sessionToken);
+
+      if (!isSessionValid) {
+        // Not authenticated: clear stored credentials and force Authentication Gate
+        clearAuthSession();
+        localStorage.removeItem(ACTIVE_USER_KEY);
+        setActiveUserId(null);
+        setCurrentUser(null);
+        setIsHydrated(true);
+        return;
+      }
+
+      // Valid session authenticated
       const storedUserId = localStorage.getItem(ACTIVE_USER_KEY) || "tharanesh-selvam";
       setActiveUserId(storedUserId);
 
@@ -206,6 +226,10 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     const rawId = identity.userId.trim() || identity.email.trim();
     if (!rawId) return;
 
+    // Create and persist verified session token
+    const token = createSessionToken(rawId, identity.email);
+    localStorage.setItem(AUTH_SESSION_KEY, token);
+
     setActiveUserId(rawId);
     setCurrentUser(identity);
     localStorage.setItem(ACTIVE_USER_KEY, rawId);
@@ -248,6 +272,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
   // Logout / Lock Diary
   const logoutUser = useCallback(() => {
+    clearAuthSession();
     setActiveUserId(null);
     setCurrentUser(null);
     localStorage.removeItem(ACTIVE_USER_KEY);

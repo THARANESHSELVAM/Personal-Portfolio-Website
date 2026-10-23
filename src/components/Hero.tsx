@@ -40,10 +40,10 @@ export function Hero() {
 
   return (
     <section id="hero" className="relative pt-6 pb-12 lg:pt-10 lg:pb-16 overflow-hidden">
-      {/* Ambient background glow from reference */}
+      {/* Ambient background glow */}
       <div 
         aria-hidden="true" 
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none -z-10" 
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none -z-10 opacity-30 dark:opacity-100" 
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,31 +54,31 @@ export function Hero() {
           <div className="lg:col-span-5 space-y-5 text-left">
             {/* Top Badges */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-950/70 text-cyan-300 border border-cyan-500/30 shadow-sm shadow-cyan-500/10">
-                <GraduationCap className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-50 text-cyan-700 border border-cyan-200 dark:bg-cyan-950/70 dark:text-cyan-300 dark:border-cyan-500/30 shadow-sm shadow-cyan-500/10">
+                <GraduationCap className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                 <span>M.Tech CSE Student</span>
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-teal-950/70 text-teal-300 border border-teal-500/30">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-teal-950/70 dark:text-teal-300 dark:border-teal-500/30">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
                 <span>Open to Opportunities</span>
               </span>
             </div>
 
             {/* Main Title & Subtitle */}
             <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
                 Hi, I&apos;m{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-300">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-cyan-600 to-teal-600 dark:from-teal-400 dark:via-cyan-400 dark:to-teal-300">
                   Tharanesh Selvam
                 </span>
               </h1>
-              <h2 className="text-base sm:text-lg lg:text-xl font-bold text-slate-100 tracking-tight">
+              <h2 className="text-base sm:text-lg lg:text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">
                 Full-Stack Software Engineer &amp; Cloud Architect
               </h2>
             </div>
 
             {/* Supporting Paragraph */}
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-lg font-normal">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-lg font-normal">
               I build scalable web applications, work with modern technologies, and love solving real-world problems through code.
             </p>
 
@@ -87,7 +87,7 @@ export function Hero() {
               <button
                 type="button"
                 onClick={handleNavigateToProjects}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-cyan-500/25 transition-all duration-200 active:scale-95 group focus-visible:ring-2 focus-visible:ring-cyan-400"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 dark:from-teal-400 dark:to-cyan-500 text-white dark:text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-cyan-500/25 transition-all duration-200 active:scale-95 group focus-visible:ring-2 focus-visible:ring-cyan-400"
               >
                 <span>Explore My Projects</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -96,30 +96,30 @@ export function Hero() {
               <button
                 type="button"
                 onClick={handleNavigateToResume}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#0a1122]/90 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-400/50 text-white font-medium text-xs sm:text-sm shadow-sm transition-all duration-200 active:scale-95 focus-visible:ring-2 focus-visible:ring-cyan-400"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white hover:bg-slate-100 border border-slate-300 hover:border-cyan-500 text-slate-800 dark:bg-[#0a1122]/90 dark:hover:bg-slate-800 dark:border-slate-700/80 dark:hover:border-cyan-400/50 dark:text-white font-medium text-xs sm:text-sm shadow-sm transition-all duration-200 active:scale-95 focus-visible:ring-2 focus-visible:ring-cyan-400"
               >
-                <Download className="w-4 h-4 text-cyan-400" />
+                <Download className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                 <span>Download Resume</span>
               </button>
             </div>
 
             {/* Social Pills & Collaborate Cue */}
-            <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs border-t border-slate-800/80">
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs border-t border-slate-200 dark:border-slate-800/80">
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={copyEmail}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#090f1d] border border-cyan-900/30 text-slate-300 hover:text-white hover:border-cyan-400/40 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-cyan-400 dark:bg-[#090f1d] dark:border-cyan-900/30 dark:text-slate-300 dark:hover:text-white transition-colors"
                   title="Copy email to clipboard"
                 >
                   {copied ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-300 text-[11px]">Copied!</span>
+                      <Check className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+                      <span className="text-emerald-700 dark:text-emerald-300 text-[11px] font-semibold">Copied!</span>
                     </>
                   ) : (
                     <>
-                      <Mail className="w-3.5 h-3.5 text-cyan-400" />
+                      <Mail className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                       <span className="text-[11px]">Email</span>
                     </>
                   )}
@@ -129,9 +129,9 @@ export function Hero() {
                   href={state.contact?.github || "https://github.com/THARANESHSELVAM"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#090f1d] border border-cyan-900/30 text-slate-300 hover:text-white hover:border-cyan-400/40 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-cyan-400 dark:bg-[#090f1d] dark:border-cyan-900/30 dark:text-slate-300 dark:hover:text-white transition-colors"
                 >
-                  <GithubIcon className="w-3.5 h-3.5 text-cyan-400" />
+                  <GithubIcon className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                   <span className="text-[11px]">GitHub</span>
                 </a>
 
@@ -139,19 +139,19 @@ export function Hero() {
                   href={state.contact?.linkedin || "https://linkedin.com/in/tharanesh-selvam"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#090f1d] border border-cyan-900/30 text-slate-300 hover:text-white hover:border-cyan-400/40 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-cyan-400 dark:bg-[#090f1d] dark:border-cyan-900/30 dark:text-slate-300 dark:hover:text-white transition-colors"
                 >
-                  <LinkedinIcon className="w-3.5 h-3.5 text-cyan-400" />
+                  <LinkedinIcon className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                   <span className="text-[11px]">LinkedIn</span>
                 </a>
               </div>
 
               <a
                 href="#contact"
-                className="text-[11px] font-mono text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-1 group"
+                className="text-[11px] font-mono text-slate-500 hover:text-cyan-600 dark:text-slate-400 dark:hover:text-cyan-300 transition-colors flex items-center gap-1 group font-medium"
               >
                 <span>Let&apos;s build something great together</span>
-                <span className="group-hover:translate-x-0.5 transition-transform text-cyan-400">→</span>
+                <span className="group-hover:translate-x-0.5 transition-transform text-cyan-600 dark:text-cyan-400">→</span>
               </a>
             </div>
           </div>
@@ -159,14 +159,14 @@ export function Hero() {
           {/* ================= CENTER COLUMN: 3D Laptop with Floating Tech Badges (4 Cols) ================= */}
           <div className="lg:col-span-4 relative flex items-center justify-center py-4 lg:py-0">
             {/* Ambient Cyan Radial Floor Glow */}
-            <div className="absolute w-72 h-72 bg-gradient-to-b from-cyan-500/20 via-teal-500/10 to-transparent rounded-full blur-2xl -z-10 pointer-events-none" />
+            <div className="absolute w-72 h-72 bg-gradient-to-b from-cyan-500/20 via-teal-500/10 to-transparent rounded-full blur-2xl -z-10 pointer-events-none opacity-40 dark:opacity-100" />
 
             {/* 3D Laptop Composition */}
             <div className="relative w-full max-w-[340px] aspect-[4/3] flex items-center justify-center">
               {/* Laptop Body Wrapper with 3D tilt */}
-              <div className="relative w-64 sm:w-72 rounded-2xl p-2.5 bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 border border-slate-700/80 shadow-2xl shadow-cyan-500/10 transform -rotate-1 hover:rotate-0 transition-transform duration-500">
+              <div className="relative w-64 sm:w-72 rounded-2xl p-2.5 bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400 dark:from-slate-700 dark:via-slate-800 dark:to-slate-900 border border-slate-300 dark:border-slate-700/80 shadow-2xl shadow-cyan-500/10 transform -rotate-1 hover:rotate-0 transition-transform duration-500">
                 {/* Laptop Screen */}
-                <div className="relative w-full aspect-[16/10] rounded-xl bg-[#03060f] border border-slate-800 overflow-hidden p-3 flex flex-col justify-between">
+                <div className="relative w-full aspect-[16/10] rounded-xl bg-slate-950 border border-slate-800 overflow-hidden p-3 flex flex-col justify-between text-white">
                   {/* Top Bar with mock dots */}
                   <div className="flex items-center justify-between border-b border-slate-800/80 pb-1.5">
                     <div className="flex items-center gap-1.5">
@@ -197,33 +197,33 @@ export function Hero() {
                 </div>
 
                 {/* Laptop Keyboard Base / Hinge */}
-                <div className="mt-1.5 h-3 bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 rounded-b-lg border-t border-slate-600 shadow-md flex items-center justify-center">
-                  <div className="w-12 h-1 bg-slate-600 rounded-full" />
+                <div className="mt-1.5 h-3 bg-gradient-to-r from-slate-400 via-slate-300 to-slate-400 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800 rounded-b-lg border-t border-slate-400 dark:border-slate-600 shadow-md flex items-center justify-center">
+                  <div className="w-12 h-1 bg-slate-400 dark:bg-slate-600 rounded-full" />
                 </div>
               </div>
 
-              {/* FLOATING TECH BADGES (Exact to screenshot) */}
+              {/* FLOATING TECH BADGES */}
               {/* 1. React (Top-Left) */}
-              <div className="absolute -top-1 -left-2 sm:-left-4 px-3 py-1 rounded-xl bg-[#090f1d]/95 border border-cyan-500/40 text-cyan-300 text-[11px] font-semibold flex items-center gap-1.5 shadow-lg shadow-cyan-500/15 animate-bounce [animation-duration:3.2s]">
-                <span className="text-cyan-400">⚛</span>
+              <div className="absolute -top-1 -left-2 sm:-left-4 px-3 py-1 rounded-xl bg-white/95 dark:bg-[#090f1d]/95 border border-cyan-400/60 dark:border-cyan-500/40 text-cyan-700 dark:text-cyan-300 text-[11px] font-semibold flex items-center gap-1.5 shadow-lg shadow-cyan-500/15 animate-bounce [animation-duration:3.2s]">
+                <span className="text-cyan-500">⚛</span>
                 <span>React</span>
               </div>
 
               {/* 2. Next.js (Top-Right) */}
-              <div className="absolute top-2 -right-2 sm:-right-4 px-3 py-1 rounded-xl bg-[#090f1d]/95 border border-cyan-500/40 text-white text-[11px] font-semibold flex items-center gap-1.5 shadow-lg shadow-cyan-500/15 animate-bounce [animation-duration:3.6s]">
-                <span className="w-2 h-2 rounded-full bg-white" />
+              <div className="absolute top-2 -right-2 sm:-right-4 px-3 py-1 rounded-xl bg-white/95 dark:bg-[#090f1d]/95 border border-slate-300 dark:border-cyan-500/40 text-slate-900 dark:text-white text-[11px] font-semibold flex items-center gap-1.5 shadow-lg shadow-cyan-500/15 animate-bounce [animation-duration:3.6s]">
+                <span className="w-2 h-2 rounded-full bg-slate-900 dark:bg-white" />
                 <span>Next.js</span>
               </div>
 
               {/* 3. TypeScript (Bottom-Left) */}
-              <div className="absolute -bottom-2 -left-2 sm:-left-3 px-3 py-1 rounded-xl bg-[#090f1d]/95 border border-cyan-500/40 text-cyan-200 text-[11px] font-mono font-bold flex items-center gap-1.5 shadow-lg shadow-cyan-500/15 animate-bounce [animation-duration:4s]">
-                <span className="text-[10px] text-cyan-400 bg-cyan-950/80 px-1 rounded">TS</span>
+              <div className="absolute -bottom-2 -left-2 sm:-left-3 px-3 py-1 rounded-xl bg-white/95 dark:bg-[#090f1d]/95 border border-cyan-400/60 dark:border-cyan-500/40 text-cyan-800 dark:text-cyan-200 text-[11px] font-mono font-bold flex items-center gap-1.5 shadow-lg shadow-cyan-500/15 animate-bounce [animation-duration:4s]">
+                <span className="text-[10px] text-cyan-600 dark:text-cyan-400 bg-cyan-100 dark:bg-cyan-950/80 px-1 rounded">TS</span>
                 <span>TypeScript</span>
               </div>
 
               {/* 4. AWS (Bottom-Right) */}
-              <div className="absolute -bottom-1 -right-2 sm:-right-3 px-3 py-1 rounded-xl bg-[#090f1d]/95 border border-cyan-500/40 text-amber-300 text-[11px] font-bold flex items-center gap-1.5 shadow-lg shadow-cyan-500/15 animate-bounce [animation-duration:3.8s]">
-                <span className="text-amber-400 font-mono text-xs">☁</span>
+              <div className="absolute -bottom-1 -right-2 sm:-right-3 px-3 py-1 rounded-xl bg-white/95 dark:bg-[#090f1d]/95 border border-amber-300 dark:border-cyan-500/40 text-amber-700 dark:text-amber-300 text-[11px] font-bold flex items-center gap-1.5 shadow-lg shadow-cyan-500/15 animate-bounce [animation-duration:3.8s]">
+                <span className="text-amber-500 dark:text-amber-400 font-mono text-xs">☁</span>
                 <span>AWS</span>
               </div>
             </div>
@@ -231,64 +231,64 @@ export function Hero() {
 
           {/* ================= RIGHT COLUMN: 2x2 Stats & Quote Cards (3 Cols) ================= */}
           <div className="lg:col-span-3 space-y-4">
-            {/* Top 2x2 Stats Matrix Card (Matches Reference Image) */}
-            <div className="p-5 rounded-2xl bg-[#090f1d]/90 border border-cyan-900/30 backdrop-blur-md shadow-xl space-y-4 text-left">
+            {/* Top 2x2 Stats Matrix Card */}
+            <div className="p-5 rounded-2xl bg-white border border-slate-200 dark:bg-[#090f1d]/90 dark:border-cyan-900/30 backdrop-blur-md shadow-md dark:shadow-xl space-y-4 text-left">
               <div className="grid grid-cols-2 gap-4">
                 {/* Stat 1: 5+ Projects */}
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
-                    <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+                    <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
                       <FolderKanban className="w-3.5 h-3.5" />
                     </div>
-                    <span className="text-lg sm:text-xl font-extrabold text-white">5+</span>
+                    <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">5+</span>
                   </div>
-                  <div className="text-[11px] text-slate-400 font-medium">Projects</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Projects</div>
                 </div>
 
                 {/* Stat 2: 20+ Skills */}
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
-                    <div className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">
+                    <div className="p-1.5 rounded-lg bg-cyan-50 text-cyan-600 dark:bg-cyan-500/10 dark:text-cyan-400">
                       <Sparkles className="w-3.5 h-3.5" />
                     </div>
-                    <span className="text-lg sm:text-xl font-extrabold text-white">20+</span>
+                    <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">20+</span>
                   </div>
-                  <div className="text-[11px] text-slate-400 font-medium">Skills</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Skills</div>
                 </div>
 
                 {/* Stat 3: 2 Major Domains */}
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
-                    <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400">
+                    <div className="p-1.5 rounded-lg bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400">
                       <Layers className="w-3.5 h-3.5" />
                     </div>
-                    <span className="text-lg sm:text-xl font-extrabold text-white">2</span>
+                    <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">2</span>
                   </div>
-                  <div className="text-[11px] text-slate-400 font-medium">Major Domains</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Major Domains</div>
                 </div>
 
                 {/* Stat 4: 100% Learning Mode */}
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
-                    <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
+                    <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
                       <RefreshCw className="w-3.5 h-3.5" />
                     </div>
-                    <span className="text-lg sm:text-xl font-extrabold text-white">100%</span>
+                    <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">100%</span>
                   </div>
-                  <div className="text-[11px] text-slate-400 font-medium">Learning Mode</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Learning Mode</div>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Quote Card (Matches Reference Image) */}
-            <div className="p-5 rounded-2xl bg-[#090f1d]/90 border border-cyan-900/30 backdrop-blur-md shadow-xl text-left space-y-3 relative overflow-hidden">
-              <div className="text-cyan-400/40 text-3xl font-serif leading-none select-none">
+            {/* Bottom Quote Card */}
+            <div className="p-5 rounded-2xl bg-white border border-slate-200 dark:bg-[#090f1d]/90 dark:border-cyan-900/30 backdrop-blur-md shadow-md dark:shadow-xl text-left space-y-3 relative overflow-hidden">
+              <div className="text-cyan-600 dark:text-cyan-400/40 text-3xl font-serif leading-none select-none">
                 “
               </div>
-              <p className="text-xs sm:text-sm text-slate-200 italic leading-snug">
+              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 italic leading-snug">
                 &quot;Continuous learning is the key to growth.&quot;
               </p>
-              <div className="text-[11px] font-mono text-slate-400 text-right">
+              <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 text-right">
                 — Tharanesh Selvam
               </div>
             </div>

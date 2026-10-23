@@ -310,15 +310,15 @@ ${project.metrics.join("\n")}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="md:col-span-2 p-5 rounded-2xl bg-lime-500/5 dark:bg-cyan-500/10 border border-cyan-500/20 space-y-3">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-cyan-400 font-bold block">
+                <div className="md:col-span-2 p-5 rounded-2xl bg-cyan-50/70 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 space-y-3">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-cyan-700 dark:text-cyan-400 font-bold block">
                     Core Mission &amp; Operational Workflow
                   </span>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                     {caseStudy.projectUse || caseStudy.overview}
                   </p>
                   {caseStudy.overview && caseStudy.projectUse && (
-                    <p className="text-xs text-slate-500 dark:text-slate-400 pt-1 border-t border-lime-500/10 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 pt-1 border-t border-cyan-200/60 dark:border-cyan-500/10 leading-relaxed">
                       {caseStudy.overview}
                     </p>
                   )}
@@ -427,16 +427,16 @@ ${project.metrics.join("\n")}
                 <span>3. Solved Expert Architecture &amp; Mechanics</span>
               </div>
 
-              <div className="p-5 sm:p-6 rounded-2xl bg-lime-500/5 dark:bg-cyan-500/10 border border-cyan-500/20 space-y-3">
-                <div className="flex items-center gap-2 text-cyan-400 font-bold text-xs uppercase tracking-wider">
+              <div className="p-5 sm:p-6 rounded-2xl bg-cyan-50/70 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 space-y-3">
+                <div className="flex items-center gap-2 text-cyan-700 dark:text-cyan-400 font-bold text-xs uppercase tracking-wider">
                   <Workflow className="w-4 h-4" />
                   <span>Technical Design &amp; Architectural Blueprint</span>
                 </div>
                 <p className="text-sm sm:text-base text-slate-800 dark:text-slate-200 leading-relaxed">
                   {caseStudy.expertSolution || project.solution}
                 </p>
-                <div className="text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-lime-500/10">
-                  <strong className="text-cyan-400">End-to-End Pipeline: </strong>
+                <div className="text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-cyan-200/60 dark:border-cyan-500/10">
+                  <strong className="text-cyan-700 dark:text-cyan-400 font-semibold">End-to-End Pipeline: </strong>
                   {caseStudy.architectureNotes}
                 </div>
               </div>
@@ -489,45 +489,45 @@ ${project.metrics.join("\n")}
                 <span>4. Novelty &amp; Innovation: How I Solved This Problem</span>
               </div>
 
-              {/* VIP Glowing Breakthrough Card */}
-              <div className="relative p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 text-white border-2 border-indigo-500/40 shadow-xl shadow-indigo-500/10 space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-500/30 pb-3">
+              {/* VIP Breakthrough Card */}
+              <div className="relative p-6 sm:p-7 rounded-3xl bg-indigo-50/70 border-2 border-indigo-200 text-slate-900 dark:bg-gradient-to-br dark:from-indigo-950 dark:via-slate-900 dark:to-slate-950 dark:text-white dark:border-indigo-500/40 shadow-xl shadow-indigo-500/5 dark:shadow-indigo-500/10 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-200 dark:border-indigo-500/30 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="p-1.5 rounded-lg bg-indigo-500/20 text-cyan-400 border border-indigo-500/30">
+                    <div className="p-1.5 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-cyan-400 border border-indigo-200 dark:border-indigo-500/30">
                       <Sparkles className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-xs font-mono font-bold tracking-wider text-cyan-400 uppercase">
+                      <span className="text-xs font-mono font-bold tracking-wider text-indigo-700 dark:text-cyan-400 uppercase">
                         The Core Engineering Secret Sauce
                       </span>
-                      <h4 className="text-base sm:text-lg font-bold text-white">
+                      <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                         Unique Technical Breakthrough
                       </h4>
                     </div>
                   </div>
 
-                  <span className="px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-indigo-100 text-indigo-800 dark:bg-cyan-500/20 dark:text-cyan-300 border border-indigo-200 dark:border-cyan-500/30">
                     Bespoke Innovation
                   </span>
                 </div>
 
-                <p className="text-sm sm:text-base text-slate-200 leading-relaxed">
+                <p className="text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
                   {caseStudy.novelty || caseStudy.overview}
                 </p>
 
                 {/* Novelty Highlight Bullets */}
                 {caseStudy.noveltyHighlights && caseStudy.noveltyHighlights.length > 0 && (
                   <div className="pt-2 space-y-2">
-                    <span className="text-[11px] font-mono uppercase tracking-wider text-indigo-300 font-semibold block">
+                    <span className="text-[11px] font-mono uppercase tracking-wider text-indigo-800 dark:text-indigo-300 font-semibold block">
                       Key Technical Innovations Implemented:
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {caseStudy.noveltyHighlights.map((highlight, idx) => (
                         <div
                           key={idx}
-                          className="flex items-start gap-2.5 p-3 rounded-xl bg-white/5 border border-indigo-500/20 text-xs sm:text-sm text-slate-200"
+                          className="flex items-start gap-2.5 p-3 rounded-xl bg-white dark:bg-white/5 border border-indigo-200 dark:border-indigo-500/20 text-xs sm:text-sm text-slate-800 dark:text-slate-200 shadow-sm"
                         >
-                          <Zap className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                          <Zap className="w-4 h-4 text-indigo-600 dark:text-cyan-400 shrink-0 mt-0.5" />
                           <span>{highlight}</span>
                         </div>
                       ))}
@@ -549,15 +549,15 @@ ${project.metrics.join("\n")}
               </div>
 
               {/* Verified Metrics Hero Block */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-950 dark:from-slate-950 dark:to-slate-900 text-white border border-slate-800 space-y-3">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-cyan-400 font-semibold block">
+              <div className="p-5 sm:p-6 rounded-2xl bg-slate-100 border border-slate-200 text-slate-900 dark:bg-gradient-to-r dark:from-slate-950 dark:to-slate-900 dark:border-slate-800 dark:text-white space-y-3">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-cyan-700 dark:text-cyan-400 font-bold block">
                   Production Verified Results
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {project.metrics.map((metric, i) => (
                     <div
                       key={i}
-                      className="bg-white/5 p-3 rounded-xl border border-white/10 text-xs sm:text-sm font-semibold flex items-center gap-2"
+                      className="bg-white dark:bg-white/5 p-3 rounded-xl border border-slate-200 dark:border-white/10 text-xs sm:text-sm font-semibold flex items-center gap-2 text-slate-800 dark:text-white shadow-sm"
                     >
                       <span>{metric}</span>
                     </div>

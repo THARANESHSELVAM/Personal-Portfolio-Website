@@ -411,20 +411,20 @@ export function LearningLog() {
             </div>
 
             {/* Quick Auto-Fill from GitHub Banner */}
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white border border-slate-800 shadow-md space-y-2.5">
+            <div className="p-4 rounded-2xl bg-slate-50 text-slate-900 border border-slate-200 dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 dark:text-white dark:border-slate-800 shadow-md space-y-2.5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <div className="p-1 rounded-lg bg-cyan-500/20 text-cyan-400">
+                  <div className="p-1 rounded-lg bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
                     <GithubIcon className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                       <span>Auto-Fill Milestone from GitHub</span>
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30">
                         1-Click Sync
                       </span>
                     </h4>
-                    <p className="text-[11px] text-slate-300">
+                    <p className="text-[11px] text-slate-600 dark:text-slate-300">
                       Extracts primary language, competency domain, takeaway summary, and proof-of-work link.
                     </p>
                   </div>
@@ -433,9 +433,9 @@ export function LearningLog() {
                 <button
                   type="button"
                   onClick={() => setIsGitHubModalOpen(true)}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-white/10 hover:bg-white/20 text-white transition-colors self-start sm:self-auto"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-white/10 dark:hover:bg-white/20 dark:text-white transition-colors self-start sm:self-auto"
                 >
-                  <Search className="w-3 h-3 text-cyan-400" />
+                  <Search className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
                   <span>Browse My Repos</span>
                 </button>
               </div>
@@ -455,7 +455,7 @@ export function LearningLog() {
                     }
                   }}
                   placeholder="https://github.com/THARANESHSELVAM/your-repo or owner/repo"
-                  className="flex-1 px-3 py-1.5 text-xs font-mono rounded-xl bg-slate-950/80 border border-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                  className="flex-1 px-3 py-1.5 text-xs font-mono rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 dark:bg-slate-950/80 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 />
                 <button
                   type="button"

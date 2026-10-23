@@ -549,14 +549,14 @@ export function ProjectGrid() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 mb-3">
-            <Briefcase className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-cyan-700 bg-cyan-50 border border-cyan-200 dark:text-cyan-400 dark:bg-cyan-500/10 dark:border-cyan-500/20 mb-3">
+            <Briefcase className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             <span>APPLIED WORK &amp; IMPACT</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Featured Projects &amp; Engineering Work
           </h2>
-          <p className="mt-3 text-slate-400 text-sm sm:text-base leading-relaxed">
+          <p className="mt-3 text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
             Explore real-world software applications featuring problem breakdowns, architecture decisions, live deployments, and measurable results.
           </p>
         </div>
@@ -565,7 +565,7 @@ export function ProjectGrid() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10">
           {/* Domain Filter Pills */}
           <div className="flex flex-wrap items-center justify-center gap-2">
-            <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mr-1 font-mono">
+            <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 mr-1 font-mono font-medium">
               <Filter className="w-3.5 h-3.5" />
               <span>Domain:</span>
             </div>
@@ -576,8 +576,8 @@ export function ProjectGrid() {
                 onClick={() => setSelectedFilter(cat)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 border ${
                   selectedFilter === cat
-                    ? "bg-gradient-to-r from-teal-400 to-cyan-500 text-slate-950 border-cyan-400 font-bold shadow-sm shadow-cyan-500/25"
-                    : "glass-panel text-slate-400 hover:text-white border-slate-800 hover:border-slate-700"
+                    ? "bg-gradient-to-r from-teal-500 to-cyan-600 text-white dark:from-teal-400 dark:to-cyan-500 dark:text-slate-950 border-cyan-400 font-bold shadow-sm shadow-cyan-500/25"
+                    : "bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-100 border-slate-200 dark:bg-slate-900/80 dark:text-slate-400 dark:hover:text-white dark:border-slate-800"
                 }`}
               >
                 {cat}
@@ -590,10 +590,10 @@ export function ProjectGrid() {
             <button
               type="button"
               onClick={() => setIsGitHubBrowserOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white font-medium text-xs border border-slate-800 hover:border-cyan-400/40 shadow-sm transition-all active:scale-95 whitespace-nowrap"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-800 hover:text-slate-950 dark:bg-slate-900/90 dark:hover:bg-slate-800 dark:text-slate-200 dark:hover:text-white font-medium text-xs border border-slate-300 dark:border-slate-800 hover:border-cyan-400/40 shadow-sm transition-all active:scale-95 whitespace-nowrap"
               title="Browse public GitHub repos and 1-click import into portfolio"
             >
-              <GithubIcon className="w-4 h-4 text-cyan-400" />
+              <GithubIcon className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
               <span>Browse GitHub Repos</span>
             </button>
 
@@ -668,17 +668,17 @@ export function ProjectGrid() {
                     setActiveCaseStudyProject(project);
                   }
                 }}
-                className="cursor-pointer glass-panel rounded-3xl border border-slate-800/90 p-6 flex flex-col justify-between hover:border-cyan-400/50 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300 group relative text-left bg-[#090f1d]/90 border-cyan-900/30"
+                className="cursor-pointer rounded-3xl p-6 flex flex-col justify-between hover:border-cyan-400/50 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300 group relative text-left bg-white border border-slate-200 dark:bg-[#090f1d]/90 dark:border-cyan-900/30 shadow-sm"
               >
                 <div className="space-y-4">
                   {/* Domain Tag, Featured Badge & Delete Action */}
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-cyan-50 text-cyan-700 border border-cyan-200 dark:bg-cyan-500/10 dark:text-cyan-400 dark:border-cyan-500/20">
                         {project.domainTag}
                       </span>
                       {project.featured && (
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">
                           ★ Featured
                         </span>
                       )}
@@ -691,7 +691,7 @@ export function ProjectGrid() {
                           e.stopPropagation();
                           handleOpenEditModal(project);
                         }}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700/60 shadow-sm transition-colors"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 hover:text-slate-900 hover:bg-slate-200 border border-slate-200 dark:bg-slate-800/80 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700 dark:border-slate-700/60 shadow-sm transition-colors"
                         title={`Edit "${project.title}"`}
                       >
                         <Edit3 className="w-3.5 h-3.5" />
@@ -706,7 +706,7 @@ export function ProjectGrid() {
                             deleteProject(project.id);
                           }
                         }}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-transparent hover:border-rose-200 dark:hover:border-rose-800/50 transition-all duration-200"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:text-rose-400 dark:hover:bg-rose-950/40 border border-transparent hover:border-rose-200 dark:hover:border-rose-800/50 transition-all duration-200"
                         title={`Delete "${project.title}"`}
                         aria-label={`Delete "${project.title}"`}
                       >
@@ -717,11 +717,11 @@ export function ProjectGrid() {
 
                   {/* Project Title with Interactive Arrow Cue */}
                   <div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors flex items-start justify-between gap-2">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors flex items-start justify-between gap-2">
                       <span>{project.title}</span>
-                      <ArrowRight className="w-4 h-4 text-cyan-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                      <ArrowRight className="w-4 h-4 text-cyan-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
                     </h3>
-                    <div className="text-[11px] text-cyan-400/80 font-mono font-medium mt-1">
+                    <div className="text-[11px] text-cyan-700 dark:text-cyan-400/80 font-mono font-medium mt-1">
                       Click to inspect deep dive &amp; architecture ↗
                     </div>
                   </div>
@@ -737,7 +737,7 @@ export function ProjectGrid() {
                   )}
 
                   {/* Problem Solved Framing */}
-                  <div className="p-3.5 rounded-xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-800">
+                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
                     <div className="text-[11px] font-mono uppercase tracking-wider text-rose-600 dark:text-rose-400 font-semibold mb-1">
                       Problem Bottleneck
                     </div>
@@ -748,10 +748,10 @@ export function ProjectGrid() {
 
                   {/* Novelty Highlight Chip ("How I Solved It") */}
                   {(project.noveltySnippet || project.caseStudy?.noveltyHighlights?.[0]) && (
-                    <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
-                      <div className="text-[11px] text-slate-300 leading-snug">
-                        <span className="font-bold text-cyan-400 font-mono">Novelty: </span>
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex items-start gap-2">
+                      <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 shrink-0 mt-0.5" />
+                      <div className="text-[11px] text-slate-700 dark:text-slate-300 leading-snug">
+                        <span className="font-bold text-cyan-700 dark:text-cyan-400 font-mono">Novelty: </span>
                         <span>{project.noveltySnippet || project.caseStudy?.noveltyHighlights?.[0]}</span>
                       </div>
                     </div>
@@ -764,7 +764,7 @@ export function ProjectGrid() {
 
                   {/* Tech Stack Pills */}
                   <div>
-                    <div className="text-[10px] font-mono uppercase text-slate-400 dark:text-slate-500 mb-1.5">
+                    <div className="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-500 mb-1.5 font-medium">
                       Stack &amp; Tools (Synchronized to Resume)
                     </div>
                     <div className="flex flex-wrap gap-1.5">
@@ -777,7 +777,7 @@ export function ProjectGrid() {
                         </span>
                       ))}
                       {project.techStack.length > 5 && (
-                        <span className="px-2 py-0.5 rounded-md text-[10px] font-mono text-slate-400 bg-slate-100 dark:bg-slate-800/40">
+                        <span className="px-2 py-0.5 rounded-md text-[10px] font-mono text-slate-500 bg-slate-100 dark:bg-slate-800/40">
                           +{project.techStack.length - 5}
                         </span>
                       )}
@@ -785,8 +785,8 @@ export function ProjectGrid() {
                   </div>
 
                   {/* High-Contrast Dedicated Metrics Callout Block */}
-                  <div className="p-4 rounded-2xl bg-slate-900/90 text-white shadow-md border border-slate-800/90 space-y-1.5">
-                    <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-cyan-400 font-bold">
+                  <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/90 text-slate-900 dark:text-white shadow-sm dark:shadow-md border border-slate-200 dark:border-slate-800/90 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-cyan-700 dark:text-cyan-400 font-bold">
                       <TrendingUp className="w-3.5 h-3.5" />
                       <span>Key Benchmarks &amp; Impact</span>
                     </div>
@@ -794,7 +794,7 @@ export function ProjectGrid() {
                       {project.metrics.map((metric, i) => (
                         <div
                           key={i}
-                          className="text-xs font-medium text-slate-200 flex items-start gap-1.5 leading-snug"
+                          className="text-xs font-medium text-slate-700 dark:text-slate-200 flex items-start gap-1.5 leading-snug"
                         >
                           <span>{metric}</span>
                         </div>
