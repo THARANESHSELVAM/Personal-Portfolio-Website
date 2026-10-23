@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { PROFILE } from "@/data/profile";
 import { 
   ArrowRight, 
   FileText, 
@@ -11,99 +10,107 @@ import {
   MapPin, 
   Terminal, 
   Sparkles,
-  ShieldCheck,
-  TrendingUp,
-  Cpu
+  Briefcase,
+  ExternalLink
 } from "lucide-react";
-import { LinkedinIcon, TwitterIcon, GithubIcon } from "@/components/Icons";
-
+import { LinkedinIcon, GithubIcon } from "@/components/Icons";
 import { useProfile } from "@/context/ProfileContext";
 
 export function Hero() {
-  const { state } = useProfile();
+  const { state, setActiveTab } = useProfile();
   const [copied, setCopied] = useState(false);
 
   const copyEmail = () => {
-    navigator.clipboard.writeText(state.contact.email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (state.contact?.email) {
+      navigator.clipboard.writeText(state.contact.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleNavigateToProjects = () => {
+    setActiveTab("projects");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleNavigateToResume = () => {
+    setActiveTab("resume");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <section id="about" className="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
-      {/* Ambient background glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-gradient-to-tr from-cyan-500/15 via-indigo-500/15 to-violet-500/15 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-10 right-10 w-72 h-72 bg-cyan-400/10 rounded-full blur-2xl pointer-events-none -z-10" />
-      <div className="absolute bottom-10 left-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none -z-10" />
+    <section id="hero" className="relative pt-10 pb-16 md:pt-16 md:pb-24 overflow-hidden">
+      {/* Subtle ambient glow in charcoal and restrained lime */}
+      <div 
+        aria-hidden="true" 
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[350px] bg-lime-500/5 rounded-full blur-3xl pointer-events-none -z-10" 
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center text-center space-y-6">
+          
           {/* Engineering Role Pill */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel text-xs sm:text-sm font-mono text-cyan-600 dark:text-cyan-400 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-            <Terminal className="w-3.5 h-3.5" />
-            <span>{state.title}</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel text-xs sm:text-sm font-mono text-lime-400 border border-lime-500/20 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse" />
+            <Terminal className="w-3.5 h-3.5 text-lime-400" />
+            <span>{state.title || "Aspiring Full-Stack Software Engineer"}</span>
           </div>
 
-          {/* High-Impact Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
-            Architecting <span className="bg-gradient-to-r from-cyan-500 via-indigo-500 to-violet-500 bg-clip-text text-transparent">Hyperscale Systems</span> & Mission-Critical Web Platforms
+          {/* High-Impact Headline with Crisp White Typography */}
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15] max-w-4xl">
+            Crafting <span className="text-lime-400 underline decoration-lime-500/40 decoration-2 underline-offset-8">modern, accessible web applications</span> & reliable software systems
           </h1>
 
-          {/* Elevator pitch */}
-          <p className="text-base sm:text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-normal max-w-3xl">
-            {state.elevatorPitch}
+          {/* Elevator Pitch / Supporting Text */}
+          <p className="text-sm sm:text-lg text-slate-300 leading-relaxed font-normal max-w-2xl">
+            {state.elevatorPitch || 
+              "Computer Science student and full-stack software engineer passionate about clean component design, Next.js, React, TypeScript, and modern web architectures. Seeking student internship and entry-level software development roles."
+            }
           </p>
 
-          {/* Location & Availability badge */}
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          {/* Location & Availability Badge */}
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs sm:text-sm text-slate-400">
             <div className="flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-cyan-500" />
-              <span>{state.contact.location}</span>
+              <MapPin className="w-4 h-4 text-lime-400 shrink-0" />
+              <span>{state.contact?.location || "India / Remote"}</span>
             </div>
-            <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
-            <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span>{state.availability.type}</span>
+            <span className="hidden sm:inline text-slate-700">•</span>
+            <div className="flex items-center gap-1.5 text-lime-400 font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-lime-400" />
+              <span>{state.availability?.badgeText || state.availability?.type || "Open to Internships"}</span>
             </div>
           </div>
 
-          {/* Dual Primary CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto pt-2">
-            <a
-              href="#projects"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-semibold text-sm shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all duration-200 group active:scale-95"
+          {/* Primary Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto pt-2">
+            <button
+              type="button"
+              onClick={handleNavigateToProjects}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-sm shadow-lg shadow-lime-500/20 transition-all duration-200 group active:scale-95 focus-visible:ring-2 focus-visible:ring-lime-400"
             >
               <span>Explore Projects</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </a>
+            </button>
 
-            <a
-              href="#learning-log"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl glass-panel text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 font-semibold text-sm border border-slate-300/70 dark:border-slate-700 shadow-sm transition-all duration-200 active:scale-95"
+            <button
+              type="button"
+              onClick={handleNavigateToResume}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl glass-panel text-white hover:text-lime-300 hover:border-lime-500/40 font-semibold text-sm border border-slate-800 shadow-sm transition-all duration-200 active:scale-95 focus-visible:ring-2 focus-visible:ring-lime-400"
             >
-              <Sparkles className="w-4 h-4 text-cyan-500" />
-              <span>What I Learnt</span>
-            </a>
-
-            <a
-              href="#resume"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl glass-panel text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 font-semibold text-sm border border-slate-300/70 dark:border-slate-700 shadow-sm transition-all duration-200 active:scale-95"
-            >
-              <FileText className="w-4 h-4 text-indigo-500" />
-              <span>ATS Resume</span>
-            </a>
+              <FileText className="w-4 h-4 text-lime-400" />
+              <span>View ATS Resume</span>
+            </button>
 
             <button
               type="button"
               onClick={copyEmail}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl glass-panel text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium text-xs border border-slate-300/70 dark:border-slate-700 shadow-sm transition-all duration-200"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl glass-panel text-slate-300 hover:text-white font-medium text-xs border border-slate-800 shadow-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-lime-400"
               title="Copy email to clipboard"
             >
               {copied ? (
                 <>
-                  <Check className="w-4 h-4 text-emerald-500" />
-                  <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Email Copied!</span>
+                  <Check className="w-4 h-4 text-lime-400" />
+                  <span className="text-lime-400 font-semibold">Email Copied!</span>
                 </>
               ) : (
                 <>
@@ -114,70 +121,66 @@ export function Hero() {
             </button>
           </div>
 
-          {/* Social Profiles Direct Links */}
-          <div className="flex items-center gap-3 pt-3">
-            <a
-              href={state.contact.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2.5 rounded-xl glass-panel text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 hover:scale-110 border border-slate-200 dark:border-slate-800 transition-all duration-200"
-              aria-label="GitHub Profile"
-            >
-              <GithubIcon className="w-4 h-4" />
-            </a>
-            <a
-              href={state.contact.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2.5 rounded-xl glass-panel text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 hover:scale-110 border border-slate-200 dark:border-slate-800 transition-all duration-200"
-              aria-label="LinkedIn Profile"
-            >
-              <LinkedinIcon className="w-4 h-4" />
-            </a>
-            <a
-              href={state.contact.twitter}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2.5 rounded-xl glass-panel text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 hover:scale-110 border border-slate-200 dark:border-slate-800 transition-all duration-200"
-              aria-label="Twitter Profile"
-            >
-              <TwitterIcon className="w-4 h-4" />
-            </a>
-            <a
-              href={`mailto:${state.contact.email}`}
-              className="p-2.5 rounded-xl glass-panel text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 hover:scale-110 border border-slate-200 dark:border-slate-800 transition-all duration-200"
-              aria-label="Email Directly"
-            >
-              <Mail className="w-4 h-4" />
-            </a>
+          {/* Direct Professional Social Links */}
+          <div className="flex items-center gap-3 pt-2">
+            {state.contact?.github && (
+              <a
+                href={state.contact.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-xl glass-panel text-slate-300 hover:text-lime-400 hover:border-lime-500/40 border border-slate-800 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-lime-400"
+                aria-label="GitHub Profile"
+                title="GitHub Profile"
+              >
+                <GithubIcon className="w-4 h-4" />
+              </a>
+            )}
+            {state.contact?.linkedin && (
+              <a
+                href={state.contact.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-xl glass-panel text-slate-300 hover:text-lime-400 hover:border-lime-500/40 border border-slate-800 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-lime-400"
+                aria-label="LinkedIn Profile"
+                title="LinkedIn Profile"
+              >
+                <LinkedinIcon className="w-4 h-4" />
+              </a>
+            )}
+            {state.contact?.email && (
+              <a
+                href={`mailto:${state.contact.email}`}
+                className="p-2.5 rounded-xl glass-panel text-slate-300 hover:text-lime-400 hover:border-lime-500/40 border border-slate-800 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-lime-400"
+                aria-label="Send Email Directly"
+                title="Send Email Directly"
+              >
+                <Mail className="w-4 h-4" />
+              </a>
+            )}
           </div>
         </div>
 
-        {/* Quantifiable Stats Ribbon */}
-        <div className="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {state.stats.map((stat, idx) => (
-            <div
-              key={idx}
-              className="glass-panel p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 hover:border-cyan-500/40 dark:hover:border-cyan-500/40 transition-all duration-300 group hover:-translate-y-1"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs uppercase tracking-wider font-mono text-slate-500 dark:text-slate-400">
+        {/* Quantifiable Stats Ribbon in Dark Charcoal & Restrained Lime */}
+        {state.stats && state.stats.length > 0 && (
+          <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            {state.stats.map((stat, idx) => (
+              <div
+                key={idx}
+                className="glass-panel p-4 rounded-2xl border border-slate-800/80 hover:border-lime-500/30 transition-all duration-300 group text-left"
+              >
+                <span className="text-[11px] uppercase tracking-wider font-mono text-slate-400 block mb-1">
                   {stat.label}
                 </span>
-                {idx === 0 && <TrendingUp className="w-4 h-4 text-cyan-500 opacity-80" />}
-                {idx === 1 && <ShieldCheck className="w-4 h-4 text-emerald-500 opacity-80" />}
-                {idx === 2 && <Sparkles className="w-4 h-4 text-indigo-500 opacity-80" />}
-                {idx === 3 && <Cpu className="w-4 h-4 text-violet-500 opacity-80" />}
+                <div className="text-xl sm:text-2xl font-extrabold text-white tracking-tight group-hover:text-lime-400 transition-colors">
+                  {stat.value}
+                </div>
+                <p className="mt-1 text-xs text-slate-400 line-clamp-1">
+                  {stat.detail}
+                </p>
               </div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                {stat.value}
-              </div>
-              <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-                {stat.detail}
-              </p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

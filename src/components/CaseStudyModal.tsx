@@ -180,11 +180,11 @@ ${project.metrics.join("\n")}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-lime-500/10 text-lime-400 border border-lime-500/20">
                   {project.domainTag}
                 </span>
                 {project.featured && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">
                     ★ Featured Architecture
                   </span>
                 )}
@@ -232,10 +232,10 @@ ${project.metrics.join("\n")}
                 <button
                   type="button"
                   onClick={() => onEditProject(project)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 border border-cyan-200 dark:border-cyan-800/60 shadow-sm transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700/60 shadow-sm transition-colors"
                   title="Edit this project's architecture, problem statement, metrics, and tech stack"
                 >
-                  <Edit3 className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                  <Edit3 className="w-3.5 h-3.5 text-lime-400" />
                   <span>Edit Project</span>
                 </button>
               )}
@@ -244,7 +244,7 @@ ${project.metrics.join("\n")}
               <button
                 type="button"
                 onClick={handleCopySummary}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold glass-panel text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 border border-slate-200 dark:border-slate-700 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold glass-panel text-slate-700 dark:text-slate-300 hover:text-lime-400 border border-slate-200 dark:border-slate-700 transition-colors"
                 title="Copy structured summary to clipboard for interview / recruiter briefing"
               >
                 {copiedSummary ? (
@@ -284,7 +284,7 @@ ${project.metrics.join("\n")}
                   onClick={() => setActiveTab(tab.id)}
                   className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all whitespace-nowrap shrink-0 ${
                     isActive
-                      ? "bg-cyan-500 text-white font-semibold shadow-sm shadow-cyan-500/30"
+                      ? "bg-lime-400 text-slate-950 font-bold shadow-sm shadow-lime-400/20"
                       : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/80"
                   }`}
                 >
@@ -305,20 +305,20 @@ ${project.metrics.join("\n")}
           {(activeTab === "all" || activeTab === "use") && (
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-sm font-bold tracking-tight text-slate-900 dark:text-white uppercase font-mono">
-                <Target className="w-4 h-4 text-cyan-500" />
+                <Target className="w-4 h-4 text-lime-400" />
                 <span>1. Practical Use Case &amp; Real-World Value</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="md:col-span-2 p-5 rounded-2xl bg-cyan-500/5 dark:bg-cyan-500/10 border border-cyan-500/20 space-y-3">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-cyan-700 dark:text-cyan-400 font-bold block">
+                <div className="md:col-span-2 p-5 rounded-2xl bg-lime-500/5 dark:bg-lime-500/10 border border-lime-500/20 space-y-3">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-lime-400 font-bold block">
                     Core Mission &amp; Operational Workflow
                   </span>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                     {caseStudy.projectUse || caseStudy.overview}
                   </p>
                   {caseStudy.overview && caseStudy.projectUse && (
-                    <p className="text-xs text-slate-500 dark:text-slate-400 pt-1 border-t border-cyan-500/10 leading-relaxed">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 pt-1 border-t border-lime-500/10 leading-relaxed">
                       {caseStudy.overview}
                     </p>
                   )}
@@ -352,7 +352,7 @@ ${project.metrics.join("\n")}
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
                     {caseStudy.keyFeatures.map((feat, i) => (
                       <div key={i} className="flex items-start gap-2 text-xs text-slate-700 dark:text-slate-300 font-medium">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-cyan-500 shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-lime-400 shrink-0 mt-0.5" />
                         <span>{feat}</span>
                       </div>
                     ))}
@@ -423,27 +423,27 @@ ${project.metrics.join("\n")}
           {(activeTab === "all" || activeTab === "solution") && (
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-sm font-bold tracking-tight text-slate-900 dark:text-white uppercase font-mono">
-                <Cpu className="w-4 h-4 text-cyan-500" />
+                <Cpu className="w-4 h-4 text-lime-400" />
                 <span>3. Solved Expert Architecture &amp; Mechanics</span>
               </div>
 
-              <div className="p-5 sm:p-6 rounded-2xl bg-cyan-500/5 dark:bg-cyan-500/10 border border-cyan-500/20 space-y-3">
-                <div className="flex items-center gap-2 text-cyan-700 dark:text-cyan-400 font-bold text-xs uppercase tracking-wider">
+              <div className="p-5 sm:p-6 rounded-2xl bg-lime-500/5 dark:bg-lime-500/10 border border-lime-500/20 space-y-3">
+                <div className="flex items-center gap-2 text-lime-400 font-bold text-xs uppercase tracking-wider">
                   <Workflow className="w-4 h-4" />
                   <span>Technical Design &amp; Architectural Blueprint</span>
                 </div>
                 <p className="text-sm sm:text-base text-slate-800 dark:text-slate-200 leading-relaxed">
                   {caseStudy.expertSolution || project.solution}
                 </p>
-                <div className="text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-cyan-500/10">
-                  <strong className="text-cyan-600 dark:text-cyan-400">End-to-End Pipeline: </strong>
+                <div className="text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-lime-500/10">
+                  <strong className="text-lime-400">End-to-End Pipeline: </strong>
                   {caseStudy.architectureNotes}
                 </div>
               </div>
 
               {/* ASCII Interactive Architecture Diagram */}
               {caseStudy.architectureDiagram && (
-                <div className="relative rounded-2xl bg-slate-950 p-4 sm:p-5 border border-slate-800 text-cyan-300 font-mono text-xs leading-relaxed shadow-xl overflow-hidden">
+                <div className="relative rounded-2xl bg-slate-950 p-4 sm:p-5 border border-slate-800 text-lime-300 font-mono text-xs leading-relaxed shadow-xl overflow-hidden">
                   <div className="flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-800 pb-2.5 mb-3">
                     <span className="flex items-center gap-1.5">
                       <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block" />
@@ -493,11 +493,11 @@ ${project.metrics.join("\n")}
               <div className="relative p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 text-white border-2 border-indigo-500/40 shadow-xl shadow-indigo-500/10 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-500/30 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="p-1.5 rounded-lg bg-indigo-500/20 text-cyan-400 border border-indigo-500/30">
+                    <div className="p-1.5 rounded-lg bg-indigo-500/20 text-lime-400 border border-indigo-500/30">
                       <Sparkles className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-xs font-mono font-bold tracking-wider text-cyan-400 uppercase">
+                      <span className="text-xs font-mono font-bold tracking-wider text-lime-400 uppercase">
                         The Core Engineering Secret Sauce
                       </span>
                       <h4 className="text-base sm:text-lg font-bold text-white">
@@ -506,7 +506,7 @@ ${project.metrics.join("\n")}
                     </div>
                   </div>
 
-                  <span className="px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-lime-500/20 text-lime-300 border border-lime-500/30">
                     Bespoke Innovation
                   </span>
                 </div>
@@ -527,7 +527,7 @@ ${project.metrics.join("\n")}
                           key={idx}
                           className="flex items-start gap-2.5 p-3 rounded-xl bg-white/5 border border-indigo-500/20 text-xs sm:text-sm text-slate-200"
                         >
-                          <Zap className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                          <Zap className="w-4 h-4 text-lime-400 shrink-0 mt-0.5" />
                           <span>{highlight}</span>
                         </div>
                       ))}
@@ -549,8 +549,8 @@ ${project.metrics.join("\n")}
               </div>
 
               {/* Verified Metrics Hero Block */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 dark:from-slate-950 dark:to-slate-900 text-white border border-slate-800 space-y-3">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-cyan-400 font-semibold block">
+              <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-950 dark:from-slate-950 dark:to-slate-900 text-white border border-slate-800 space-y-3">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-lime-400 font-semibold block">
                   Production Verified Results
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -619,7 +619,7 @@ ${project.metrics.join("\n")}
 
               {caseStudy.tradeoffs && caseStudy.tradeoffs.length > 0 && (
                 <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-semibold block">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-lime-400 font-semibold block">
                     Evaluated Trade-offs (CAP Theorem / Latency vs. Storage / CPU Overhead)
                   </span>
                   <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
@@ -650,15 +650,15 @@ ${project.metrics.join("\n")}
                   </ul>
                 </div>
 
-                <div className="p-4 sm:p-5 rounded-2xl bg-cyan-500/5 dark:bg-cyan-500/10 border border-cyan-500/20 space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-400">
+                <div className="p-4 sm:p-5 rounded-2xl bg-lime-500/5 dark:bg-lime-500/10 border border-lime-500/20 space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-lime-400">
                     <Lightbulb className="w-4 h-4" />
                     <span>Key Architectural Lessons Learned</span>
                   </div>
                   <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
                     {caseStudy.keyLearnings.map((l, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <span className="text-cyan-500 font-bold">•</span>
+                        <span className="text-lime-400 font-bold">•</span>
                         <span>{l}</span>
                       </li>
                     ))}
@@ -674,7 +674,7 @@ ${project.metrics.join("\n")}
           {(activeTab === "all" || activeTab === "solution" || activeTab === "tradeoffs") && (
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-2 text-sm font-bold tracking-tight text-slate-900 dark:text-white uppercase font-mono">
-                <Code2 className="w-4 h-4 text-cyan-500" />
+                <Code2 className="w-4 h-4 text-lime-400" />
                 <span>7. Technology Stack &amp; Architectural Rationale</span>
               </div>
 
@@ -686,7 +686,7 @@ ${project.metrics.join("\n")}
                       className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-1"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-cyan-600 dark:text-cyan-400">
+                        <span className="text-xs font-bold text-lime-400">
                           {tech.name}
                         </span>
                         <span className="text-[10px] font-mono text-slate-400 uppercase">
@@ -724,7 +724,7 @@ ${project.metrics.join("\n")}
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500 hover:bg-cyan-600 text-white shadow-sm shadow-cyan-500/20 transition-all active:scale-95"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold shadow-sm shadow-lime-400/20 transition-all active:scale-95"
               >
                 <span>Live Demo</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -773,7 +773,7 @@ ${project.metrics.join("\n")}
             <button
               type="button"
               onClick={handleCopySummary}
-              className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-lime-400 transition-colors"
             >
               {copiedSummary ? "✓ Copied Summary" : "Copy Brief"}
             </button>

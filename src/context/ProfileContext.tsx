@@ -46,9 +46,32 @@ export interface ProfileContextType {
   logoutUser: () => void;
   updateProfile: (updates: Partial<ProfileState>) => void;
   addLearning: (entry: Omit<LearningEntry, "id" | "dateLogged">) => void;
+  addLearnings: (entries: Array<Omit<LearningEntry, "id" | "dateLogged">>) => number;
   updateLearning: (id: string, entry: Partial<LearningEntry>) => void;
   deleteLearning: (id: string) => void;
   addProject: (project: Omit<Project, "id">) => void;
+  importProjectWithDiarySync: (
+    project: Omit<Project, "id">,
+    options?: {
+      syncToDiary?: boolean;
+      newSkills?: Array<{ technology: string; category: CompetencyArea; tags: string[] }>;
+    }
+  ) => { project: Project; addedLearningsCount: number };
+  resyncProjectFromGitHub: (
+    projectId: string,
+    updates: {
+      techStack: string[];
+      liveUrl?: string;
+      repoUrl?: string;
+      metrics?: string[];
+    },
+    options?: {
+      syncToDiary?: boolean;
+      newSkills?: Array<{ technology: string; category: CompetencyArea; tags: string[] }>;
+      projectTitle?: string;
+      repoUrl?: string;
+    }
+  ) => { updatedProject: Project; addedLearningsCount: number };
   updateProject: (id: string, updates: Partial<Project>) => void;
   deleteProject: (id: string) => void;
   clearWorkspaceData: () => void;
@@ -91,69 +114,73 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      // 2. Load active user
-      const storedUserId = localStorage.getItem(ACTIVE_USER_KEY);
-      if (storedUserId) {
-        setActiveUserId(storedUserId);
+      // 2. Load active user (defaults immediately to tharanesh-selvam for recruiters & visitors)
+      const storedUserId = localStorage.getItem(ACTIVE_USER_KEY) || "tharanesh-selvam";
+      setActiveUserId(storedUserId);
 
-        const storageKey = getWorkspaceStorageKey(storedUserId);
-        const saved = localStorage.getItem(storageKey);
+      const storageKey = getWorkspaceStorageKey(storedUserId);
+      const saved = localStorage.getItem(storageKey);
 
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (parsed && Array.isArray(parsed.learnings) && Array.isArray(parsed.projects)) {
-            // Merge initial rich case studies into projects matching initial IDs if needed
-            const mergedProjects = parsed.projects.map((proj: Project) => {
-              const initial = INITIAL_PROJECTS.find((p: Project) => p.id === proj.id);
-              if (initial && initial.caseStudy) {
-                return {
-                  ...initial,
-                  ...proj,
-                  noveltySnippet: initial.noveltySnippet || proj.noveltySnippet,
-                  caseStudy: {
-                    ...initial.caseStudy,
-                    ...(proj.caseStudy || {}),
-                    projectUse: proj.caseStudy?.projectUse || initial.caseStudy.projectUse,
-                    problemStatement: proj.caseStudy?.problemStatement || initial.caseStudy.problemStatement,
-                    expertSolution: proj.caseStudy?.expertSolution || initial.caseStudy.expertSolution,
-                    novelty: proj.caseStudy?.novelty || initial.caseStudy.novelty,
-                    noveltyHighlights: (proj.caseStudy?.noveltyHighlights && proj.caseStudy.noveltyHighlights.length > 0)
-                      ? proj.caseStudy.noveltyHighlights
-                      : initial.caseStudy.noveltyHighlights,
-                    benchmarks: (proj.caseStudy?.benchmarks && proj.caseStudy.benchmarks.length > 0)
-                      ? proj.caseStudy.benchmarks
-                      : initial.caseStudy.benchmarks,
-                  },
-                };
-              }
-              return proj;
-            });
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && Array.isArray(parsed.learnings) && Array.isArray(parsed.projects)) {
+          // Merge initial rich case studies into projects matching initial IDs if needed
+          const mergedProjects = parsed.projects.map((proj: Project) => {
+            const initial = INITIAL_PROJECTS.find((p: Project) => p.id === proj.id);
+            if (initial && initial.caseStudy) {
+              return {
+                ...initial,
+                ...proj,
+                noveltySnippet: initial.noveltySnippet || proj.noveltySnippet,
+                caseStudy: {
+                  ...initial.caseStudy,
+                  ...(proj.caseStudy || {}),
+                  projectUse: proj.caseStudy?.projectUse || initial.caseStudy.projectUse,
+                  problemStatement: proj.caseStudy?.problemStatement || initial.caseStudy.problemStatement,
+                  expertSolution: proj.caseStudy?.expertSolution || initial.caseStudy.expertSolution,
+                  novelty: proj.caseStudy?.novelty || initial.caseStudy.novelty,
+                  noveltyHighlights: (proj.caseStudy?.noveltyHighlights && proj.caseStudy.noveltyHighlights.length > 0)
+                    ? proj.caseStudy.noveltyHighlights
+                    : initial.caseStudy.noveltyHighlights,
+                  benchmarks: (proj.caseStudy?.benchmarks && proj.caseStudy.benchmarks.length > 0)
+                    ? proj.caseStudy.benchmarks
+                    : initial.caseStudy.benchmarks,
+                },
+              };
+            }
+            return proj;
+          });
 
-            setState({ ...parsed, projects: mergedProjects });
-            setCurrentUser({
-              userId: storedUserId,
-              name: parsed.name || "Tharanesh Selvam",
-              email: parsed.contact?.email || storedUserId,
-              title: parsed.title || "Full-Stack Software Engineer",
-              location: parsed.contact?.location || "",
-              phone: parsed.contact?.phone || "",
-              github: parsed.contact?.github || "",
-              linkedin: parsed.contact?.linkedin || "",
-            });
-          }
-        } else {
-          // No saved workspace for this active user yet, initialize default
-          const defaultIdentity: UserIdentity = {
+          setState({ ...parsed, projects: mergedProjects });
+          setCurrentUser({
             userId: storedUserId,
-            name: "Tharanesh Selvam",
-            email: storedUserId.includes("@") ? storedUserId : `${storedUserId}@gmail.com`,
-            title: "Full-Stack Software Engineer & Cloud Architect",
-          };
-          const starter = createStarterWorkspace(defaultIdentity);
-          setState(starter);
-          setCurrentUser(defaultIdentity);
-          localStorage.setItem(storageKey, JSON.stringify(starter));
+            name: parsed.name || "Tharanesh Selvam",
+            fullName: parsed.name || "Tharanesh Selvam",
+            email: parsed.contact?.email || "tharanesh.selvam@gmail.com",
+            title: parsed.title || "Aspiring Full-Stack Software Engineer",
+            location: parsed.contact?.location || "India / Remote",
+            phone: parsed.contact?.phone || "",
+            github: parsed.contact?.github || "https://github.com/THARANESHSELVAM",
+            linkedin: parsed.contact?.linkedin || "https://linkedin.com/in/tharanesh-selvam",
+          });
         }
+      } else {
+        // No saved workspace for this active user yet, initialize default for Tharanesh Selvam
+        const defaultIdentity: UserIdentity = {
+          userId: storedUserId,
+          name: "Tharanesh Selvam",
+          fullName: "Tharanesh Selvam",
+          email: storedUserId.includes("@") ? storedUserId : "tharanesh.selvam@gmail.com",
+          title: "Aspiring Full-Stack Software Engineer",
+          location: "India / Open to Remote & Relocation",
+          github: "https://github.com/THARANESHSELVAM",
+          linkedin: "https://linkedin.com/in/tharanesh-selvam",
+        };
+        const starter = createStarterWorkspace(defaultIdentity);
+        setState(starter);
+        setCurrentUser(defaultIdentity);
+        localStorage.setItem(storageKey, JSON.stringify(starter));
+        localStorage.setItem(ACTIVE_USER_KEY, storedUserId);
       }
     } catch (e) {
       console.error("Failed to hydrate user workspace from localStorage:", e);
@@ -343,6 +370,28 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     }));
   }, []);
 
+  const addLearnings = useCallback((entries: Array<Omit<LearningEntry, "id" | "dateLogged">>): number => {
+    if (!entries || entries.length === 0) return 0;
+    const nowStr = new Date().toISOString().split("T")[0];
+    const newItems: LearningEntry[] = entries.map((entry, idx) => ({
+      ...entry,
+      id: `learn-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
+      dateLogged: nowStr,
+    }));
+
+    setState((prev) => ({
+      ...prev,
+      learnings: [...newItems, ...prev.learnings],
+      stats: prev.stats.map((s) =>
+        s.label.includes("Milestones")
+          ? { ...s, value: `${prev.learnings.length + newItems.length} Logged` }
+          : s
+      ),
+    }));
+
+    return newItems.length;
+  }, []);
+
   const updateLearning = useCallback((id: string, updates: Partial<LearningEntry>) => {
     setState((prev) => ({
       ...prev,
@@ -378,6 +427,147 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       ),
     }));
   }, []);
+
+  const importProjectWithDiarySync = useCallback((
+    project: Omit<Project, "id">,
+    options?: {
+      syncToDiary?: boolean;
+      newSkills?: Array<{ technology: string; category: CompetencyArea; tags: string[] }>;
+    }
+  ): { project: Project; addedLearningsCount: number } => {
+    const newProject: Project = {
+      ...project,
+      id: `proj-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+    };
+
+    let newLearningsToAppend: LearningEntry[] = [];
+
+    if (options?.syncToDiary && options.newSkills && options.newSkills.length > 0) {
+      const existingTechs = new Set(state.learnings.map((l) => l.technology.toLowerCase().trim()));
+      const nowStr = new Date().toISOString().split("T")[0];
+
+      options.newSkills.forEach((skill, idx) => {
+        const norm = skill.technology.toLowerCase().trim();
+        if (!existingTechs.has(norm)) {
+          existingTechs.add(norm); // avoid duplicates in same batch
+          newLearningsToAppend.push({
+            id: `learn-gh-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
+            technology: skill.technology,
+            category: skill.category,
+            masteryLevel: "Production Ready",
+            keyTakeaway: `Implemented and verified in portfolio repository "${project.title}" (${project.repoUrl || "GitHub"}).`,
+            repoOrDemoUrl: project.repoUrl,
+            dateLogged: nowStr,
+            tags: skill.tags && skill.tags.length > 0 ? skill.tags : [skill.category.replace(/\s+/g, ""), "GitHubImport"],
+          });
+        }
+      });
+    }
+
+    setState((prev) => ({
+      ...prev,
+      projects: [newProject, ...prev.projects],
+      learnings: newLearningsToAppend.length > 0 ? [...newLearningsToAppend, ...prev.learnings] : prev.learnings,
+      stats: prev.stats.map((s) => {
+        if (s.label.includes("Projects")) return { ...s, value: `${prev.projects.length + 1} Built` };
+        if (s.label.includes("Milestones")) return { ...s, value: `${prev.learnings.length + newLearningsToAppend.length} Logged` };
+        return s;
+      }),
+    }));
+
+    return {
+      project: newProject,
+      addedLearningsCount: newLearningsToAppend.length,
+    };
+  }, [state.learnings]);
+
+  const resyncProjectFromGitHub = useCallback((
+    projectId: string,
+    updates: {
+      techStack: string[];
+      liveUrl?: string;
+      repoUrl?: string;
+      metrics?: string[];
+    },
+    options?: {
+      syncToDiary?: boolean;
+      newSkills?: Array<{ technology: string; category: CompetencyArea; tags: string[] }>;
+      projectTitle?: string;
+      repoUrl?: string;
+    }
+  ): { updatedProject: Project; addedLearningsCount: number } => {
+    let updatedProjResult: Project | null = null;
+    let newLearningsToAppend: LearningEntry[] = [];
+
+    if (options?.syncToDiary && options.newSkills && options.newSkills.length > 0) {
+      const existingTechs = new Set(state.learnings.map((l) => l.technology.toLowerCase().trim()));
+      const nowStr = new Date().toISOString().split("T")[0];
+
+      options.newSkills.forEach((skill, idx) => {
+        const norm = skill.technology.toLowerCase().trim();
+        if (!existingTechs.has(norm)) {
+          existingTechs.add(norm);
+          newLearningsToAppend.push({
+            id: `learn-gh-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
+            technology: skill.technology,
+            category: skill.category,
+            masteryLevel: "Production Ready",
+            keyTakeaway: `Implemented and verified in re-synchronized repository "${options.projectTitle || "Portfolio Project"}" (${options.repoUrl || ""}).`,
+            repoOrDemoUrl: options.repoUrl,
+            dateLogged: nowStr,
+            tags: skill.tags && skill.tags.length > 0 ? skill.tags : [skill.category.replace(/\s+/g, ""), "GitHubSync"],
+          });
+        }
+      });
+    }
+
+    setState((prev) => {
+      const nextProjects = prev.projects.map((p) => {
+        if (p.id !== projectId) return p;
+
+        // Merge tech stacks without duplicates, preserving existing casing
+        const existingLower = new Set(p.techStack.map((t) => t.toLowerCase()));
+        const mergedStack = [...p.techStack];
+        updates.techStack.forEach((t) => {
+          if (!existingLower.has(t.toLowerCase())) {
+            existingLower.add(t.toLowerCase());
+            mergedStack.push(t);
+          }
+        });
+
+        // Merge metrics or update if new ones exist
+        const updatedMetrics = updates.metrics && updates.metrics.length > 0 ? updates.metrics : p.metrics;
+
+        const updatedProj: Project = {
+          ...p,
+          techStack: mergedStack,
+          liveUrl: updates.liveUrl !== undefined ? updates.liveUrl : p.liveUrl,
+          repoUrl: updates.repoUrl || p.repoUrl,
+          metrics: updatedMetrics,
+          // CRITICAL: Preserve custom architectural case study notes 100%!
+          caseStudy: p.caseStudy,
+        };
+        updatedProjResult = updatedProj;
+        return updatedProj;
+      });
+
+      return {
+        ...prev,
+        projects: nextProjects,
+        learnings: newLearningsToAppend.length > 0 ? [...newLearningsToAppend, ...prev.learnings] : prev.learnings,
+        stats: prev.stats.map((s) =>
+          s.label.includes("Milestones") && newLearningsToAppend.length > 0
+            ? { ...s, value: `${prev.learnings.length + newLearningsToAppend.length} Logged` }
+            : s
+        ),
+      };
+    });
+
+    return {
+      updatedProject: updatedProjResult || (state.projects.find((p) => p.id === projectId) as Project),
+      addedLearningsCount: newLearningsToAppend.length,
+    };
+  }, [state.learnings, state.projects]);
 
   const updateProject = useCallback((id: string, updates: Partial<Project>) => {
     setState((prev) => ({
@@ -495,9 +685,12 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         logoutUser,
         updateProfile,
         addLearning,
+        addLearnings,
         updateLearning,
         deleteLearning,
         addProject,
+        importProjectWithDiarySync,
+        resyncProjectFromGitHub,
         updateProject,
         deleteProject,
         clearWorkspaceData,

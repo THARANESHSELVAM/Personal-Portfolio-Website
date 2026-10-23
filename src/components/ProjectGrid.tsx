@@ -2,8 +2,17 @@
 
 import { useState } from "react";
 import { useProfile } from "@/context/ProfileContext";
-import { Project } from "@/data/profile";
+import { Project, CompetencyArea } from "@/data/profile";
 import { CaseStudyModal } from "./CaseStudyModal";
+import { GitHubRepoBrowserModal } from "./GitHubRepoBrowserModal";
+import confetti from "canvas-confetti";
+import {
+  parseGitHubUrl,
+  fetchGitHubRepo,
+  FetchedRepoData,
+  SuggestedLearning,
+  toTitleCase,
+} from "@/lib/github";
 import { 
   Briefcase, 
   ExternalLink, 
@@ -19,17 +28,54 @@ import {
   Sparkles,
   Target,
   ArrowRight,
-  Edit3
+  Edit3,
+  Loader2,
+  RefreshCw,
+  AlertCircle,
+  CheckCircle2,
+  Star,
+  GitFork,
+  Globe
 } from "lucide-react";
 import { GithubIcon } from "@/components/Icons";
 
 export function ProjectGrid() {
-  const { state, addProject, updateProject, deleteProject } = useProfile();
+  const {
+    state,
+    addProject,
+    importProjectWithDiarySync,
+    resyncProjectFromGitHub,
+    addLearnings,
+    updateProject,
+    deleteProject,
+    currentUser,
+  } = useProfile();
+
   const [selectedFilter, setSelectedFilter] = useState<string>("All");
   const [activeCaseStudyProject, setActiveCaseStudyProject] = useState<Project | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+
+  // GitHub Repository Browser Modal state
+  const [isGitHubBrowserOpen, setIsGitHubBrowserOpen] = useState(false);
+  const [statusToast, setStatusToast] = useState<{ message: string; type: "success" | "info" } | null>(null);
+
+  // Quick Import from GitHub in Add Project Modal
+  const [quickRepoUrl, setQuickRepoUrl] = useState("");
+  const [isFetchingRepo, setIsFetchingRepo] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [fetchSuccessMessage, setFetchSuccessMessage] = useState<string | null>(null);
+  const [autoLogToDiary, setAutoLogToDiary] = useState<boolean>(true);
+  const [pendingDiscoveredSkills, setPendingDiscoveredSkills] = useState<SuggestedLearning[]>([]);
+
+  // Quick Sync with GitHub in Edit Project Modal
+  const [editQuickRepoUrl, setEditQuickRepoUrl] = useState("");
+  const [isEditFetchingRepo, setIsEditFetchingRepo] = useState(false);
+  const [editFetchError, setEditFetchError] = useState<string | null>(null);
+  const [editFetchSuccessMessage, setEditFetchSuccessMessage] = useState<string | null>(null);
+  const [editAutoLogToDiary, setEditAutoLogToDiary] = useState<boolean>(true);
+  const [editPendingDiscoveredSkills, setEditPendingDiscoveredSkills] = useState<SuggestedLearning[]>([]);
 
   // Edit Project Form State
   const [editProjectData, setEditProjectData] = useState({
@@ -64,9 +110,9 @@ export function ProjectGrid() {
     solution: "",
     novelty: "",
     techStackInput: "",
-    metric1: "⚡ Slashed latency by 45%",
-    metric2: "📈 Scaled to 100k+ active users",
-    metric3: "💰 Reduced infrastructure costs by 30%",
+    metric1: "⚡ 100% TypeScript typed with strict compiler mode",
+    metric2: "🎯 95+ Lighthouse score across performance & accessibility",
+    metric3: "♿ WCAG 2.1 AA keyboard navigable design system",
     liveUrl: "",
     repoUrl: "",
     challenges: "",
@@ -77,17 +123,179 @@ export function ProjectGrid() {
 
   const categories = [
     "All",
-    "Distributed Systems",
     "Full-Stack Web",
-    "AI & Distributed Systems",
-    "Cloud Security",
-    "Data & Observability",
-    "Developer Tooling"
+    "Developer Tooling",
+    "UI / UX Engineering",
+    "Open Source Tools"
   ];
 
   const filteredProjects = selectedFilter === "All"
     ? state.projects
     : state.projects.filter((p) => p.category === selectedFilter);
+
+  // 1-Click Repo Fetch inside Add Project Modal
+  const handleFetchQuickRepo = async () => {
+    const parsed = parseGitHubUrl(quickRepoUrl);
+    if (!parsed) {
+      setFetchError("Please enter a valid GitHub URL (e.g. https://github.com/THARANESHSELVAM/Personal-Portfolio-Website) or shorthand (THARANESHSELVAM/repo).");
+      setFetchSuccessMessage(null);
+      return;
+    }
+
+    setIsFetchingRepo(true);
+    setFetchError(null);
+    setFetchSuccessMessage(null);
+
+    try {
+      const data = await fetchGitHubRepo(parsed.owner, parsed.repo);
+
+      // Auto-populate form fields
+      setNewProject({
+        title: data.title,
+        category: data.category,
+        domainTag: data.domainTag,
+        projectUse: data.description,
+        problemSolved: newProject.problemSolved.trim() || `Production architecture designed with ${data.primaryLanguage} to address scalability, high concurrency, and reliable distributed state management.`,
+        solution: data.description,
+        novelty: data.suggestedNovelty,
+        techStackInput: Array.from(new Set([...data.languages, ...data.topics])).join(", "),
+        metric1: data.suggestedMetrics[0] || "⚡ 100% Type-Safe Architecture",
+        metric2: data.suggestedMetrics[1] || "📈 High Concurrent Throughput",
+        metric3: data.suggestedMetrics[2] || "💰 Optimized Cloud Infrastructure",
+        liveUrl: data.homepage || "",
+        repoUrl: data.html_url,
+        challenges: "Ensuring low latency, zero packet loss, and seamless distributed state synchronization.",
+        keyLearnings: `Production mastery of ${data.languages.slice(0, 3).join(", ")} and modern modular software architecture.`,
+      });
+
+      setPendingDiscoveredSkills(data.suggestedLearnings);
+      setFetchSuccessMessage(
+        `✓ Loaded "${data.name}"! (${data.languages.length} languages detected, ${data.stars} stars, domain classified as ${data.category}).`
+      );
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to fetch repository from GitHub.";
+      setFetchError(msg);
+      setFetchSuccessMessage(null);
+    } finally {
+      setIsFetchingRepo(false);
+    }
+  };
+
+  // 1-Click Repo Fetch inside Edit Project Modal
+  const handleEditQuickFetchRepo = async () => {
+    const targetUrl = editQuickRepoUrl || editProjectData.repoUrl;
+    const parsed = parseGitHubUrl(targetUrl);
+    if (!parsed) {
+      setEditFetchError("Please enter a valid GitHub repository URL or shorthand.");
+      setEditFetchSuccessMessage(null);
+      return;
+    }
+
+    setIsEditFetchingRepo(true);
+    setEditFetchError(null);
+    setEditFetchSuccessMessage(null);
+
+    try {
+      const data = await fetchGitHubRepo(parsed.owner, parsed.repo);
+
+      // Merge new languages and topics into techStackList
+      const incomingTechs = Array.from(new Set([...data.languages, ...data.topics]));
+      const existingLower = new Set(editProjectData.techStackList.map((t) => t.toLowerCase()));
+      const mergedList = [...editProjectData.techStackList];
+      incomingTechs.forEach((t) => {
+        if (!existingLower.has(t.toLowerCase())) {
+          existingLower.add(t.toLowerCase());
+          mergedList.push(t);
+        }
+      });
+
+      setEditProjectData((prev) => ({
+        ...prev,
+        techStackList: mergedList,
+        liveUrl: data.homepage || prev.liveUrl,
+        repoUrl: data.html_url,
+        metric1: data.suggestedMetrics[0] || prev.metric1,
+      }));
+
+      setEditPendingDiscoveredSkills(data.suggestedLearnings);
+      setEditFetchSuccessMessage(
+        `✓ Synchronized with "${data.name}"! Merged ${incomingTechs.length} technologies from GitHub.`
+      );
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to sync repository from GitHub.";
+      setEditFetchError(msg);
+      setEditFetchSuccessMessage(null);
+    } finally {
+      setIsEditFetchingRepo(false);
+    }
+  };
+
+  // From GitHub Browser Modal: Select repo to import -> opens Add Modal prefilled
+  const handleSelectRepoForImport = (data: FetchedRepoData, autoLog: boolean) => {
+    setQuickRepoUrl(data.html_url);
+    setAutoLogToDiary(autoLog);
+    setPendingDiscoveredSkills(data.suggestedLearnings);
+
+    setNewProject({
+      title: data.title,
+      category: data.category,
+      domainTag: data.domainTag,
+      projectUse: data.description,
+      problemSolved: `Engineered an optimized ${data.primaryLanguage} architecture to overcome concurrency bottlenecks and deliver verified enterprise reliability.`,
+      solution: data.description,
+      novelty: data.suggestedNovelty,
+      techStackInput: Array.from(new Set([...data.languages, ...data.topics])).join(", "),
+      metric1: data.suggestedMetrics[0] || "⚡ 100% Type-Safe Architecture",
+      metric2: data.suggestedMetrics[1] || "📈 High Concurrent Throughput",
+      metric3: data.suggestedMetrics[2] || "💰 Optimized Cloud Infrastructure",
+      liveUrl: data.homepage || "",
+      repoUrl: data.html_url,
+      challenges: "Ensuring low latency, zero packet loss, and seamless distributed state synchronization.",
+      keyLearnings: `Production mastery of ${data.languages.slice(0, 3).join(", ")} and modern modular software architecture.`,
+    });
+
+    setFetchSuccessMessage(`✓ Loaded "${data.name}"! Review fields and save below.`);
+    setFetchError(null);
+    setIsAddModalOpen(true);
+  };
+
+  // From GitHub Browser Modal: 1-Click Re-sync existing project
+  const handleResyncRepo = (
+    existingProject: Project,
+    data: FetchedRepoData,
+    autoLog: boolean
+  ) => {
+    const { updatedProject, addedLearningsCount } = resyncProjectFromGitHub(
+      existingProject.id,
+      {
+        techStack: Array.from(new Set([...existingProject.techStack, ...data.languages, ...data.topics])),
+        liveUrl: data.homepage || existingProject.liveUrl,
+        repoUrl: data.html_url,
+        metrics: data.suggestedMetrics.length > 0 ? data.suggestedMetrics : existingProject.metrics,
+      },
+      {
+        syncToDiary: autoLog,
+        newSkills: data.suggestedLearnings,
+        projectTitle: existingProject.title,
+        repoUrl: data.html_url,
+      }
+    );
+
+    try {
+      confetti({
+        particleCount: 60,
+        spread: 50,
+        origin: { y: 0.65 },
+      });
+    } catch (e) {}
+
+    const toastMsg = addedLearningsCount > 0
+      ? `Re-synced "${updatedProject.title}"! Tech stack updated from GitHub and +${addedLearningsCount} new skills logged to Learning Diary without overwriting custom case study notes.`
+      : `Re-synced "${updatedProject.title}"! Tech stack & metrics updated from GitHub without overwriting custom case study notes.`;
+
+    setStatusToast({ message: toastMsg, type: "success" });
+    setTimeout(() => setStatusToast(null), 5000);
+  };
 
   const handleCreateProject = (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,7 +319,7 @@ export function ProjectGrid() {
       (m) => m && m.trim().length > 0
     );
 
-    addProject({
+    const projectPayload = {
       title: newProject.title.trim(),
       category: newProject.category,
       domainTag: newProject.domainTag.trim() || newProject.category,
@@ -146,7 +354,30 @@ export function ProjectGrid() {
           ? newProject.keyLearnings.split(";").map((l) => l.trim())
           : ["Decoupled microservices improve fault isolation."],
       },
-    });
+    };
+
+    const { project: created, addedLearningsCount } = importProjectWithDiarySync(
+      projectPayload,
+      {
+        syncToDiary: autoLogToDiary,
+        newSkills: pendingDiscoveredSkills,
+      }
+    );
+
+    try {
+      confetti({
+        particleCount: 70,
+        spread: 60,
+        origin: { y: 0.6 },
+      });
+    } catch (e) {}
+
+    const toastText = addedLearningsCount > 0
+      ? `Project "${created.title}" saved! +${addedLearningsCount} new verified skill${addedLearningsCount === 1 ? "" : "s"} logged to Learning Diary & Live ATS Resume.`
+      : `Project "${created.title}" saved and Live ATS Resume updated!`;
+
+    setStatusToast({ message: toastText, type: "success" });
+    setTimeout(() => setStatusToast(null), 5000);
 
     setIsAddModalOpen(false);
     setNewProject({
@@ -166,11 +397,19 @@ export function ProjectGrid() {
       challenges: "",
       keyLearnings: "",
     });
+    setQuickRepoUrl("");
+    setFetchError(null);
+    setFetchSuccessMessage(null);
+    setPendingDiscoveredSkills([]);
     setFormErrors({});
   };
 
   const handleOpenEditModal = (project: Project) => {
     setEditingProject(project);
+    setEditQuickRepoUrl(project.repoUrl || "");
+    setEditFetchError(null);
+    setEditFetchSuccessMessage(null);
+    setEditPendingDiscoveredSkills([]);
     setEditProjectData({
       id: project.id,
       title: project.title,
@@ -266,6 +505,26 @@ export function ProjectGrid() {
 
     updateProject(editingProject.id, updatedData);
 
+    // If there were pending discovered skills from GitHub re-fetch and autoLog is enabled
+    let loggedCount = 0;
+    if (editAutoLogToDiary && editPendingDiscoveredSkills.length > 0) {
+      const existingTechs = new Set(state.learnings.map((l) => l.technology.toLowerCase().trim()));
+      const skillsToLog = editPendingDiscoveredSkills
+        .filter((s) => !existingTechs.has(s.technology.toLowerCase().trim()))
+        .map((s) => ({
+          technology: s.technology,
+          category: s.category,
+          masteryLevel: "Production Ready" as const,
+          keyTakeaway: `Implemented and verified in updated repository "${updatedData.title}" (${updatedData.repoUrl || ""}).`,
+          repoOrDemoUrl: updatedData.repoUrl,
+          tags: s.tags,
+        }));
+
+      if (skillsToLog.length > 0) {
+        loggedCount = addLearnings(skillsToLog);
+      }
+    }
+
     if (activeCaseStudyProject?.id === editingProject.id) {
       setActiveCaseStudyProject({
         ...editingProject,
@@ -273,6 +532,13 @@ export function ProjectGrid() {
         caseStudy: updatedData.caseStudy as any,
       });
     }
+
+    const toastMsg = loggedCount > 0
+      ? `Changes saved for "${updatedData.title}"! +${loggedCount} new skills logged to Learning Diary.`
+      : `Changes saved for "${updatedData.title}"! Live ATS Resume re-compiled.`;
+
+    setStatusToast({ message: toastMsg, type: "success" });
+    setTimeout(() => setStatusToast(null), 5000);
 
     setIsEditModalOpen(false);
     setEditingProject(null);
@@ -283,15 +549,15 @@ export function ProjectGrid() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 mb-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-lime-400 bg-lime-500/10 border border-lime-500/20 mb-3">
             <Briefcase className="w-3.5 h-3.5" />
             <span>APPLIED WORK &amp; IMPACT</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Impact-Driven Engineering Projects
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            Featured Projects &amp; Engineering Work
           </h2>
-          <p className="mt-3 text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
-            Click on any project to explore its <strong>practical use</strong>, <strong>problem statement</strong>, <strong>solved expert architecture</strong>, and <strong>novelty (how I solved it)</strong> with verified benchmarks.
+          <p className="mt-3 text-slate-400 text-sm sm:text-base leading-relaxed">
+            Explore real-world software applications featuring problem breakdowns, architecture decisions, live deployments, and measurable results.
           </p>
         </div>
 
@@ -310,8 +576,8 @@ export function ProjectGrid() {
                 onClick={() => setSelectedFilter(cat)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 border ${
                   selectedFilter === cat
-                    ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white shadow-sm"
-                    : "glass-panel text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border-slate-200 dark:border-slate-800"
+                    ? "bg-lime-400 text-slate-950 border-lime-400 font-bold shadow-sm shadow-lime-400/20"
+                    : "glass-panel text-slate-400 hover:text-white border-slate-800 hover:border-slate-700"
                 }`}
               >
                 {cat}
@@ -319,21 +585,56 @@ export function ProjectGrid() {
             ))}
           </div>
 
-          {/* Add Project Button */}
-          <button
-            type="button"
-            onClick={() => setIsAddModalOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-semibold text-xs shadow-md shadow-cyan-500/20 transition-all active:scale-95 whitespace-nowrap"
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>Add Project Entry</span>
-          </button>
+          {/* Action CTAs: Browse GitHub Repos + Add Project */}
+          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+            <button
+              type="button"
+              onClick={() => setIsGitHubBrowserOpen(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white font-medium text-xs border border-slate-800 hover:border-lime-500/40 shadow-sm transition-all active:scale-95 whitespace-nowrap"
+              title="Browse public GitHub repos and 1-click import into portfolio"
+            >
+              <GithubIcon className="w-4 h-4 text-lime-400" />
+              <span>Browse GitHub Repos</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setQuickRepoUrl("");
+                setFetchError(null);
+                setFetchSuccessMessage(null);
+                setPendingDiscoveredSkills([]);
+                setIsAddModalOpen(true);
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs shadow-md shadow-lime-400/20 transition-all active:scale-95 whitespace-nowrap"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>Add Project Entry</span>
+            </button>
+          </div>
         </div>
+
+        {/* Real-time Status Notification Toast */}
+        {statusToast && (
+          <div className="mb-8 p-4 rounded-2xl bg-lime-950/60 border border-lime-500/30 text-lime-200 flex items-center justify-between gap-3 shadow-lg shadow-lime-500/5 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="flex items-center gap-2.5 text-xs sm:text-sm font-medium">
+              <CheckCircle2 className="w-4 h-4 text-lime-400 shrink-0" />
+              <span>{statusToast.message}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setStatusToast(null)}
+              className="p-1 rounded-lg hover:bg-lime-500/20 text-lime-400 transition-colors"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
 
         {/* Projects Multi-Column Grid */}
         {filteredProjects.length === 0 ? (
           <div className="text-center py-16 px-4 glass-panel rounded-3xl border border-slate-200 dark:border-slate-800 max-w-lg mx-auto space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-lime-500/10 text-lime-400 flex items-center justify-center mx-auto">
               <Briefcase className="w-6 h-6" />
             </div>
             <div className="space-y-1">
@@ -347,7 +648,7 @@ export function ProjectGrid() {
             <button
               type="button"
               onClick={() => setIsAddModalOpen(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-semibold text-xs shadow-md transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs shadow-md shadow-lime-400/20 transition-all"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Add New Project</span>
@@ -367,17 +668,17 @@ export function ProjectGrid() {
                     setActiveCaseStudyProject(project);
                   }
                 }}
-                className="cursor-pointer glass-panel rounded-3xl border border-slate-200/90 dark:border-slate-800/90 p-6 flex flex-col justify-between hover:border-cyan-500/60 dark:hover:border-cyan-400/60 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300 group relative text-left"
+                className="cursor-pointer glass-panel rounded-3xl border border-slate-800/90 p-6 flex flex-col justify-between hover:border-lime-400/50 hover:shadow-2xl hover:shadow-lime-400/10 hover:-translate-y-1 transition-all duration-300 group relative text-left bg-[#0e1320]/80"
               >
                 <div className="space-y-4">
                   {/* Domain Tag, Featured Badge & Delete Action */}
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-lime-500/10 text-lime-400 border border-lime-500/20">
                         {project.domainTag}
                       </span>
                       {project.featured && (
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">
                           ★ Featured
                         </span>
                       )}
@@ -390,7 +691,7 @@ export function ProjectGrid() {
                           e.stopPropagation();
                           handleOpenEditModal(project);
                         }}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 border border-cyan-200 dark:border-cyan-800/60 shadow-sm transition-colors"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700/60 shadow-sm transition-colors"
                         title={`Edit "${project.title}"`}
                       >
                         <Edit3 className="w-3.5 h-3.5" />
@@ -416,11 +717,11 @@ export function ProjectGrid() {
 
                   {/* Project Title with Interactive Arrow Cue */}
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors flex items-start justify-between gap-2">
+                    <h3 className="text-xl font-bold text-white group-hover:text-lime-400 transition-colors flex items-start justify-between gap-2">
                       <span>{project.title}</span>
-                      <ArrowRight className="w-4 h-4 text-cyan-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                      <ArrowRight className="w-4 h-4 text-lime-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
                     </h3>
-                    <div className="text-[11px] text-cyan-600/90 dark:text-cyan-400/90 font-mono font-medium mt-1">
+                    <div className="text-[11px] text-lime-400/80 font-mono font-medium mt-1">
                       Click to inspect deep dive &amp; architecture ↗
                     </div>
                   </div>
@@ -447,10 +748,10 @@ export function ProjectGrid() {
 
                   {/* Novelty Highlight Chip ("How I Solved It") */}
                   {(project.noveltySnippet || project.caseStudy?.noveltyHighlights?.[0]) && (
-                    <div className="p-2.5 rounded-xl bg-gradient-to-r from-indigo-500/10 via-purple-500/5 to-transparent border border-indigo-500/20 flex items-start gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0 mt-0.5" />
-                      <div className="text-[11px] text-slate-800 dark:text-slate-200 leading-snug">
-                        <span className="font-bold text-indigo-600 dark:text-indigo-400 font-mono">Novelty: </span>
+                    <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-2">
+                      <Sparkles className="w-3.5 h-3.5 text-lime-400 shrink-0 mt-0.5" />
+                      <div className="text-[11px] text-slate-300 leading-snug">
+                        <span className="font-bold text-lime-400 font-mono">Novelty: </span>
                         <span>{project.noveltySnippet || project.caseStudy?.noveltyHighlights?.[0]}</span>
                       </div>
                     </div>
@@ -484,10 +785,10 @@ export function ProjectGrid() {
                   </div>
 
                   {/* High-Contrast Dedicated Metrics Callout Block */}
-                  <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 text-white shadow-md border border-slate-800 space-y-1.5">
-                    <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-cyan-400 font-bold">
+                  <div className="p-4 rounded-2xl bg-slate-900/90 text-white shadow-md border border-slate-800/90 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-lime-400 font-bold">
                       <TrendingUp className="w-3.5 h-3.5" />
-                      <span>Quantifiable Impact</span>
+                      <span>Key Benchmarks &amp; Impact</span>
                     </div>
                     <div className="space-y-1">
                       {project.metrics.map((metric, i) => (
@@ -511,7 +812,7 @@ export function ProjectGrid() {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white shadow-sm transition-colors"
+                        className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg bg-lime-400 hover:bg-lime-300 text-slate-950 shadow-sm transition-colors"
                         title="View Live Demo"
                       >
                         <span>Live</span>
@@ -541,7 +842,7 @@ export function ProjectGrid() {
                         e.stopPropagation();
                         handleOpenEditModal(project);
                       }}
-                      className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:border-cyan-500/40 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-lime-400 hover:border-lime-500/40 transition-colors"
                       title="Edit project details"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
@@ -554,7 +855,7 @@ export function ProjectGrid() {
                         e.stopPropagation();
                         setActiveCaseStudyProject(project);
                       }}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 transition-all group-hover:bg-indigo-600 group-hover:text-white dark:group-hover:bg-indigo-500"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:text-lime-400 border border-slate-800 hover:border-lime-500/40 transition-all"
                     >
                       <BookOpen className="w-3.5 h-3.5" />
                       <span>Case Study &amp; Novelty</span>
@@ -587,7 +888,7 @@ export function ProjectGrid() {
           <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto glass-panel bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 z-10 space-y-6">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
+                <div className="p-2 rounded-xl bg-lime-500/10 text-lime-400">
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
@@ -608,6 +909,102 @@ export function ProjectGrid() {
               </button>
             </div>
 
+            {/* Quick Import from GitHub Banner */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white border border-slate-800 shadow-xl space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-lime-500/20 text-lime-400 border border-lime-500/30">
+                    <GithubIcon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                      <span>Quick Import from GitHub</span>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-lime-500/20 text-lime-300 border border-lime-500/30">
+                        1-Click Fetch
+                      </span>
+                    </h4>
+                    <p className="text-[11px] text-slate-300">
+                      Auto-populates title, languages, category, live demo, and verified benchmarks.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Auto-log toggle */}
+                <label className="flex items-center gap-1.5 text-[11px] font-medium text-slate-200 cursor-pointer select-none bg-white/5 hover:bg-white/10 px-2.5 py-1.5 rounded-xl border border-white/10 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={autoLogToDiary}
+                    onChange={(e) => setAutoLogToDiary(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded text-lime-400 focus:ring-lime-400/40 border-slate-600"
+                  />
+                  <span>Auto-log new skills to Diary</span>
+                </label>
+              </div>
+
+              {/* Input & Fetch Trigger */}
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    value={quickRepoUrl}
+                    onChange={(e) => {
+                      setQuickRepoUrl(e.target.value);
+                      if (fetchError) setFetchError(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleFetchQuickRepo();
+                      }
+                    }}
+                    placeholder="https://github.com/THARANESHSELVAM/your-repo or owner/repo"
+                    className="w-full px-3.5 py-2 text-xs font-mono rounded-xl bg-slate-950/80 border border-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleFetchQuickRepo}
+                  disabled={isFetchingRepo || !quickRepoUrl.trim()}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs shadow-md shadow-lime-400/20 transition-all disabled:opacity-50 shrink-0"
+                >
+                  {isFetchingRepo ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Fetching...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Fetch Repo</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Error notice */}
+              {fetchError && (
+                <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-start gap-2">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-rose-400" />
+                  <span>{fetchError}</span>
+                </div>
+              )}
+
+              {/* Success notice */}
+              {fetchSuccessMessage && (
+                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span>{fetchSuccessMessage}</span>
+                  </div>
+                  {pendingDiscoveredSkills.length > 0 && autoLogToDiary && (
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-200">
+                      +{pendingDiscoveredSkills.length} new skill{pendingDiscoveredSkills.length === 1 ? "" : "s"} ready to log
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
             <form onSubmit={handleCreateProject} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
@@ -619,7 +1016,7 @@ export function ProjectGrid() {
                     placeholder="e.g. Distributed Task Queue"
                     value={newProject.title}
                     onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
-                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
                   />
                   {formErrors.title && (
                     <p className="text-[11px] text-rose-500">{formErrors.title}</p>
@@ -635,7 +1032,7 @@ export function ProjectGrid() {
                     onChange={(e) =>
                       setNewProject({ ...newProject, category: e.target.value, domainTag: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white dark:bg-slate-900"
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50 bg-white dark:bg-slate-900"
                   >
                     <option value="Distributed Systems">Distributed Systems</option>
                     <option value="Full-Stack Web">Full-Stack Web</option>
@@ -697,7 +1094,7 @@ export function ProjectGrid() {
 
               {/* Novelty ("How I Solved This Problem") */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
+                <label className="text-xs font-semibold text-lime-400 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Novelty &amp; Breakthrough: How I Solved This Problem</span>
                 </label>
@@ -706,7 +1103,7 @@ export function ProjectGrid() {
                   placeholder="The secret sauce, custom algorithms, non-obvious optimizations, or unique techniques you invented..."
                   value={newProject.novelty}
                   onChange={(e) => setNewProject({ ...newProject, novelty: e.target.value })}
-                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-indigo-300 dark:border-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
+                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50 resize-none"
                 />
               </div>
 
@@ -720,7 +1117,7 @@ export function ProjectGrid() {
                   placeholder="e.g. Go, Redis, Docker, gRPC, React"
                   value={newProject.techStackInput}
                   onChange={(e) => setNewProject({ ...newProject, techStackInput: e.target.value })}
-                  className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                  className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
                 />
               </div>
 
@@ -793,7 +1190,7 @@ export function ProjectGrid() {
                 </button>
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-semibold text-xs sm:text-sm shadow-md transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold font-semibold text-xs sm:text-sm shadow-md transition-all"
                 >
                   <Check className="w-4 h-4" />
                   <span>Save Project &amp; Sync Resume</span>
@@ -814,7 +1211,7 @@ export function ProjectGrid() {
           <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto glass-panel bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 z-10 space-y-6">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
+                <div className="p-2.5 rounded-xl bg-lime-500/10 text-lime-400">
                   <Edit3 className="w-5 h-5" />
                 </div>
                 <div>
@@ -822,7 +1219,7 @@ export function ProjectGrid() {
                     <h3 className="font-bold text-lg text-slate-900 dark:text-white">
                       Edit Applied Project
                     </h3>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-lime-500/10 text-lime-400 border border-lime-500/20">
                       ID: {editingProject.id}
                     </span>
                   </div>
@@ -840,6 +1237,83 @@ export function ProjectGrid() {
               </button>
             </div>
 
+            {/* Quick Re-sync with GitHub Banner */}
+            <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2.5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-lime-500/10 text-lime-400">
+                    <GithubIcon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                      <span>Sync Latest from GitHub</span>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-lime-500/10 text-lime-400 border border-lime-500/20">
+                        Safe Re-Sync
+                      </span>
+                    </h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      Refreshes tech stack, links &amp; metrics without overwriting your custom case study notes.
+                    </p>
+                  </div>
+                </div>
+
+                <label className="flex items-center gap-1.5 text-[11px] text-slate-700 dark:text-slate-300 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={editAutoLogToDiary}
+                    onChange={(e) => setEditAutoLogToDiary(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded text-lime-400 focus:ring-lime-400/30"
+                  />
+                  <span>Auto-log new skills to Diary</span>
+                </label>
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={editQuickRepoUrl}
+                  onChange={(e) => {
+                    setEditQuickRepoUrl(e.target.value);
+                    if (editFetchError) setEditFetchError(null);
+                  }}
+                  placeholder="https://github.com/THARANESHSELVAM/your-repo"
+                  className="flex-1 px-3 py-1.5 text-xs font-mono rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                />
+                <button
+                  type="button"
+                  onClick={handleEditQuickFetchRepo}
+                  disabled={isEditFetchingRepo || !editQuickRepoUrl.trim()}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 font-semibold text-xs shadow-sm disabled:opacity-50 transition-all shrink-0"
+                >
+                  {isEditFetchingRepo ? (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <span>Syncing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="w-3 h-3" />
+                      <span>Re-fetch Metadata</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {editFetchError && (
+                <p className="text-[11px] text-rose-500 flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3 shrink-0" />
+                  <span>{editFetchError}</span>
+                </p>
+              )}
+
+              {editFetchSuccessMessage && (
+                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 shrink-0" />
+                  <span>{editFetchSuccessMessage}</span>
+                </p>
+              )}
+            </div>
+
             <form onSubmit={handleUpdateProjectSubmit} className="space-y-5">
               {/* Title & Category */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -852,7 +1326,7 @@ export function ProjectGrid() {
                     placeholder="e.g. Distributed Task Queue"
                     value={editProjectData.title}
                     onChange={(e) => setEditProjectData({ ...editProjectData, title: e.target.value })}
-                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
                   />
                   {formErrors.title && (
                     <p className="text-[11px] text-rose-500">{formErrors.title}</p>
@@ -868,7 +1342,7 @@ export function ProjectGrid() {
                     onChange={(e) =>
                       setEditProjectData({ ...editProjectData, category: e.target.value, domainTag: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white dark:bg-slate-900"
+                    className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50 bg-white dark:bg-slate-900"
                   >
                     <option value="Distributed Systems">Distributed Systems</option>
                     <option value="Full-Stack Web">Full-Stack Web</option>
@@ -944,7 +1418,7 @@ export function ProjectGrid() {
 
               {/* Novelty ("How I Solved This Problem") */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
+                <label className="text-xs font-semibold text-lime-400 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Novelty &amp; Breakthrough: How I Solved This Problem</span>
                 </label>
@@ -953,7 +1427,7 @@ export function ProjectGrid() {
                   placeholder="The secret sauce, custom algorithms, non-obvious optimizations, or unique techniques you invented..."
                   value={editProjectData.novelty}
                   onChange={(e) => setEditProjectData({ ...editProjectData, novelty: e.target.value })}
-                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-indigo-300 dark:border-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
+                  className="w-full px-4 py-2 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50 resize-none"
                 />
               </div>
 
@@ -971,7 +1445,7 @@ export function ProjectGrid() {
                   {editProjectData.techStackList.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800/60"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700"
                     >
                       <span>{tag}</span>
                       <button
@@ -1002,12 +1476,12 @@ export function ProjectGrid() {
                         handleAddEditTag();
                       }
                     }}
-                    className="flex-1 px-3 py-2 text-xs rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                    className="flex-1 px-3 py-2 text-xs rounded-xl glass-panel text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
                   />
                   <button
                     type="button"
                     onClick={handleAddEditTag}
-                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-200 dark:bg-slate-700 hover:bg-cyan-500 hover:text-white text-slate-800 dark:text-slate-200 transition-colors"
+                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-200 dark:bg-slate-700 hover:bg-lime-400 hover:text-slate-950 text-slate-800 dark:text-slate-200 transition-colors"
                   >
                     + Add Tag
                   </button>
@@ -1083,7 +1557,7 @@ export function ProjectGrid() {
                 </button>
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-semibold text-xs sm:text-sm shadow-md transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold font-semibold text-xs sm:text-sm shadow-md transition-all"
                 >
                   <Check className="w-4 h-4" />
                   <span>Save Changes &amp; Recompute Resume</span>
@@ -1093,6 +1567,20 @@ export function ProjectGrid() {
           </div>
         </div>
       )}
+
+      {/* GitHub Repo Browser Drawer Modal */}
+      <GitHubRepoBrowserModal
+        isOpen={isGitHubBrowserOpen}
+        onClose={() => setIsGitHubBrowserOpen(false)}
+        onSelectRepoForImport={handleSelectRepoForImport}
+        onResyncRepo={handleResyncRepo}
+        savedProjects={state.projects}
+        defaultUsername={
+          (state.contact?.github || currentUser?.github)
+            ? (state.contact?.github || currentUser?.github || "").split("/").filter(Boolean).pop() || "THARANESHSELVAM"
+            : "THARANESHSELVAM"
+        }
+      />
     </section>
   );
 }

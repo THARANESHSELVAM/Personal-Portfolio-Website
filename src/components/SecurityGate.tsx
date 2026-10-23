@@ -87,8 +87,8 @@ export function SecurityGate() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-10 relative overflow-hidden bg-slate-50 dark:bg-[#090d16]">
       {/* Background radial ambient lights */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-cyan-500/15 via-indigo-500/10 to-violet-500/15 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-10 right-10 w-80 h-80 bg-cyan-400/10 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-lime-500/10 via-slate-800 to-slate-950 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute top-10 right-10 w-80 h-80 bg-lime-400/5 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
       <div className="w-full max-w-4xl glass-panel bg-white/95 dark:bg-slate-900/90 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-10 z-10 space-y-8 animate-in fade-in duration-300">
@@ -96,7 +96,7 @@ export function SecurityGate() {
         {/* Header Branding */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-lime-500/10 text-lime-400 border border-lime-500/20">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>SECURE IDENTITY GATE &amp; STORAGE ISOLATION</span>
             </div>
@@ -119,7 +119,7 @@ export function SecurityGate() {
         <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-500/30 shadow-lg shadow-indigo-500/10 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
-              <div className="flex items-center gap-2 text-cyan-400 text-xs font-mono font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-lime-400 text-xs font-mono font-bold uppercase tracking-wider">
                 <Sparkles className="w-4 h-4" />
                 <span>Recommended Instant Access</span>
               </div>
@@ -134,7 +134,7 @@ export function SecurityGate() {
             <button
               type="button"
               onClick={handleQuickDemoLogin}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-sm shadow-md shadow-cyan-500/30 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-sm shadow-md shadow-lime-400/20 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
             >
               <span>Quick Launch Diary</span>
               <ArrowRight className="w-4 h-4" />
@@ -143,19 +143,19 @@ export function SecurityGate() {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-white/10 text-xs text-slate-300 font-mono">
             <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-lime-400" />
               <span>Identity Verified</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-lime-400" />
               <span>Scoped Storage</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-lime-400" />
               <span>Auto-ATS Generator</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-lime-400" />
               <span>Dataset Ready</span>
             </div>
           </div>
@@ -178,7 +178,7 @@ export function SecurityGate() {
             {/* User ID or Email */}
             <div className="space-y-1 sm:col-span-1">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-cyan-500" />
+                <Lock className="w-3.5 h-3.5 text-lime-400" />
                 <span>User ID or Email ID <span className="text-rose-500">*</span></span>
               </label>
               <input
@@ -186,7 +186,7 @@ export function SecurityGate() {
                 placeholder="e.g. tharanesh-selvam or email"
                 value={formData.userIdOrEmail}
                 onChange={(e) => setFormData({ ...formData, userIdOrEmail: e.target.value })}
-                className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
               />
               <span className="text-[10px] text-slate-400 font-mono">
                 Used to isolate your localStorage key (`myresume_workspace_*`)
@@ -199,7 +199,7 @@ export function SecurityGate() {
             {/* Full Name */}
             <div className="space-y-1 sm:col-span-1">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-cyan-500" />
+                <User className="w-3.5 h-3.5 text-lime-400" />
                 <span>Full Name <span className="text-rose-500">*</span></span>
               </label>
               <input
@@ -207,7 +207,7 @@ export function SecurityGate() {
                 placeholder="e.g. Tharanesh Selvam"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
               />
               {errors.name && (
                 <p className="text-[11px] text-rose-500 font-medium">{errors.name}</p>
@@ -217,7 +217,7 @@ export function SecurityGate() {
             {/* Title / Target Role */}
             <div className="space-y-1 sm:col-span-2 lg:col-span-1">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                <Briefcase className="w-3.5 h-3.5 text-cyan-500" />
+                <Briefcase className="w-3.5 h-3.5 text-lime-400" />
                 <span>Target Role / Title <span className="text-rose-500">*</span></span>
               </label>
               <input
@@ -225,7 +225,7 @@ export function SecurityGate() {
                 placeholder="e.g. Full-Stack Software Engineer"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl glass-panel text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
               />
               {errors.title && (
                 <p className="text-[11px] text-rose-500 font-medium">{errors.title}</p>
@@ -287,7 +287,7 @@ export function SecurityGate() {
               <label
                 className={`p-3 rounded-xl border flex items-start gap-3 cursor-pointer transition-all ${
                   formData.starterOption === "curated"
-                    ? "bg-cyan-500/10 border-cyan-500/40 text-slate-900 dark:text-white"
+                    ? "bg-lime-500/10 border-lime-500/40 text-slate-900 dark:text-white"
                     : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
                 }`}
               >
@@ -296,7 +296,7 @@ export function SecurityGate() {
                   name="starterOption"
                   checked={formData.starterOption === "curated"}
                   onChange={() => setFormData({ ...formData, starterOption: "curated" })}
-                  className="mt-0.5 text-cyan-600 focus:ring-cyan-500"
+                  className="mt-0.5 text-lime-400 focus:ring-lime-400"
                 />
                 <div>
                   <span className="text-xs font-bold block">Pre-load Verified Engineering Milestones</span>
@@ -309,7 +309,7 @@ export function SecurityGate() {
               <label
                 className={`p-3 rounded-xl border flex items-start gap-3 cursor-pointer transition-all ${
                   formData.starterOption === "blank"
-                    ? "bg-cyan-500/10 border-cyan-500/40 text-slate-900 dark:text-white"
+                    ? "bg-lime-500/10 border-lime-500/40 text-slate-900 dark:text-white"
                     : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
                 }`}
               >
@@ -318,7 +318,7 @@ export function SecurityGate() {
                   name="starterOption"
                   checked={formData.starterOption === "blank"}
                   onChange={() => setFormData({ ...formData, starterOption: "blank" })}
-                  className="mt-0.5 text-cyan-600 focus:ring-cyan-500"
+                  className="mt-0.5 text-lime-400 focus:ring-lime-400"
                 />
                 <div>
                   <span className="text-xs font-bold block">100% Blank Slate</span>
