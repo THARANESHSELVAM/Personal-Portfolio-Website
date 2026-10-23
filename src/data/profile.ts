@@ -202,7 +202,7 @@ export const INITIAL_PROJECTS: Project[] = [
     noveltySnippet: "Next.js App Router, 1-Click GitHub API Importer, and Accessible Design Tokens",
     problemSolved: "Traditional developer resumes are static and fail to demonstrate actual hands-on coding proficiency or live repository integration.",
     solution: "A modern, responsive portfolio built with Next.js, React and Tailwind CSS featuring dynamic GitHub sync and accessible UI.",
-    techStack: ["Next.js", "React", "Tailwind"],
+    techStack: ["Next.js", "React", "Tailwind CSS"],
     metrics: [
       "⚡ 100% Type-Safe TypeScript Architecture",
       "📱 100% Responsive on Mobile, Tablet & Desktop",
@@ -362,49 +362,311 @@ export const INITIAL_PROFILE_STATE: ProfileState = {
 export const PROFILE = INITIAL_PROFILE_STATE;
 
 /**
- * Dynamically extract categorized skills from verified learning logs and project tech stacks
+ * Classifies any technology keyword into its authoritative CompetencyArea
+ */
+export function classifyDomainCategory(tech: string): CompetencyArea {
+  const lower = tech.toLowerCase().trim();
+
+  // Data & AI keywords (explicitly mapping Pandas, Scikit-learn, etc. to Data & AI)
+  if (
+    lower.includes("pandas") ||
+    lower.includes("scikit") ||
+    lower.includes("sklearn") ||
+    lower.includes("numpy") ||
+    lower.includes("scipy") ||
+    lower.includes("matplotlib") ||
+    lower.includes("seaborn") ||
+    lower.includes("pytorch") ||
+    lower.includes("torch") ||
+    lower.includes("tensorflow") ||
+    lower.includes("keras") ||
+    lower.includes("huggingface") ||
+    lower.includes("faiss") ||
+    lower.includes("pinecone") ||
+    lower.includes("chroma") ||
+    lower.includes("clickhouse") ||
+    lower.includes("spark") ||
+    lower.includes("flink") ||
+    lower.includes("vector") ||
+    lower.includes("ai") ||
+    lower.includes("ml") ||
+    lower.includes("machine learning") ||
+    lower.includes("deep learning") ||
+    lower.includes("data science") ||
+    lower.includes("data analysis") ||
+    lower.includes("llm") ||
+    lower.includes("langchain")
+  ) {
+    return "Data & AI";
+  }
+
+  // Frontend keywords
+  if (
+    lower.includes("react") ||
+    lower.includes("next") ||
+    lower.includes("tailwind") ||
+    lower.includes("typescript") ||
+    lower.includes("javascript") ||
+    lower.includes("html") ||
+    lower.includes("css") ||
+    lower.includes("vue") ||
+    lower.includes("svelte") ||
+    lower.includes("angular") ||
+    lower.includes("webgl") ||
+    lower.includes("canvas") ||
+    lower.includes("webassembly") ||
+    lower.includes("wasm") ||
+    lower.includes("wcag") ||
+    lower.includes("accessibility") ||
+    lower.includes("ui") ||
+    lower.includes("frontend")
+  ) {
+    return "Frontend";
+  }
+
+  // Cloud & DevOps keywords
+  if (
+    lower.includes("docker") ||
+    lower.includes("kubernetes") ||
+    lower.includes("k8s") ||
+    lower.includes("terraform") ||
+    lower.includes("ansible") ||
+    lower.includes("aws") ||
+    lower.includes("azure") ||
+    lower.includes("gcp") ||
+    lower.includes("git") ||
+    lower.includes("ci/cd") ||
+    lower.includes("cicd") ||
+    lower.includes("actions") ||
+    lower.includes("ebpf") ||
+    lower.includes("opentelemetry") ||
+    lower.includes("vault") ||
+    lower.includes("linux") ||
+    lower.includes("nginx") ||
+    lower.includes("cloud") ||
+    lower.includes("devops")
+  ) {
+    return "Cloud & DevOps";
+  }
+
+  // Backend keywords
+  if (
+    lower.includes("node") ||
+    lower.includes("express") ||
+    lower.includes("nest") ||
+    lower.includes("python") ||
+    lower.includes("fastapi") ||
+    lower.includes("django") ||
+    lower.includes("flask") ||
+    lower.includes("go") ||
+    lower.includes("golang") ||
+    lower.includes("rust") ||
+    lower.includes("java") ||
+    lower.includes("spring") ||
+    lower.includes("graphql") ||
+    lower.includes("grpc") ||
+    lower.includes("kafka") ||
+    lower.includes("redis") ||
+    lower.includes("postgres") ||
+    lower.includes("mysql") ||
+    lower.includes("mongodb") ||
+    lower.includes("sqlite") ||
+    lower.includes("backend") ||
+    lower.includes("api")
+  ) {
+    return "Backend";
+  }
+
+  return "System Design";
+}
+
+/**
+ * Normalizes raw/compound skill strings into canonical, discrete skills
+ */
+export function extractCanonicalSkills(
+  raw: string,
+  preferredCategory?: CompetencyArea
+): Array<{ name: string; category: CompetencyArea }> {
+  const lower = raw.toLowerCase().trim();
+
+  // Compound Next.js & React
+  if (lower.includes("next") && lower.includes("react")) {
+    return [
+      { name: "Next.js", category: "Frontend" },
+      { name: "React", category: "Frontend" },
+    ];
+  }
+
+  // Next.js alone
+  if (lower.includes("next")) {
+    return [{ name: "Next.js", category: "Frontend" }];
+  }
+
+  // React alone (ensure it does not mistakenly catch words like 'reactive')
+  if (/\b(react|reactjs|react 19|react 18)\b/i.test(raw) || (lower.includes("react") && !lower.includes("reactive"))) {
+    return [{ name: "React", category: "Frontend" }];
+  }
+
+  // Tailwind CSS
+  if (lower.includes("tailwind")) {
+    return [{ name: "Tailwind CSS", category: "Frontend" }];
+  }
+
+  // TypeScript
+  if (lower.includes("typescript")) {
+    return [{ name: "TypeScript", category: "Frontend" }];
+  }
+
+  // JavaScript
+  if (lower.includes("javascript") && !lower.includes("typescript")) {
+    return [{ name: "JavaScript", category: "Frontend" }];
+  }
+
+  // Web Accessibility / HTML
+  if (lower.includes("wcag") || lower.includes("accessibility") || lower.includes("semantic html") || lower.includes("a11y")) {
+    return [{ name: "Web Accessibility (WCAG)", category: "Frontend" }];
+  }
+
+  // GitHub REST API / REST APIs
+  if (lower.includes("rest api") || lower.includes("restapi") || lower.includes("github api") || lower.includes("rest & external") || lower.includes("restful")) {
+    return [
+      { name: "REST APIs", category: "Backend" },
+      { name: "GitHub API", category: "Backend" }
+    ];
+  }
+
+  // Git / GitHub / Version Control
+  if ((lower.includes("git") || lower.includes("version control")) && !lower.includes("digital")) {
+    return [{ name: "Git & GitHub", category: "Cloud & DevOps" }];
+  }
+
+  // Pandas -> Data & AI
+  if (lower.includes("pandas")) {
+    return [{ name: "Pandas", category: "Data & AI" }];
+  }
+
+  // Scikit-learn -> Data & AI
+  if (lower.includes("scikit") || lower.includes("sklearn")) {
+    return [{ name: "Scikit-learn", category: "Data & AI" }];
+  }
+
+  // NumPy -> Data & AI
+  if (lower.includes("numpy")) {
+    return [{ name: "NumPy", category: "Data & AI" }];
+  }
+
+  // Python -> Backend
+  if (lower === "python" || lower.startsWith("python ")) {
+    return [{ name: "Python", category: "Backend" }];
+  }
+
+  // Node.js -> Backend
+  if (lower.includes("node")) {
+    return [{ name: "Node.js", category: "Backend" }];
+  }
+
+  // PostgreSQL / Postgres -> Backend
+  if (lower.includes("postgres")) {
+    return [{ name: "PostgreSQL", category: "Backend" }];
+  }
+
+  // Redis -> Backend
+  if (lower.includes("redis")) {
+    return [{ name: "Redis", category: "Backend" }];
+  }
+
+  // Docker -> Cloud & DevOps
+  if (lower.includes("docker")) {
+    return [{ name: "Docker", category: "Cloud & DevOps" }];
+  }
+
+  // Kubernetes -> Cloud & DevOps
+  if (lower.includes("kubernetes") || lower.includes("k8s")) {
+    return [{ name: "Kubernetes", category: "Cloud & DevOps" }];
+  }
+
+  // Fallback classification using domain classifier rules
+  const category = preferredCategory || classifyDomainCategory(raw);
+  return [{ name: raw.trim(), category }];
+}
+
+/**
+ * Dynamically extract categorized, deduplicated skills from verified learning logs and project tech stacks
  */
 export function extractSkillsFromState(state: ProfileState): Record<CompetencyArea, string[]> {
-  const result: Record<CompetencyArea, Set<string>> = {
-    Frontend: new Set<string>(),
-    Backend: new Set<string>(),
-    "Cloud & DevOps": new Set<string>(),
-    "Data & AI": new Set<string>(),
-    "System Design": new Set<string>(),
+  const result: Record<CompetencyArea, string[]> = {
+    Frontend: [],
+    Backend: [],
+    "Cloud & DevOps": [],
+    "Data & AI": [],
+    "System Design": [],
   };
 
-  // 1. Ingest from verified learning entries
-  state.learnings.forEach((entry) => {
-    if (result[entry.category]) {
-      result[entry.category].add(entry.technology);
+  const seenSkills = new Set<string>();
+
+  const addSkill = (name: string, category: CompetencyArea) => {
+    const cleanName = name.trim();
+    if (!cleanName) return;
+    const lowerKey = cleanName.toLowerCase();
+
+    // Deduplication check
+    if (seenSkills.has(lowerKey)) return;
+    seenSkills.add(lowerKey);
+
+    // Register common aliases so variations like "Tailwind" and "Tailwind CSS",
+    // "React" and "React.js", "Next.js" and "NextJS" do not appear twice.
+    if (lowerKey === "tailwind" || lowerKey === "tailwindcss" || lowerKey === "tailwind css") {
+      seenSkills.add("tailwind");
+      seenSkills.add("tailwindcss");
+      seenSkills.add("tailwind css");
     }
+    if (lowerKey === "react" || lowerKey === "react.js" || lowerKey === "reactjs") {
+      seenSkills.add("react");
+      seenSkills.add("react.js");
+      seenSkills.add("reactjs");
+    }
+    if (lowerKey === "next.js" || lowerKey === "nextjs" || lowerKey === "next") {
+      seenSkills.add("next");
+      seenSkills.add("next.js");
+      seenSkills.add("nextjs");
+    }
+    if (lowerKey === "scikit-learn" || lowerKey === "scikitlearn" || lowerKey === "sklearn") {
+      seenSkills.add("scikit-learn");
+      seenSkills.add("scikitlearn");
+      seenSkills.add("sklearn");
+    }
+    if (lowerKey === "node" || lowerKey === "node.js" || lowerKey === "nodejs") {
+      seenSkills.add("node");
+      seenSkills.add("node.js");
+      seenSkills.add("nodejs");
+    }
+
+    if (result[category]) {
+      result[category].push(cleanName);
+    } else {
+      result["System Design"].push(cleanName);
+    }
+  };
+
+  // 1. Ingest from verified learning entries with canonical extraction
+  state.learnings.forEach((entry) => {
+    const extracted = extractCanonicalSkills(entry.technology, entry.category);
+    extracted.forEach((item) => {
+      addSkill(item.name, item.category);
+    });
   });
 
   // 2. Ingest from project tech stacks intelligently
   state.projects.forEach((proj) => {
     proj.techStack.forEach((tech) => {
-      const lower = tech.toLowerCase();
-      if (lower.includes("react") || lower.includes("next") || lower.includes("tailwind") || lower.includes("webassembly") || lower.includes("webgl") || lower.includes("canvas") || lower.includes("typescript")) {
-        result["Frontend"].add(tech);
-      } else if (lower.includes("kafka") || lower.includes("redis") || lower.includes("postgres") || lower.includes("grpc") || lower.includes("go") || lower.includes("rust") || lower.includes("node") || lower.includes("python")) {
-        result["Backend"].add(tech);
-      } else if (lower.includes("kubernetes") || lower.includes("docker") || lower.includes("terraform") || lower.includes("aws") || lower.includes("ebpf") || lower.includes("opentelemetry") || lower.includes("vault")) {
-        result["Cloud & DevOps"].add(tech);
-      } else if (lower.includes("clickhouse") || lower.includes("faiss") || lower.includes("pytorch") || lower.includes("flink") || lower.includes("vector") || lower.includes("ai")) {
-        result["Data & AI"].add(tech);
-      } else {
-        result["System Design"].add(tech);
-      }
+      const extracted = extractCanonicalSkills(tech);
+      extracted.forEach((item) => {
+        addSkill(item.name, item.category);
+      });
     });
   });
 
-  return {
-    Frontend: Array.from(result["Frontend"]),
-    Backend: Array.from(result["Backend"]),
-    "Cloud & DevOps": Array.from(result["Cloud & DevOps"]),
-    "Data & AI": Array.from(result["Data & AI"]),
-    "System Design": Array.from(result["System Design"]),
-  };
+  return result;
 }
 
 /**

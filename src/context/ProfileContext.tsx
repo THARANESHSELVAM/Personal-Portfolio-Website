@@ -111,8 +111,10 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       // 1. Check if hash specifies a tab
       if (typeof window !== "undefined" && window.location.hash) {
         const hash = window.location.hash.replace("#", "").toLowerCase();
-        if (hash === "profile" || hash === "diary" || hash === "projects" || hash === "resume") {
+        if (hash === "profile" || hash === "diary" || hash === "projects" || hash === "skills" || hash === "resume") {
           setActiveTabState(hash as WorkspaceTab);
+        } else if (hash === "live-ats" || hash === "ats" || hash === "ats-resume") {
+          setActiveTabState("resume");
         } else if (hash === "learning-log") {
           setActiveTabState("diary");
         } else if (hash === "about") {

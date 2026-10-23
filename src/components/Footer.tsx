@@ -18,10 +18,11 @@ export function Footer() {
   };
 
   const navTabs: { id: WorkspaceTab; name: string }[] = [
-    { id: "profile", name: "Profile & Identity" },
-    { id: "diary", name: "Learning Diary" },
-    { id: "projects", name: "Projects Lab" },
-    { id: "resume", name: "Live ATS Resume" },
+    { id: "profile", name: "Home" },
+    { id: "diary", name: "Diary" },
+    { id: "projects", name: "Projects" },
+    { id: "skills", name: "Skills" },
+    { id: "resume", name: "ATS Resume" },
   ];
 
   return (

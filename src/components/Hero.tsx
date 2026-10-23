@@ -4,6 +4,7 @@ import { useState } from "react";
 import { 
   ArrowRight, 
   Download, 
+  FileText,
   Mail, 
   Check, 
   GraduationCap, 
@@ -98,8 +99,8 @@ export function Hero() {
                 onClick={handleNavigateToResume}
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white hover:bg-slate-100 border border-slate-300 hover:border-cyan-500 text-slate-800 dark:bg-[#0a1122]/90 dark:hover:bg-slate-800 dark:border-slate-700/80 dark:hover:border-cyan-400/50 dark:text-white font-medium text-xs sm:text-sm shadow-sm transition-all duration-200 active:scale-95 focus-visible:ring-2 focus-visible:ring-cyan-400"
               >
-                <Download className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-                <span>Download Resume</span>
+                <FileText className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                <span>View ATS Resume</span>
               </button>
             </div>
 

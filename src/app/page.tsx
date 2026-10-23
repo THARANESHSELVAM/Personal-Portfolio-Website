@@ -56,8 +56,7 @@ export default function Home() {
         {activeTab === "diary" && <LearningLog />}
         {activeTab === "projects" && <ProjectGrid />}
         {activeTab === "skills" && <ProfileView initialSection="skills" />}
-        {activeTab === "resume" && <ResumeHub />}
-        {activeTab === "live-ats" && <ResumeHub initialLiveATS={true} />}
+        {(activeTab === "resume" || activeTab === "live-ats") && <ResumeHub />}
       </main>
 
       <Footer />

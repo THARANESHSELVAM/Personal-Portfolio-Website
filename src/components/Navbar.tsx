@@ -45,13 +45,8 @@ export function Navbar() {
     },
     { 
       id: "resume", 
-      name: "Resume", 
-      icon: FileText 
-    },
-    { 
-      id: "live-ats", 
-      name: "Live ATS", 
-      icon: Activity,
+      name: "ATS Resume", 
+      icon: FileText,
       isLive: true
     },
   ];
