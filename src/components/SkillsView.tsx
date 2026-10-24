@@ -11,22 +11,23 @@ import {
   Server, 
   Cloud,
   CheckCircle2,
-  Sparkles
+  PlusCircle,
+  BookOpen
 } from "lucide-react";
 
 /**
  * Isolated Skills Tab View
- * Renders ONLY:
+ * Renders:
  * 1. Technical Skills & Architecture (</> TECHNICAL COMPETENCIES)
  *    - 4 Domain cards dynamically synchronized with the Learning Diary and Projects.
  * 2. About the Developer (Background & Engineering Focus & Education)
  *    - Bio narrative, Edit Bio action modal, and Education timeline.
- * 
- * Strictly hides Hero Intro and Resume Contact Header Settings.
  */
 export function SkillsView() {
-  const { state, updateProfile, extractedSkills } = useProfile();
+  const { state, updateProfile, extractedSkills, setActiveTab } = useProfile();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const isBlank = Boolean(state.isBlankSlate);
 
   const [profileForm, setProfileForm] = useState({
     name: state.name,
@@ -38,10 +39,24 @@ export function SkillsView() {
     linkedin: state.contact?.linkedin || "",
     tagline: state.tagline || "",
     elevatorPitch: state.elevatorPitch || "",
+    degree: state.resume?.education?.[0]?.degree || "",
+    institution: state.resume?.education?.[0]?.institution || "",
+    year: state.resume?.education?.[0]?.year || "",
   });
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
+    const updatedEducation = profileForm.degree.trim()
+      ? [
+          {
+            degree: profileForm.degree.trim(),
+            institution: profileForm.institution.trim() || "University / College",
+            year: profileForm.year.trim() || "2026",
+          },
+          ...(state.resume?.education?.slice(1) || []),
+        ]
+      : state.resume?.education || [];
+
     updateProfile({
       name: profileForm.name.trim(),
       title: profileForm.title.trim(),
@@ -54,6 +69,10 @@ export function SkillsView() {
         location: profileForm.location.trim(),
         github: profileForm.github.trim(),
         linkedin: profileForm.linkedin.trim(),
+      },
+      resume: {
+        ...state.resume,
+        education: updatedEducation,
       },
     });
     setIsEditModalOpen(false);
@@ -85,7 +104,7 @@ export function SkillsView() {
       title: "Frontend Engineering",
       icon: Code2,
       skills: mergeSkills(
-        ["React 19", "Next.js", "TypeScript", "Tailwind CSS", "HTML5 & CSS3", "State Management", "Responsive UI"],
+        isBlank ? [] : ["React 19", "Next.js", "TypeScript", "Tailwind CSS", "HTML5 & CSS3", "State Management", "Responsive UI"],
         extractedSkills?.Frontend || []
       ),
     },
@@ -93,7 +112,7 @@ export function SkillsView() {
       title: "Backend & Systems",
       icon: Server,
       skills: mergeSkills(
-        ["Node.js", "Express", "REST APIs", "PostgreSQL", "GIS / PostGIS", "Python", "Microservices"],
+        isBlank ? [] : ["Node.js", "Express", "REST APIs", "PostgreSQL", "GIS / PostGIS", "Python", "Microservices"],
         extractedSkills?.Backend || []
       ),
     },
@@ -101,7 +120,7 @@ export function SkillsView() {
       title: "Cloud & DevOps",
       icon: Cloud,
       skills: mergeSkills(
-        ["AWS", "Vercel", "Docker", "Git & GitHub", "CI/CD Workflows", "Turbopack", "Edge Deployments"],
+        isBlank ? [] : ["AWS", "Vercel", "Docker", "Git & GitHub", "CI/CD Workflows", "Turbopack", "Edge Deployments"],
         extractedSkills?.["Cloud & DevOps"] || []
       ),
     },
@@ -109,11 +128,13 @@ export function SkillsView() {
       title: "Data & AI / ML",
       icon: Cpu,
       skills: mergeSkills(
-        ["Python", "Pandas", "NumPy", "Scikit-learn", "Data Pipelines", "Model Evaluation", "EDA"],
+        isBlank ? [] : ["Python", "Pandas", "NumPy", "Scikit-learn", "Data Pipelines", "Model Evaluation", "EDA"],
         extractedSkills?.["Data & AI"] || []
       ),
     },
-  ], [extractedSkills]);
+  ], [extractedSkills, isBlank]);
+
+  const totalSkills = skillCategories.reduce((acc, cat) => acc + cat.skills.length, 0);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10 sm:space-y-12 pb-24">
@@ -136,41 +157,78 @@ export function SkillsView() {
           </div>
           <span className="text-xs font-mono text-cyan-700 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-200 dark:border-cyan-500/30 self-start sm:self-auto font-medium flex items-center gap-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-            <span>Verified Production Tools</span>
+            <span>{totalSkills} Verified Technical Skills</span>
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {skillCategories.map((group, idx) => {
-            const Icon = group.icon;
-            return (
-              <div
-                key={idx}
-                className="p-5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-cyan-400/40 transition-all space-y-3 dark:bg-[#060b17] dark:border-cyan-900/20 shadow-xs"
+        {totalSkills === 0 ? (
+          <div className="text-center py-12 px-6 rounded-2xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 max-w-lg mx-auto space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mx-auto">
+              <Code2 className="w-6 h-6" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-base font-bold text-slate-900 dark:text-white">
+                No Technical Skills Logged Yet
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">
+                Skills are compiled automatically from your verified Learning Diary entries and Project tech stacks. Add your first learning entry to begin populating competencies.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setActiveTab("diary")}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20 transition-all"
               >
-                <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-cyan-50 text-cyan-700 border border-cyan-200 dark:bg-cyan-500/10 dark:text-cyan-400 dark:border-cyan-500/20">
-                    <Icon className="w-4 h-4" />
+                <PlusCircle className="w-3.5 h-3.5" />
+                <span>+ Log First Learning Entry</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("projects")}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-all"
+              >
+                <span>+ Add First Project</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {skillCategories.map((group, idx) => {
+              const Icon = group.icon;
+              return (
+                <div
+                  key={idx}
+                  className="p-5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-cyan-400/40 transition-all space-y-3 dark:bg-[#060b17] dark:border-cyan-900/20 shadow-xs"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 rounded-xl bg-cyan-50 text-cyan-700 border border-cyan-200 dark:bg-cyan-500/10 dark:text-cyan-400 dark:border-cyan-500/20">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm">
+                      {group.title}
+                    </h3>
                   </div>
-                  <h3 className="font-bold text-slate-900 dark:text-white text-sm">
-                    {group.title}
-                  </h3>
-                </div>
 
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {group.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-800 border border-slate-200 hover:border-cyan-400/40 hover:text-cyan-600 dark:bg-[#0a1122] dark:text-slate-200 dark:border-slate-800 dark:hover:border-cyan-400/40 dark:hover:text-cyan-300 transition-colors"
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {group.skills.length === 0 ? (
+                      <span className="text-xs text-slate-400 italic">No technologies logged in this domain yet.</span>
+                    ) : (
+                      group.skills.map((skill) => (
+                        <span
+                          key={skill}
+                          className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-800 border border-slate-200 hover:border-cyan-400/40 hover:text-cyan-600 dark:bg-[#0a1122] dark:text-slate-200 dark:border-slate-800 dark:hover:border-cyan-400/40 dark:hover:text-cyan-300 transition-colors"
+                        >
+                          {skill}
+                        </span>
+                      ))
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* 2. About Developer Narrative & Career Goals & Education */}
@@ -202,66 +260,121 @@ export function SkillsView() {
                 linkedin: state.contact?.linkedin || "",
                 tagline: state.tagline || "",
                 elevatorPitch: state.elevatorPitch || "",
+                degree: state.resume?.education?.[0]?.degree || "",
+                institution: state.resume?.education?.[0]?.institution || "",
+                year: state.resume?.education?.[0]?.year || "",
               });
               setIsEditModalOpen(true);
             }}
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 hover:text-slate-950 font-medium text-xs border border-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 dark:text-slate-200 dark:hover:text-white dark:border-slate-800 transition-all self-start sm:self-auto shadow-xs"
           >
             <Edit3 className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-            <span>Edit Bio</span>
+            <span>Edit Bio / Education</span>
           </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
           <div className="lg:col-span-2 space-y-3">
-            <p>
-              Hello! I am <strong className="text-slate-900 dark:text-white font-semibold">{state.name || "Tharanesh Selvam"}</strong>, a Full-Stack Software Engineer &amp; Cloud Architect pursuing an M.Tech in Computer Science and Engineering. I build scalable, high-performance web applications and cloud architectures with clean code principles.
-            </p>
-            <p>
-              My technical foundation spans React 19, TypeScript, Node.js, and cloud systems like AWS. I love tackling complex software engineering challenges, integrating geospatial pipelines (Land Stack), designing machine learning experiments, and building accessible UI systems.
-            </p>
-            <p>
-              I am actively open to <strong className="text-cyan-700 dark:text-cyan-300 font-semibold">software engineering internships, full-stack development, and cloud architecture opportunities</strong>.
-            </p>
+            {state.elevatorPitch ? (
+              <p className="whitespace-pre-line">{state.elevatorPitch}</p>
+            ) : isBlank ? (
+              <div className="space-y-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800">
+                <p>
+                  Welcome! I am <strong className="text-slate-900 dark:text-white font-semibold">{state.name || "the developer"}</strong>, specializing in <strong className="text-cyan-700 dark:text-cyan-400">{state.title || "Software Engineering"}</strong>.
+                </p>
+                <p className="text-slate-500 dark:text-slate-400 text-xs">
+                  This workspace is initialized on a clean slate. Click &quot;Edit Bio / Education&quot; to customize your bio narrative, educational milestones, and career goals.
+                </p>
+              </div>
+            ) : (
+              <>
+                <p>
+                  Hello! I am <strong className="text-slate-900 dark:text-white font-semibold">{state.name || "Tharanesh Selvam"}</strong>, a Full-Stack Software Engineer &amp; Cloud Architect pursuing an M.Tech in Computer Science and Engineering. I build scalable, high-performance web applications and cloud architectures with clean code principles.
+                </p>
+                <p>
+                  My technical foundation spans React 19, TypeScript, Node.js, and cloud systems like AWS. I love tackling complex software engineering challenges, integrating geospatial pipelines (Land Stack), designing machine learning experiments, and building accessible UI systems.
+                </p>
+                <p>
+                  I am actively open to <strong className="text-cyan-700 dark:text-cyan-300 font-semibold">software engineering internships, full-stack development, and cloud architecture opportunities</strong>.
+                </p>
+              </>
+            )}
           </div>
 
           <div className="space-y-3 p-4 rounded-2xl bg-slate-50 border border-slate-200 dark:bg-[#060b17] dark:border-cyan-900/20">
-            <div className="flex items-center gap-2 text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400">
-              <GraduationCap className="w-4 h-4" />
-              <span>EDUCATION</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400">
+                <GraduationCap className="w-4 h-4" />
+                <span>EDUCATION</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setProfileForm({
+                    name: state.name,
+                    title: state.title,
+                    email: state.contact?.email || "",
+                    phone: state.contact?.phone || "",
+                    location: state.contact?.location || "",
+                    github: state.contact?.github || "",
+                    linkedin: state.contact?.linkedin || "",
+                    tagline: state.tagline || "",
+                    elevatorPitch: state.elevatorPitch || "",
+                    degree: state.resume?.education?.[0]?.degree || "",
+                    institution: state.resume?.education?.[0]?.institution || "",
+                    year: state.resume?.education?.[0]?.year || "",
+                  });
+                  setIsEditModalOpen(true);
+                }}
+                className="text-[10px] text-cyan-600 dark:text-cyan-400 font-semibold hover:underline"
+              >
+                + Add / Edit
+              </button>
             </div>
-            <div className="space-y-1">
-              <div className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                M.Tech in Computer Science &amp; Engineering
+
+            {state.resume?.education && state.resume.education.length > 0 ? (
+              <div className="space-y-3">
+                {state.resume.education.map((edu, idx) => (
+                  <div key={idx} className={idx > 0 ? "pt-2 border-t border-slate-200 dark:border-slate-800/80 space-y-1" : "space-y-1"}>
+                    <div className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                      {edu.degree}
+                    </div>
+                    <div className="text-[11px] text-slate-600 dark:text-slate-400">
+                      {edu.institution} • {edu.year}
+                      {edu.honors && ` • ${edu.honors}`}
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="text-[11px] text-slate-600 dark:text-slate-400">
-                Expected 2026 • Core: Distributed Systems, Cloud Architecture, ML
+            ) : (
+              <div className="text-center py-4 space-y-2">
+                <p className="text-xs text-slate-500">No education milestones added yet.</p>
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:underline"
+                >
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  <span>+ Add Education / Bio</span>
+                </button>
               </div>
-            </div>
-            <div className="pt-2 border-t border-slate-200 dark:border-slate-800/80 space-y-1">
-              <div className="font-bold text-slate-900 dark:text-white text-xs">
-                B.Tech / B.E. in Computer Science
-              </div>
-              <div className="text-[11px] text-slate-600 dark:text-slate-400">
-                Completed 2024 • First Class
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Edit Bio Modal */}
+      {/* Edit Bio / Education Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
           <div 
             className="fixed inset-0 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md" 
             onClick={() => setIsEditModalOpen(false)} 
           />
-          <div className="relative w-full max-w-lg rounded-3xl bg-white border border-slate-200 dark:bg-[#090f1d] dark:border-cyan-900/40 shadow-2xl p-6 z-10 space-y-5 text-slate-900 dark:text-white">
+          <div className="relative w-full max-w-lg rounded-3xl bg-white border border-slate-200 dark:bg-[#090f1d] dark:border-cyan-900/40 shadow-2xl p-6 z-10 space-y-5 text-slate-900 dark:text-white max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
               <h3 className="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
                 <Edit3 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-                <span>Edit Profile &amp; Bio Overview</span>
+                <span>Edit Profile, Bio &amp; Education</span>
               </h3>
               <button 
                 type="button" 
@@ -291,14 +404,53 @@ export function SkillsView() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-700 dark:text-slate-300 font-semibold">Elevator Pitch &amp; Focus</label>
+                <label className="text-slate-700 dark:text-slate-300 font-semibold">Elevator Pitch &amp; Focus Narrative</label>
                 <textarea
                   rows={3}
                   value={profileForm.elevatorPitch}
                   onChange={(e) => setProfileForm({ ...profileForm, elevatorPitch: e.target.value })}
+                  placeholder="Summarize your engineering background, favorite tech stacks, and career trajectory..."
                   className="w-full px-3.5 py-2 rounded-xl bg-slate-100 text-slate-900 border border-slate-300 dark:bg-[#040711] dark:border-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-none"
                 />
               </div>
+
+              {/* Education Inputs */}
+              <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+                <span className="font-bold text-[11px] font-mono uppercase text-slate-400 block">Education Overview</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <label className="text-slate-600 dark:text-slate-400">Degree</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. B.S. in Computer Science"
+                      value={profileForm.degree}
+                      onChange={(e) => setProfileForm({ ...profileForm, degree: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-xl bg-slate-100 text-slate-900 border border-slate-300 dark:bg-[#040711] dark:border-slate-800 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-slate-600 dark:text-slate-400">Institution</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. MIT / Stanford / University"
+                      value={profileForm.institution}
+                      onChange={(e) => setProfileForm({ ...profileForm, institution: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-xl bg-slate-100 text-slate-900 border border-slate-300 dark:bg-[#040711] dark:border-slate-800 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-slate-600 dark:text-slate-400">Year / Graduation Status</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 2026 or Expected 2027"
+                    value={profileForm.year}
+                    onChange={(e) => setProfileForm({ ...profileForm, year: e.target.value })}
+                    className="w-full px-3 py-1.5 rounded-xl bg-slate-100 text-slate-900 border border-slate-300 dark:bg-[#040711] dark:border-slate-800 dark:text-white"
+                  />
+                </div>
+              </div>
+
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"

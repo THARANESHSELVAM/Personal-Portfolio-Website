@@ -19,11 +19,12 @@ import {
   Zap,
   TrendingUp,
   ExternalLink,
-  BookOpen
+  BookOpen,
+  PlusCircle
 } from "lucide-react";
 
 export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean } = {}) {
-  const { state, extractedSkills, getPlainTextResume, currentUser } = useProfile();
+  const { state, extractedSkills, getPlainTextResume, currentUser, setActiveTab } = useProfile();
   const [viewMode, setViewMode] = useState<"ats" | "timeline">("ats");
   const [copied, setCopied] = useState(false);
 
@@ -229,31 +230,31 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
                   <span className="font-semibold text-slate-900 dark:text-white">Frontend: </span>
                   {extractedSkills.Frontend.length > 0
                     ? extractedSkills.Frontend.join(", ")
-                    : "TypeScript, React, Next.js, Modern Web"}
+                    : state.isBlankSlate ? "Awaiting entries" : "TypeScript, React, Next.js, Modern Web"}
                 </div>
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Backend: </span>
                   {extractedSkills.Backend.length > 0
                     ? extractedSkills.Backend.join(", ")
-                    : "Go, Node.js, REST APIs, Microservices"}
+                    : state.isBlankSlate ? "Awaiting entries" : "Go, Node.js, REST APIs, Microservices"}
                 </div>
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Cloud &amp; DevOps: </span>
                   {extractedSkills["Cloud & DevOps"].length > 0
                     ? extractedSkills["Cloud & DevOps"].join(", ")
-                    : "Docker, Kubernetes, CI/CD, Cloud Architecture"}
+                    : state.isBlankSlate ? "Awaiting entries" : "Docker, Kubernetes, CI/CD, Cloud Architecture"}
                 </div>
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Data &amp; AI: </span>
                   {extractedSkills["Data & AI"].length > 0
                     ? extractedSkills["Data & AI"].join(", ")
-                    : "PostgreSQL, Redis, Vector Databases"}
+                    : state.isBlankSlate ? "Awaiting entries" : "PostgreSQL, Redis, Vector Databases"}
                 </div>
                 <div className="sm:col-span-2">
                   <span className="font-semibold text-slate-900 dark:text-white">System Design &amp; Architecture: </span>
                   {extractedSkills["System Design"].length > 0
                     ? extractedSkills["System Design"].join(", ")
-                    : "High Availability, Event-Driven Architecture, Fault Tolerance"}
+                    : state.isBlankSlate ? "Awaiting entries" : "High Availability, Event-Driven Architecture, Fault Tolerance"}
                 </div>
               </div>
             </div>
@@ -270,8 +271,18 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
               </div>
 
               {projects.length === 0 ? (
-                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-center text-xs text-slate-500">
-                  No projects added yet. Add projects in the Projects Lab tab to automatically compile them here.
+                <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 text-center space-y-3 border border-slate-200 dark:border-slate-800">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    No projects added yet. Add projects in the Projects Lab tab to automatically compile them here.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("projects")}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20 transition-all"
+                  >
+                    <PlusCircle className="w-3.5 h-3.5" />
+                    <span>+ Add First Project</span>
+                  </button>
                 </div>
               ) : (
                 projects.map((project) => (
@@ -317,7 +328,7 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
             </div>
 
             {/* Recent Verified Milestones from Ingestion Engine */}
-            {learnings.length > 0 && (
+            {learnings.length > 0 ? (
               <div className="space-y-3">
                 <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
                   <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
@@ -338,6 +349,30 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
                     </li>
                   ))}
                 </ul>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
+                  <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
+                    <span>Verified Learning Diary Milestones</span>
+                    <span className="text-[10px] font-mono lowercase px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 font-normal">
+                      from diary (0)
+                    </span>
+                  </h2>
+                </div>
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 text-center space-y-3 border border-slate-200 dark:border-slate-800">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    No learning milestones logged yet. Entries added in your Diary will automatically appear here as verified proof-of-work.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("diary")}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20 transition-all"
+                  >
+                    <PlusCircle className="w-3.5 h-3.5" />
+                    <span>+ Log First Learning Entry</span>
+                  </button>
+                </div>
               </div>
             )}
 
@@ -382,11 +417,11 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
             )}
 
             {/* Education */}
-            {resume.education && resume.education.length > 0 && (
-              <div className="space-y-3">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
-                  Education &amp; Credentials
-                </h2>
+            <div className="space-y-3">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
+                Education &amp; Credentials
+              </h2>
+              {resume.education && resume.education.length > 0 ? (
                 <div className="space-y-2">
                   {resume.education.map((edu, idx) => (
                     <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between text-xs sm:text-sm">
@@ -405,8 +440,22 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
+              ) : (
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-center space-y-2 border border-slate-200 dark:border-slate-800">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    No education milestones added yet.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("skills")}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs border border-slate-300 dark:border-slate-700 transition-all"
+                  >
+                    <PlusCircle className="w-3.5 h-3.5 text-cyan-500" />
+                    <span>+ Add Education / Bio</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Certifications */}
             {resume.certifications && resume.certifications.length > 0 && (
@@ -430,6 +479,31 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
              VIEW 2: VISUAL TIMELINE VIEW (Chronological Learning & Project Feed)
              ========================================================================= */
           <div className="space-y-8 animate-in fade-in duration-300">
+            {projects.length === 0 && learnings.length === 0 ? (
+              <div className="text-center py-14 px-6 glass-panel rounded-3xl border border-slate-200 dark:border-slate-800 max-w-md mx-auto space-y-4">
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                  No timeline milestones recorded yet. Add learning diary logs or projects to visualize your chronological engineering trajectory.
+                </p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("diary")}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20 transition-all"
+                  >
+                    <PlusCircle className="w-3.5 h-3.5" />
+                    <span>+ Log First Learning Entry</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("projects")}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs border border-slate-300 dark:border-slate-700 transition-all"
+                  >
+                    <PlusCircle className="w-3.5 h-3.5 text-cyan-500" />
+                    <span>+ Add First Project</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
             <div className="relative pl-6 sm:pl-8 border-l-2 border-cyan-500/30 space-y-10">
               {/* Projects in Timeline */}
               {projects.map((project) => (
@@ -513,6 +587,7 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
                 </div>
               ))}
             </div>
+            )}
 
             {/* Visual Education & Certifications Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">

@@ -27,6 +27,10 @@ import {
   createSessionToken,
   validateSessionToken,
   clearAuthSession,
+  RegisteredProfile,
+  getRegisteredProfiles,
+  findRegisteredProfile,
+  registerNewProfile,
 } from "@/lib/authConfig";
 
 export type WorkspaceTab = "home" | "profile" | "diary" | "projects" | "skills" | "resume" | "live-ats";
@@ -48,7 +52,14 @@ export interface ProfileContextType {
   healthScore: number;
   competencyCounts: Record<CompetencyArea, number>;
   skillGapInsights: SkillGapInsight[];
-  loginUser: (identity: UserIdentity, options?: { loadStarterData?: boolean }) => void;
+  registeredProfiles: RegisteredProfile[];
+  refreshRegisteredProfiles: () => void;
+  switchProfile: (userId: string) => void;
+  promptCreateProfile: () => void;
+  loginUser: (
+    identity: UserIdentity,
+    options?: { loadStarterData?: boolean; isBlankSlate?: boolean; pin?: string }
+  ) => void;
   logoutUser: () => void;
   updateProfile: (updates: Partial<ProfileState>) => void;
   addLearning: (entry: Omit<LearningEntry, "id" | "dateLogged">) => void;
@@ -96,6 +107,14 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [activeTab, setActiveTabState] = useState<WorkspaceTab>("home");
   const [state, setState] = useState<ProfileState>(INITIAL_PROFILE_STATE);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [registeredProfiles, setRegisteredProfiles] = useState<RegisteredProfile[]>([]);
+
+  // Refresh registered profiles from localStorage
+  const refreshRegisteredProfiles = useCallback(() => {
+    if (typeof window !== "undefined") {
+      setRegisteredProfiles(getRegisteredProfiles());
+    }
+  }, []);
 
   // Sync tab with URL hash if present
   const setActiveTab = useCallback((tab: WorkspaceTab) => {
@@ -108,6 +127,8 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   // Initial client hydration from user-scoped localStorage
   useEffect(() => {
     try {
+      refreshRegisteredProfiles();
+
       // 1. Check if hash specifies a tab
       if (typeof window !== "undefined" && window.location.hash) {
         const hash = window.location.hash.replace("#", "").toLowerCase();
@@ -148,70 +169,92 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && Array.isArray(parsed.learnings) && Array.isArray(parsed.projects)) {
-          // Merge initial rich case studies into projects matching initial IDs if needed
-          const mergedProjects = parsed.projects.map((proj: Project) => {
-            const initial = INITIAL_PROJECTS.find((p: Project) => p.id === proj.id);
-            if (initial && initial.caseStudy) {
-              return {
-                ...initial,
-                ...proj,
-                noveltySnippet: initial.noveltySnippet || proj.noveltySnippet,
-                caseStudy: {
-                  ...initial.caseStudy,
-                  ...(proj.caseStudy || {}),
-                  projectUse: proj.caseStudy?.projectUse || initial.caseStudy.projectUse,
-                  problemStatement: proj.caseStudy?.problemStatement || initial.caseStudy.problemStatement,
-                  expertSolution: proj.caseStudy?.expertSolution || initial.caseStudy.expertSolution,
-                  novelty: proj.caseStudy?.novelty || initial.caseStudy.novelty,
-                  noveltyHighlights: (proj.caseStudy?.noveltyHighlights && proj.caseStudy.noveltyHighlights.length > 0)
-                    ? proj.caseStudy.noveltyHighlights
-                    : initial.caseStudy.noveltyHighlights,
-                  benchmarks: (proj.caseStudy?.benchmarks && proj.caseStudy.benchmarks.length > 0)
-                    ? proj.caseStudy.benchmarks
-                    : initial.caseStudy.benchmarks,
-                },
-              };
-            }
-            return proj;
-          });
+          // If parsed.isBlankSlate is true, strictly do NOT merge INITIAL_PROJECTS, keep parsed.projects as-is
+          let resolvedProjects = parsed.projects;
+          if (!parsed.isBlankSlate) {
+            resolvedProjects = parsed.projects.map((proj: Project) => {
+              const initial = INITIAL_PROJECTS.find((p: Project) => p.id === proj.id);
+              if (initial && initial.caseStudy) {
+                return {
+                  ...initial,
+                  ...proj,
+                  noveltySnippet: initial.noveltySnippet || proj.noveltySnippet,
+                  caseStudy: {
+                    ...initial.caseStudy,
+                    ...(proj.caseStudy || {}),
+                    projectUse: proj.caseStudy?.projectUse || initial.caseStudy.projectUse,
+                    problemStatement: proj.caseStudy?.problemStatement || initial.caseStudy.problemStatement,
+                    expertSolution: proj.caseStudy?.expertSolution || initial.caseStudy.expertSolution,
+                    novelty: proj.caseStudy?.novelty || initial.caseStudy.novelty,
+                    noveltyHighlights: (proj.caseStudy?.noveltyHighlights && proj.caseStudy.noveltyHighlights.length > 0)
+                      ? proj.caseStudy.noveltyHighlights
+                      : initial.caseStudy.noveltyHighlights,
+                    benchmarks: (proj.caseStudy?.benchmarks && proj.caseStudy.benchmarks.length > 0)
+                      ? proj.caseStudy.benchmarks
+                      : initial.caseStudy.benchmarks,
+                  },
+                };
+              }
+              return proj;
+            });
+          }
 
-          setState({ ...parsed, projects: mergedProjects });
+          setState({ ...parsed, projects: resolvedProjects });
           setCurrentUser({
             userId: storedUserId,
-            name: parsed.name || "Tharanesh Selvam",
-            fullName: parsed.name || "Tharanesh Selvam",
-            email: parsed.contact?.email || "tharanesh.selvam@gmail.com",
-            title: parsed.title || "Aspiring Full-Stack Software Engineer",
-            location: parsed.contact?.location || "India / Remote",
+            name: parsed.name || "Portfolio Owner",
+            fullName: parsed.name || "Portfolio Owner",
+            email: parsed.contact?.email || "",
+            title: parsed.title || "Software Engineer",
+            location: parsed.contact?.location || "Remote",
             phone: parsed.contact?.phone || "",
-            github: parsed.contact?.github || "https://github.com/THARANESHSELVAM",
-            linkedin: parsed.contact?.linkedin || "https://linkedin.com/in/tharanesh-selvam",
+            github: parsed.contact?.github || "",
+            linkedin: parsed.contact?.linkedin || "",
           });
         }
       } else {
-        // No saved workspace for this active user yet, initialize default for Tharanesh Selvam
-        const defaultIdentity: UserIdentity = {
-          userId: storedUserId,
-          name: "Tharanesh Selvam",
-          fullName: "Tharanesh Selvam",
-          email: storedUserId.includes("@") ? storedUserId : "tharanesh.selvam@gmail.com",
-          title: "Aspiring Full-Stack Software Engineer",
-          location: "India / Open to Remote & Relocation",
-          github: "https://github.com/THARANESHSELVAM",
-          linkedin: "https://linkedin.com/in/tharanesh-selvam",
-        };
-        const starter = createStarterWorkspace(defaultIdentity);
-        setState(starter);
-        setCurrentUser(defaultIdentity);
-        localStorage.setItem(storageKey, JSON.stringify(starter));
-        localStorage.setItem(ACTIVE_USER_KEY, storedUserId);
+        // No saved workspace for this active user yet
+        const foundProfile = findRegisteredProfile(storedUserId);
+        if (foundProfile && foundProfile.isBlankSlate) {
+          const blankIdentity: UserIdentity = {
+            userId: foundProfile.userId,
+            name: foundProfile.name,
+            fullName: foundProfile.name,
+            email: foundProfile.email,
+            title: foundProfile.title,
+            location: foundProfile.location || "",
+            github: foundProfile.github || "",
+            linkedin: foundProfile.linkedin || "",
+          };
+          const blankWs = createBlankWorkspace(blankIdentity);
+          setState(blankWs);
+          setCurrentUser(blankIdentity);
+          localStorage.setItem(storageKey, JSON.stringify(blankWs));
+        } else {
+          // Default to Tharanesh Selvam starter workspace
+          const defaultIdentity: UserIdentity = {
+            userId: storedUserId,
+            name: "Tharanesh Selvam",
+            fullName: "Tharanesh Selvam",
+            email: storedUserId.includes("@") ? storedUserId : "tharanesh.selvam@gmail.com",
+            title: "Aspiring Full-Stack Software Engineer",
+            location: "India / Open to Remote & Relocation",
+            github: "https://github.com/THARANESHSELVAM",
+            linkedin: "https://linkedin.com/in/tharanesh-selvam",
+          };
+          const starter = createStarterWorkspace(defaultIdentity);
+          setState(starter);
+          setCurrentUser(defaultIdentity);
+          localStorage.setItem(storageKey, JSON.stringify(starter));
+          localStorage.setItem(ACTIVE_USER_KEY, storedUserId);
+        }
       }
     } catch (e) {
       console.error("Failed to hydrate user workspace from localStorage:", e);
     } finally {
       setIsHydrated(true);
     }
-  }, []);
+  }, [refreshRegisteredProfiles]);
 
   // Save to user-scoped localStorage whenever state changes
   useEffect(() => {
@@ -226,56 +269,154 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   }, [state, activeUserId, isHydrated]);
 
   // Login / Switch to user workspace
-  const loginUser = useCallback((identity: UserIdentity, options?: { loadStarterData?: boolean }) => {
-    const rawId = identity.userId.trim() || identity.email.trim();
-    if (!rawId) return;
+  const loginUser = useCallback(
+    (
+      identity: UserIdentity,
+      options?: { loadStarterData?: boolean; isBlankSlate?: boolean; pin?: string }
+    ) => {
+      const rawId = identity.userId.trim() || identity.email.trim();
+      if (!rawId) return;
 
-    // Create and persist verified session token
-    const token = createSessionToken(rawId, identity.email);
-    localStorage.setItem(AUTH_SESSION_KEY, token);
+      const isBlank = options?.isBlankSlate ?? (options?.loadStarterData === false);
 
-    setActiveUserId(rawId);
-    setCurrentUser(identity);
-    localStorage.setItem(ACTIVE_USER_KEY, rawId);
+      // Register profile in registered profiles list
+      registerNewProfile({
+        userId: rawId,
+        email: identity.email.trim(),
+        pin: options?.pin?.trim() || "2026",
+        name: identity.name.trim(),
+        title: identity.title.trim(),
+        location: identity.location?.trim() || "",
+        github: identity.github?.trim() || "",
+        linkedin: identity.linkedin?.trim() || "",
+        isBlankSlate: isBlank,
+      });
 
-    const storageKey = getWorkspaceStorageKey(rawId);
-    const existing = localStorage.getItem(storageKey);
+      refreshRegisteredProfiles();
 
-    if (existing && !options?.loadStarterData) {
-      try {
-        const parsed = JSON.parse(existing);
-        if (parsed && Array.isArray(parsed.learnings)) {
-          setState({
-            ...parsed,
-            name: identity.name || parsed.name,
-            title: identity.title || parsed.title,
-            contact: {
-              ...parsed.contact,
-              email: identity.email || parsed.contact.email,
-              location: identity.location || parsed.contact.location,
-              github: identity.github || parsed.contact.github,
-              linkedin: identity.linkedin || parsed.contact.linkedin,
-              phone: identity.phone || parsed.contact.phone,
-            },
-          });
-          return;
+      // Create and persist verified session token
+      const token = createSessionToken(rawId, identity.email);
+      localStorage.setItem(AUTH_SESSION_KEY, token);
+
+      setActiveUserId(rawId);
+      setCurrentUser(identity);
+      localStorage.setItem(ACTIVE_USER_KEY, rawId);
+
+      const storageKey = getWorkspaceStorageKey(rawId);
+      const existing = localStorage.getItem(storageKey);
+
+      if (existing && !options?.loadStarterData && !options?.isBlankSlate) {
+        try {
+          const parsed = JSON.parse(existing);
+          if (parsed && Array.isArray(parsed.learnings)) {
+            setState({
+              ...parsed,
+              name: identity.name || parsed.name,
+              title: identity.title || parsed.title,
+              contact: {
+                ...parsed.contact,
+                email: identity.email || parsed.contact.email,
+                location: identity.location || parsed.contact.location,
+                github: identity.github || parsed.contact.github,
+                linkedin: identity.linkedin || parsed.contact.linkedin,
+                phone: identity.phone || parsed.contact.phone,
+              },
+            });
+            return;
+          }
+        } catch (err) {
+          console.warn("Could not parse existing workspace, initializing fresh.", err);
         }
-      } catch (err) {
-        console.warn("Could not parse existing workspace, initializing fresh.", err);
       }
+
+      // Initialize workspace
+      const newWorkspace = isBlank
+        ? createBlankWorkspace(identity)
+        : createStarterWorkspace(identity);
+
+      setState(newWorkspace);
+      localStorage.setItem(storageKey, JSON.stringify(newWorkspace));
+    },
+    [refreshRegisteredProfiles]
+  );
+
+  // Switch active profile seamlessly
+  const switchProfile = useCallback(
+    (userId: string) => {
+      const target = findRegisteredProfile(userId);
+      if (!target) return;
+
+      const identity: UserIdentity = {
+        userId: target.userId,
+        name: target.name,
+        fullName: target.name,
+        email: target.email,
+        title: target.title,
+        location: target.location || "",
+        github: target.github || "",
+        linkedin: target.linkedin || "",
+      };
+
+      const token = createSessionToken(target.userId, target.email);
+      localStorage.setItem(AUTH_SESSION_KEY, token);
+      localStorage.setItem(ACTIVE_USER_KEY, target.userId);
+
+      setActiveUserId(target.userId);
+      setCurrentUser(identity);
+
+      const storageKey = getWorkspaceStorageKey(target.userId);
+      const saved = localStorage.getItem(storageKey);
+
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && Array.isArray(parsed.learnings) && Array.isArray(parsed.projects)) {
+            let resolvedProjects = parsed.projects;
+            if (!parsed.isBlankSlate) {
+              resolvedProjects = parsed.projects.map((proj: Project) => {
+                const initial = INITIAL_PROJECTS.find((p: Project) => p.id === proj.id);
+                return initial && initial.caseStudy ? { ...initial, ...proj } : proj;
+              });
+            }
+            setState({ ...parsed, projects: resolvedProjects });
+          }
+        } catch (e) {
+          console.error("Error loading workspace for switched user:", e);
+        }
+      } else {
+        const freshWorkspace = target.isBlankSlate
+          ? createBlankWorkspace(identity)
+          : createStarterWorkspace(identity);
+        setState(freshWorkspace);
+        localStorage.setItem(storageKey, JSON.stringify(freshWorkspace));
+      }
+
+      setActiveTabState("home");
+      if (typeof window !== "undefined") {
+        window.history.replaceState(null, "", "#home");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    },
+    []
+  );
+
+  // Prompt onboarding in "Add New Profile Entry" mode
+  const promptCreateProfile = useCallback(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("myresume_onboarding_mode", "new");
     }
-
-    // Initialize workspace
-    const newWorkspace = options?.loadStarterData === false
-      ? createBlankWorkspace(identity)
-      : createStarterWorkspace(identity);
-
-    setState(newWorkspace);
-    localStorage.setItem(storageKey, JSON.stringify(newWorkspace));
+    clearAuthSession();
+    setActiveUserId(null);
+    setCurrentUser(null);
+    localStorage.removeItem(ACTIVE_USER_KEY);
+    setActiveTabState("home");
   }, []);
 
   // Logout / Lock Diary
   const logoutUser = useCallback(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("myresume_onboarding_mode");
+    }
     clearAuthSession();
     setActiveUserId(null);
     setCurrentUser(null);
@@ -710,6 +851,10 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         healthScore,
         competencyCounts,
         skillGapInsights,
+        registeredProfiles,
+        refreshRegisteredProfiles,
+        switchProfile,
+        promptCreateProfile,
         loginUser,
         logoutUser,
         updateProfile,

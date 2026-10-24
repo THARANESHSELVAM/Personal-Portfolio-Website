@@ -632,7 +632,29 @@ export function ProjectGrid() {
         )}
 
         {/* Projects Multi-Column Grid */}
-        {filteredProjects.length === 0 ? (
+        {state.projects.length === 0 ? (
+          <div className="text-center py-16 px-6 glass-panel rounded-3xl border border-slate-200 dark:border-slate-800 max-w-lg mx-auto space-y-4 shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mx-auto border border-cyan-500/20">
+              <Briefcase className="w-7 h-7" />
+            </div>
+            <div className="space-y-1.5">
+              <h4 className="text-lg font-bold text-slate-900 dark:text-white">
+                No Architectural Projects Yet
+              </h4>
+              <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
+                Your workspace is on a 100% blank slate. Add your first full-stack application, system architecture, or open-source tool.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsAddModalOpen(true)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white dark:text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/25 transition-all"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>+ Add First Project</span>
+            </button>
+          </div>
+        ) : filteredProjects.length === 0 ? (
           <div className="text-center py-16 px-4 glass-panel rounded-3xl border border-slate-200 dark:border-slate-800 max-w-lg mx-auto space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mx-auto">
               <Briefcase className="w-6 h-6" />
@@ -642,16 +664,15 @@ export function ProjectGrid() {
                 No Projects Available
               </h4>
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
-                No projects found for the selected category. You can add a new project entry or reset data anytime.
+                No projects found for category &quot;{selectedFilter}&quot;. Reset filter to view all projects.
               </p>
             </div>
             <button
               type="button"
-              onClick={() => setIsAddModalOpen(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/25 transition-all"
+              onClick={() => setSelectedFilter("All")}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs transition-all"
             >
-              <PlusCircle className="w-4 h-4" />
-              <span>Add New Project</span>
+              Reset Filter
             </button>
           </div>
         ) : (

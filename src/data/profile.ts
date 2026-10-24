@@ -99,6 +99,7 @@ export interface ResumeData {
 }
 
 export interface ProfileState {
+  isBlankSlate?: boolean;
   name: string;
   preferredName: string;
   title: string;
@@ -719,11 +720,11 @@ ${autoSummary}
 --------------------------------------------------------------------------------
 DYNAMICALLY EXTRACTED TECHNICAL COMPETENCIES (Derived from Logs & Projects)
 --------------------------------------------------------------------------------
-* Frontend: ${categorizedSkills.Frontend.length > 0 ? categorizedSkills.Frontend.join(", ") : "Modern Web Frameworks, TypeScript"}
-* Backend: ${categorizedSkills.Backend.length > 0 ? categorizedSkills.Backend.join(", ") : "Microservices, Distributed Streaming"}
-* Cloud & DevOps: ${categorizedSkills["Cloud & DevOps"].length > 0 ? categorizedSkills["Cloud & DevOps"].join(", ") : "AWS, Kubernetes, CI/CD"}
-* Data & AI: ${categorizedSkills["Data & AI"].length > 0 ? categorizedSkills["Data & AI"].join(", ") : "Columnar DBs, Vector Search"}
-* System Design: ${categorizedSkills["System Design"].length > 0 ? categorizedSkills["System Design"].join(", ") : "High Availability, Event-Driven Architecture"}
+* Frontend: ${categorizedSkills.Frontend.length > 0 ? categorizedSkills.Frontend.join(", ") : state.isBlankSlate ? "Awaiting entries" : "Modern Web Frameworks, TypeScript"}
+* Backend: ${categorizedSkills.Backend.length > 0 ? categorizedSkills.Backend.join(", ") : state.isBlankSlate ? "Awaiting entries" : "Microservices, Distributed Streaming"}
+* Cloud & DevOps: ${categorizedSkills["Cloud & DevOps"].length > 0 ? categorizedSkills["Cloud & DevOps"].join(", ") : state.isBlankSlate ? "Awaiting entries" : "AWS, Kubernetes, CI/CD"}
+* Data & AI: ${categorizedSkills["Data & AI"].length > 0 ? categorizedSkills["Data & AI"].join(", ") : state.isBlankSlate ? "Awaiting entries" : "Columnar DBs, Vector Search"}
+* System Design: ${categorizedSkills["System Design"].length > 0 ? categorizedSkills["System Design"].join(", ") : state.isBlankSlate ? "Awaiting entries" : "High Availability, Event-Driven Architecture"}
 
 ${experienceText}
 

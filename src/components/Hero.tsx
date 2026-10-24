@@ -18,8 +18,14 @@ import { LinkedinIcon, GithubIcon } from "@/components/Icons";
 import { useProfile } from "@/context/ProfileContext";
 
 export function Hero() {
-  const { state, setActiveTab } = useProfile();
+  const { state, setActiveTab, extractedSkills } = useProfile();
   const [copied, setCopied] = useState(false);
+
+  const isBlank = Boolean(state.isBlankSlate);
+  const totalSkillsCount = Object.values(extractedSkills || {}).flat().length;
+  const projectCountDisplay = isBlank ? `${state.projects.length}` : (state.projects.length > 0 ? `${state.projects.length}+` : "0");
+  const skillsCountDisplay = isBlank ? `${totalSkillsCount}` : (totalSkillsCount > 0 ? `${totalSkillsCount}+` : "20+");
+  const activeDomainsCount = Object.values(extractedSkills || {}).filter((list) => list.length > 0).length || (isBlank ? 0 : 2);
 
   const copyEmail = () => {
     if (state.contact?.email) {
@@ -57,7 +63,7 @@ export function Hero() {
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-50 text-cyan-700 border border-cyan-200 dark:bg-cyan-950/70 dark:text-cyan-300 dark:border-cyan-500/30 shadow-sm shadow-cyan-500/10">
                 <GraduationCap className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-                <span>M.Tech CSE Student</span>
+                <span>{state.tagline || (state.resume?.education?.[0]?.degree || (isBlank ? "Engineering Portfolio" : "M.Tech CSE Student"))}</span>
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-teal-950/70 dark:text-teal-300 dark:border-teal-500/30">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
@@ -70,11 +76,11 @@ export function Hero() {
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
                 Hi, I&apos;m{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-cyan-600 to-teal-600 dark:from-teal-400 dark:via-cyan-400 dark:to-teal-300">
-                  Tharanesh Selvam
+                  {state.name || "Portfolio Owner"}
                 </span>
               </h1>
               <h2 className="text-base sm:text-lg lg:text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">
-                Full-Stack Software Engineer &amp; Cloud Architect
+                {state.title || "Full-Stack Software Engineer & Cloud Architect"}
               </h2>
             </div>
 
@@ -193,8 +199,8 @@ export function Hero() {
                   {/* Mock Code / Visuals */}
                   <div className="space-y-1 font-mono text-[9px] text-slate-300 py-1">
                     <div className="text-cyan-400">const developer = &#123;</div>
-                    <div className="pl-2 text-slate-400">name: <span className="text-teal-300">&quot;Tharanesh&quot;</span>,</div>
-                    <div className="pl-2 text-slate-400">role: <span className="text-cyan-300">&quot;Full-Stack &amp; Cloud&quot;</span>,</div>
+                    <div className="pl-2 text-slate-400">name: <span className="text-teal-300">&quot;{state.name?.split(" ")[0] || "Developer"}&quot;</span>,</div>
+                    <div className="pl-2 text-slate-400">role: <span className="text-cyan-300">&quot;{state.title ? (state.title.length > 18 ? state.title.slice(0, 16) + "..." : state.title) : "Software Engineer"}&quot;</span>,</div>
                     <div className="pl-2 text-slate-400">status: <span className="text-emerald-400">&quot;Available&quot;</span>,</div>
                     <div className="text-cyan-400">&#125;;</div>
                   </div>
@@ -247,40 +253,40 @@ export function Hero() {
             {/* Top 2x2 Stats Matrix Card */}
             <div className="p-5 rounded-2xl bg-white border border-slate-200 dark:bg-[#090f1d]/90 dark:border-cyan-900/30 backdrop-blur-md shadow-md dark:shadow-xl space-y-4 text-left">
               <div className="grid grid-cols-2 gap-4">
-                {/* Stat 1: 5+ Projects */}
+                {/* Stat 1: Projects */}
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
                     <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
                       <FolderKanban className="w-3.5 h-3.5" />
                     </div>
-                    <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">5+</span>
+                    <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">{projectCountDisplay}</span>
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Projects</div>
                 </div>
 
-                {/* Stat 2: 20+ Skills */}
+                {/* Stat 2: Skills */}
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
                     <div className="p-1.5 rounded-lg bg-cyan-50 text-cyan-600 dark:bg-cyan-500/10 dark:text-cyan-400">
                       <Sparkles className="w-3.5 h-3.5" />
                     </div>
-                    <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">20+</span>
+                    <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">{skillsCountDisplay}</span>
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Skills</div>
                 </div>
 
-                {/* Stat 3: 2 Major Domains */}
+                {/* Stat 3: Major Domains */}
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
                     <div className="p-1.5 rounded-lg bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400">
                       <Layers className="w-3.5 h-3.5" />
                     </div>
-                    <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">2</span>
+                    <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">{activeDomainsCount}</span>
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Major Domains</div>
                 </div>
 
-                {/* Stat 4: 100% Learning Mode */}
+                {/* Stat 4: Learning Mode */}
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
                     <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
@@ -302,7 +308,7 @@ export function Hero() {
                 &quot;Continuous learning is the key to growth.&quot;
               </p>
               <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 text-right">
-                — Tharanesh Selvam
+                — {state.name || "Portfolio Owner"}
               </div>
             </div>
           </div>

@@ -685,7 +685,32 @@ export function LearningLog() {
         </div>
 
         {/* Chronological Learning Velocity Feed */}
-        {filteredLearnings.length === 0 ? (
+        {state.learnings.length === 0 ? (
+          <div className="text-center py-16 px-6 glass-panel rounded-3xl border border-slate-200 dark:border-slate-800 max-w-lg mx-auto space-y-4 shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mx-auto border border-cyan-500/20">
+              <BookOpen className="w-7 h-7" />
+            </div>
+            <div className="space-y-1.5">
+              <h4 className="text-lg font-bold text-slate-900 dark:text-white">
+                Engineering Diary is Clean &amp; Empty
+              </h4>
+              <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
+                You are on a 100% blank slate. Start documenting hands-on architectures, tools, or libraries you explore to dynamically feed your live ATS resume.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setIsFormOpen(true);
+                window.scrollTo({ top: 150, behavior: "smooth" });
+              }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white dark:text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/25 transition-all"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>+ Log First Learning Entry</span>
+            </button>
+          </div>
+        ) : filteredLearnings.length === 0 ? (
           <div className="text-center py-16 glass-panel rounded-3xl border border-slate-200 dark:border-slate-800 max-w-md mx-auto">
             <BookOpen className="w-8 h-8 text-slate-400 mx-auto mb-2 opacity-50" />
             <p className="text-slate-600 dark:text-slate-400 text-sm">
