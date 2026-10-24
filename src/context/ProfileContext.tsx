@@ -29,7 +29,7 @@ import {
   clearAuthSession,
 } from "@/lib/authConfig";
 
-export type WorkspaceTab = "profile" | "diary" | "projects" | "skills" | "resume" | "live-ats";
+export type WorkspaceTab = "home" | "profile" | "diary" | "projects" | "skills" | "resume" | "live-ats";
 
 export interface SkillGapInsight {
   type: "tip" | "warning" | "achievement";
@@ -93,7 +93,7 @@ const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [activeUserId, setActiveUserId] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<UserIdentity | null>(null);
-  const [activeTab, setActiveTabState] = useState<WorkspaceTab>("profile");
+  const [activeTab, setActiveTabState] = useState<WorkspaceTab>("home");
   const [state, setState] = useState<ProfileState>(INITIAL_PROFILE_STATE);
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -111,14 +111,16 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       // 1. Check if hash specifies a tab
       if (typeof window !== "undefined" && window.location.hash) {
         const hash = window.location.hash.replace("#", "").toLowerCase();
-        if (hash === "profile" || hash === "diary" || hash === "projects" || hash === "skills" || hash === "resume") {
+        if (hash === "home" || hash === "profile") {
+          setActiveTabState("home");
+        } else if (hash === "diary" || hash === "projects" || hash === "skills" || hash === "resume") {
           setActiveTabState(hash as WorkspaceTab);
         } else if (hash === "live-ats" || hash === "ats" || hash === "ats-resume") {
           setActiveTabState("resume");
         } else if (hash === "learning-log") {
           setActiveTabState("diary");
         } else if (hash === "about") {
-          setActiveTabState("profile");
+          setActiveTabState("skills");
         }
       }
 
@@ -278,7 +280,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     setActiveUserId(null);
     setCurrentUser(null);
     localStorage.removeItem(ACTIVE_USER_KEY);
-    setActiveTabState("profile");
+    setActiveTabState("home");
   }, []);
 
   // Update profile attributes (name, title, contact, bio)

@@ -18,7 +18,7 @@ export function Footer() {
   };
 
   const navTabs: { id: WorkspaceTab; name: string }[] = [
-    { id: "profile", name: "Home" },
+    { id: "home", name: "Home" },
     { id: "diary", name: "Diary" },
     { id: "projects", name: "Projects" },
     { id: "skills", name: "Skills" },

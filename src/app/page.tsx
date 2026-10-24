@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { useProfile } from "@/context/ProfileContext";
 import { SecurityGate } from "@/components/SecurityGate";
 import { Navbar } from "@/components/Navbar";
-import { ProfileView } from "@/components/ProfileView";
+import { HomeView } from "@/components/HomeView";
+import { SkillsView } from "@/components/SkillsView";
 import { LearningLog } from "@/components/LearningLog";
 import { ProjectGrid } from "@/components/ProjectGrid";
 import { ResumeHub } from "@/components/ResumeHub";
@@ -52,10 +53,10 @@ export default function Home() {
       <Navbar />
 
       <main className="flex-1">
-        {activeTab === "profile" && <ProfileView />}
+        {(activeTab === "home" || activeTab === "profile") && <HomeView />}
         {activeTab === "diary" && <LearningLog />}
         {activeTab === "projects" && <ProjectGrid />}
-        {activeTab === "skills" && <ProfileView initialSection="skills" />}
+        {activeTab === "skills" && <SkillsView />}
         {(activeTab === "resume" || activeTab === "live-ats") && <ResumeHub />}
       </main>
 

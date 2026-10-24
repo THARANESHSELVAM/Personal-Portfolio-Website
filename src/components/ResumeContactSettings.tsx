@@ -12,7 +12,8 @@ import {
   Sparkles, 
   RefreshCw, 
   ShieldCheck,
-  ArrowRight
+  ArrowRight,
+  Briefcase
 } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/Icons";
 
@@ -26,6 +27,7 @@ export function ResumeContactSettings() {
     location: contact?.location || "",
     linkedin: contact?.linkedin || "",
     github: contact?.github || "",
+    targetRole: state.title || "",
   });
 
   const [isSaved, setIsSaved] = useState(false);
@@ -38,8 +40,9 @@ export function ResumeContactSettings() {
       location: contact?.location || "",
       linkedin: contact?.linkedin || "",
       github: contact?.github || "",
+      targetRole: state.title || "",
     });
-  }, [contact?.email, contact?.phone, contact?.location, contact?.linkedin, contact?.github]);
+  }, [contact?.email, contact?.phone, contact?.location, contact?.linkedin, contact?.github, state.title]);
 
   const handleInputChange = (field: keyof typeof formValues, val: string) => {
     setFormValues((prev) => ({ ...prev, [field]: val }));
@@ -49,6 +52,7 @@ export function ResumeContactSettings() {
   const handleSaveCoordinates = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     updateProfile({
+      title: formValues.targetRole.trim() || state.title,
       contact: {
         ...state.contact,
         email: formValues.email.trim(),
@@ -85,7 +89,7 @@ export function ResumeContactSettings() {
             <span>Resume Contact Header Settings</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl">
-            Configure your verified contact coordinates. These values automatically synchronize to the top header of your <strong>ATS Resume</strong> and plain-text export.
+            Configure your verified contact coordinates and target role. These values automatically synchronize to the top header of your <strong>ATS Resume</strong> and plain-text export.
           </p>
         </div>
 
@@ -104,6 +108,23 @@ export function ResumeContactSettings() {
       <form onSubmit={handleSaveCoordinates} className="space-y-5">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           
+          {/* Target Role / Professional Headline */}
+          <div className="space-y-1.5 md:col-span-2 lg:col-span-1">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <Briefcase className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+              <span>Target Role / Headline</span>
+              <span className="text-rose-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={formValues.targetRole}
+              onChange={(e) => handleInputChange("targetRole", e.target.value)}
+              placeholder="e.g. Full-Stack Software Engineer & Cloud Architect"
+              required
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 dark:bg-[#060b17] dark:border-cyan-900/30 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all font-medium"
+            />
+          </div>
+
           {/* Email Address */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
@@ -137,7 +158,7 @@ export function ResumeContactSettings() {
           </div>
 
           {/* Location / Base */}
-          <div className="space-y-1.5 md:col-span-2 lg:col-span-1">
+          <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
               <span>Location / Relocation Preferences</span>
@@ -167,7 +188,7 @@ export function ResumeContactSettings() {
           </div>
 
           {/* GitHub URL */}
-          <div className="space-y-1.5 md:col-span-2">
+          <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <GithubIcon className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
               <span>GitHub Profile URL</span>
@@ -195,6 +216,12 @@ export function ResumeContactSettings() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-slate-700 dark:text-slate-300 font-sans">
+            {formValues.targetRole ? (
+              <span className="font-bold text-cyan-600 dark:text-cyan-400">{formValues.targetRole}</span>
+            ) : (
+              <span className="italic text-slate-400">Target Role not set</span>
+            )}
+            <span>•</span>
             {formValues.location ? (
               <span className="font-medium text-slate-900 dark:text-white">{formValues.location}</span>
             ) : (

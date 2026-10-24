@@ -22,7 +22,7 @@ export function Navbar() {
 
   const navTabs: { id: WorkspaceTab; name: string; icon: any; isLive?: boolean }[] = [
     { 
-      id: "profile", 
+      id: "home", 
       name: "Home", 
       icon: Home 
     },
@@ -65,7 +65,7 @@ export function Navbar() {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => handleTabClick("profile")}
+              onClick={() => handleTabClick("home")}
               className="group flex items-center gap-2.5 font-bold tracking-tight text-slate-900 dark:text-white text-left focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-lg p-1"
             >
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/10 border border-cyan-500/40 dark:border-cyan-400/40 flex items-center justify-center text-cyan-600 dark:text-cyan-400 font-extrabold text-xs shadow-sm dark:shadow-md dark:shadow-cyan-500/10 group-hover:border-cyan-400 transition-all duration-200">
@@ -89,7 +89,7 @@ export function Navbar() {
           >
             {navTabs.map((tab) => {
               const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
+              const isActive = activeTab === tab.id || (tab.id === "home" && activeTab === "profile");
               return (
                 <button
                   key={tab.id}
@@ -144,7 +144,7 @@ export function Navbar() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => handleTabClick("profile")}
+                    onClick={() => handleTabClick("home")}
                     className="w-full text-left px-3 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
                   >
                     View Portfolio Overview
@@ -188,7 +188,7 @@ export function Navbar() {
           <div className="md:hidden mt-3 pt-3 border-t border-slate-200 dark:border-slate-800/80 space-y-1.5 pb-2 animate-in fade-in slide-in-from-top-2 duration-200">
             {navTabs.map((tab) => {
               const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
+              const isActive = activeTab === tab.id || (tab.id === "home" && activeTab === "profile");
               return (
                 <button
                   key={tab.id}
