@@ -318,9 +318,9 @@ export const INITIAL_PROFILE_STATE: ProfileState = {
     calendlyUrl: "",
   },
   stats: [
-    { label: "Projects", value: "5+", detail: "Applied engineering projects" },
-    { label: "Skills", value: "20+", detail: "Core technologies & tools" },
-    { label: "Major Domains", value: "2", detail: "Full-Stack & Cloud Architecture" },
+    { label: "Projects", value: "3", detail: "Applied engineering projects" },
+    { label: "Skills", value: "13", detail: "Core technologies & tools" },
+    { label: "Major Domains", value: "3", detail: "Web Systems, GIS & Applied AI" },
     { label: "Learning Mode", value: "100%", detail: "Continuous skill development" },
   ],
   learnings: INITIAL_LEARNINGS,

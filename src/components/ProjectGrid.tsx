@@ -559,7 +559,7 @@ export function ProjectGrid() {
   };
 
   return (
-    <section id="projects" className="py-20 relative bg-[#fbfbfd] dark:bg-[#07090e] transition-colors duration-250">
+    <section id="projects" className="pt-8 pb-12 sm:pt-12 sm:pb-16 lg:pt-16 lg:pb-20 scroll-mt-20 relative bg-[#fbfbfd] dark:bg-[#07090e] transition-colors duration-250">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header: Editorial & Balanced */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
@@ -608,8 +608,8 @@ export function ProjectGrid() {
         </div>
 
         {/* Minimal Segmented Filter Controls */}
-        <div className="overflow-x-auto pb-2 mb-10 max-w-full scrollbar-none">
-          <div className="p-1 rounded-2xl bg-slate-100/90 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 inline-flex items-center gap-1">
+        <div className="overflow-x-auto pb-2 mb-8 sm:mb-10 max-w-full scrollbar-none touch-pan-x">
+          <div className="p-1 rounded-2xl bg-slate-100/90 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 inline-flex items-center gap-1.5 min-w-max">
             {categories.map((cat) => {
               const isActive = selectedFilter === cat;
               return (
@@ -620,7 +620,7 @@ export function ProjectGrid() {
                   aria-pressed={isActive}
                   className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 ${
                     isActive
-                      ? "bg-white text-slate-900 shadow-sm border border-slate-200/80 dark:bg-white/10 dark:text-white dark:border-white/15 dark:shadow-inner font-semibold"
+                      ? "bg-slate-900 text-white shadow-sm border border-slate-900 dark:bg-cyan-500/20 dark:text-cyan-300 dark:border-cyan-500/40 font-semibold"
                       : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-black/[0.03] dark:hover:bg-white/[0.03]"
                   }`}
                 >
@@ -701,31 +701,31 @@ export function ProjectGrid() {
                 aria-labelledby={`featured-title-${featuredProject.id}`}
                 className="rounded-3xl p-5 sm:p-8 lg:p-10 border border-slate-200/80 dark:border-white/10 hover:border-cyan-500/30 transition-all duration-300 relative group bg-white/95 dark:bg-[#090d16] shadow-sm dark:shadow-xl"
               >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-stretch">
                   {/* Left Column: Editorial Information & Actions */}
                   <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
                     <div>
-                      {/* Meta Row: Domain Tag, Featured Badge, Discreet Management */}
-                      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                        <div className="flex items-center gap-2.5">
-                          <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20">
+                      {/* Meta Row: Domain Tag, Featured Badge, Discreet Management with Dedicated Breathing Room */}
+                      <div className="flex items-start justify-between gap-3 mb-4">
+                        <div className="flex flex-wrap items-center gap-2 min-w-0">
+                          <span className="px-2.5 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 whitespace-nowrap">
                             {featuredProject.domainTag}
                           </span>
-                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-300 border border-slate-200/80 dark:border-white/10">
+                          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-300 border border-slate-200/80 dark:border-white/10 whitespace-nowrap">
                             Flagship Project
                           </span>
                         </div>
 
-                        {/* Discreet Management Controls */}
-                        <div className="flex items-center gap-1">
+                        {/* Discreet Management Controls: Dedicated spacing & touch target */}
+                        <div className="flex items-center gap-1 shrink-0 p-1 rounded-xl bg-slate-100/70 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/5">
                           <button
                             type="button"
                             onClick={() => handleOpenEditModal(featuredProject)}
                             title={`Edit ${featuredProject.title}`}
                             aria-label={`Edit details for ${featuredProject.title}`}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-cyan-500"
+                            className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-white dark:hover:bg-white/10 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-cyan-500"
                           >
-                            <Edit3 className="w-4 h-4" aria-hidden="true" />
+                            <Edit3 className="w-3.5 h-3.5" aria-hidden="true" />
                           </button>
                           <button
                             type="button"
@@ -736,25 +736,25 @@ export function ProjectGrid() {
                             }}
                             title={`Delete ${featuredProject.title}`}
                             aria-label={`Delete ${featuredProject.title}`}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-rose-500"
+                            className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-rose-500"
                           >
-                            <Trash2 className="w-4 h-4" aria-hidden="true" />
+                            <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                           </button>
                         </div>
                       </div>
 
-                      {/* Project Title with Interactive Trigger */}
-                      <div>
-                        <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                      {/* Project Title with Interactive Trigger & Safe Wrapping */}
+                      <div className="mb-4">
+                        <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                           <button
                             type="button"
                             id={`featured-title-${featuredProject.id}`}
                             onClick={() => setActiveCaseStudyProject(featuredProject)}
                             aria-label={`View architectural case study for ${featuredProject.title}`}
-                            className="text-left hover:text-cyan-600 dark:hover:text-cyan-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 transition-colors cursor-pointer group/title inline-flex items-center gap-3 w-full"
+                            className="text-left hover:text-cyan-600 dark:hover:text-cyan-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 transition-colors cursor-pointer group/title inline-flex items-center justify-between gap-3 w-full break-words"
                           >
-                            <span>{featuredProject.title}</span>
-                            <ArrowRight className="w-5 h-5 text-cyan-500 opacity-60 group-hover/title:opacity-100 group-hover/title:translate-x-1.5 transition-all shrink-0 mt-0.5" aria-hidden="true" />
+                            <span className="break-words">{featuredProject.title}</span>
+                            <ArrowRight className="w-4 h-4 text-cyan-500 opacity-60 group-hover/title:opacity-100 group-hover/title:translate-x-1.5 transition-all shrink-0 mt-0.5" aria-hidden="true" />
                           </button>
                         </h3>
                         <p className="text-xs sm:text-sm font-mono text-cyan-600 dark:text-cyan-400 mt-2">
@@ -763,7 +763,7 @@ export function ProjectGrid() {
                       </div>
 
                       {/* Editorial Narrative: Problem & Solution (High contrast, comfortable line-height) */}
-                      <div className="space-y-3.5 text-sm sm:text-base leading-relaxed mt-5">
+                      <div className="space-y-3.5 text-sm sm:text-base leading-relaxed mb-4">
                         <p className="text-slate-600 dark:text-slate-300">
                           <strong className="font-semibold text-slate-900 dark:text-white mr-1.5 font-sans">Problem:</strong>
                           {featuredProject.problemSolved}
@@ -777,7 +777,7 @@ export function ProjectGrid() {
 
                       {/* Key Innovation Highlight */}
                       {(featuredProject.noveltySnippet || featuredProject.caseStudy?.novelty) && (
-                        <div className="p-3.5 sm:p-4 rounded-2xl bg-cyan-500/[0.04] dark:bg-cyan-500/[0.06] border border-cyan-500/15 flex items-start gap-3 mt-5">
+                        <div className="p-3.5 sm:p-4 rounded-2xl bg-cyan-500/[0.04] dark:bg-cyan-500/[0.06] border border-cyan-500/15 flex items-start gap-3 mb-4">
                           <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0 mt-0.5" aria-hidden="true" />
                           <div className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                             <strong className="font-semibold text-slate-900 dark:text-white font-mono text-xs uppercase tracking-wider block sm:inline sm:mr-2">
@@ -789,7 +789,7 @@ export function ProjectGrid() {
                       )}
 
                       {/* Tech Stack Pills */}
-                      <div className="mt-5">
+                      <div className="mb-2">
                         <div className="text-xs font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold mb-2">
                           Technologies &amp; Architecture
                         </div>
@@ -807,7 +807,7 @@ export function ProjectGrid() {
                     </div>
 
                     {/* Action Links Bar */}
-                    <div className="pt-4 mt-6 border-t border-slate-200/80 dark:border-white/10 flex flex-wrap items-center gap-3">
+                    <div className="pt-4 mt-6 border-t border-slate-200/80 dark:border-white/10 flex flex-wrap items-center gap-2.5">
                       <button
                         type="button"
                         onClick={() => setActiveCaseStudyProject(featuredProject)}
@@ -962,20 +962,20 @@ export function ProjectGrid() {
                       aria-labelledby={`project-title-${project.id}`}
                       className="rounded-3xl p-5 sm:p-8 flex flex-col justify-between border border-slate-200/80 dark:border-white/10 hover:border-cyan-500/30 hover:-translate-y-0.5 transition-all duration-250 group relative bg-white/95 dark:bg-[#090d16] shadow-sm dark:shadow-md"
                     >
-                      <div className="space-y-5">
-                        {/* Domain Tag & Discreet Management Controls */}
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20">
+                      <div className="space-y-4">
+                        {/* Domain Tag & Discreet Management Controls with Dedicated Breathing Room */}
+                        <div className="flex items-start justify-between gap-2 mb-3">
+                          <span className="px-2.5 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20 whitespace-nowrap">
                             {project.domainTag}
                           </span>
 
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1 shrink-0 p-1 rounded-xl bg-slate-100/70 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/5">
                             <button
                               type="button"
                               onClick={() => handleOpenEditModal(project)}
                               title={`Edit ${project.title}`}
                               aria-label={`Edit project ${project.title}`}
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-cyan-500"
+                              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-white dark:hover:bg-white/10 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-cyan-500"
                             >
                               <Edit3 className="w-3.5 h-3.5" aria-hidden="true" />
                             </button>
@@ -988,24 +988,24 @@ export function ProjectGrid() {
                               }}
                               title={`Delete ${project.title}`}
                               aria-label={`Delete ${project.title}`}
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-rose-500"
+                              className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-rose-500"
                             >
                               <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                             </button>
                           </div>
                         </div>
 
-                        {/* Project Title with Interactive Trigger */}
-                        <div>
+                        {/* Project Title with Interactive Trigger & Safe Wrapping */}
+                        <div className="mb-3">
                           <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
                             <button
                               type="button"
                               id={`project-title-${project.id}`}
                               onClick={() => setActiveCaseStudyProject(project)}
                               aria-label={`View case study and architecture for ${project.title}`}
-                              className="text-left font-bold text-slate-900 dark:text-white hover:text-cyan-600 dark:hover:text-cyan-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 transition-colors cursor-pointer group/title inline-flex items-center justify-between gap-2 w-full"
+                              className="text-left font-bold text-slate-900 dark:text-white hover:text-cyan-600 dark:hover:text-cyan-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 transition-colors cursor-pointer group/title inline-flex items-center justify-between gap-2.5 w-full break-words"
                             >
-                              <span>{project.title}</span>
+                              <span className="break-words">{project.title}</span>
                               <ArrowRight className="w-4 h-4 text-cyan-500 opacity-50 group-hover/title:opacity-100 group-hover/title:translate-x-1 transition-all shrink-0 mt-0.5" aria-hidden="true" />
                             </button>
                           </h3>
