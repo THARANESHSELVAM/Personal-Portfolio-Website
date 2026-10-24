@@ -2,33 +2,103 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ==========================================================================
+   DESIGN TOKENS — APPLE MINIMALISM + FUTURISTIC DEVELOPER AESTHETIC
+   ========================================================================== */
+
 :root {
-  --background: #f8fafc;
-  --foreground: #040711;
-  --card-bg: rgba(255, 255, 255, 0.92);
-  --card-border: rgba(226, 232, 240, 0.85);
-  --accent-cyan: #0891b2;
-  --accent-teal: #0d9488;
-  --accent-cyan-light: #06b6d4;
-  --accent-glow: rgba(6, 182, 212, 0.2);
-  --night-950: #040711;
-  --night-900: #070d1c;
-  --night-800: #0a1122;
+  /* Surface & Canvas: Clean, soft neutral surface */
+  --background: #fbfbfd;
+  --foreground: #090d16;
+  --foreground-muted: #64748b;
+  --foreground-subtle: #94a3b8;
+
+  /* Card & Glass Surfaces */
+  --card-bg: rgba(255, 255, 255, 0.84);
+  --card-bg-elevated: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(15, 23, 42, 0.08);
+  --card-border-subtle: rgba(15, 23, 42, 0.04);
+  --card-highlight: rgba(255, 255, 255, 0.95);
+
+  /* Accents: Refined Cyan & Sapphire Blue */
+  --accent-cyan: #0284c7;
+  --accent-cyan-light: #0ea5e9;
+  --accent-blue: #2563eb;
+  --accent-teal: #0f766e;
+  --accent-glow: rgba(2, 132, 199, 0.12);
+
+  /* Obsidian & Graphite Palette (Light Mode Equivalents) */
+  --obsidian-950: #ffffff;
+  --obsidian-900: #f8fafc;
+  --obsidian-850: #f1f5f9;
+  --obsidian-800: #e2e8f0;
+
+  /* Legacy Backward Compatibility Aliases */
+  --night-950: #f8fafc;
+  --night-900: #f1f5f9;
+  --night-800: #e2e8f0;
+
+  /* Elevation Shadows */
+  --shadow-subtle: 0 2px 10px -1px rgba(0, 0, 0, 0.04), 0 1px 3px -1px rgba(0, 0, 0, 0.02);
+  --shadow-elevated: 0 12px 28px -4px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.03);
+
+  /* Design Tokens: Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
+  --radius-full: 9999px;
+
+  /* Design Tokens: Transitions & Easing */
+  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-subtle: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
 }
 
 .dark {
-  --background: #040711;
-  --foreground: #f8fafc;
-  --card-bg: rgba(10, 16, 29, 0.85);
-  --card-border: rgba(34, 211, 238, 0.12);
-  --accent-cyan: #06b6d4;
+  /* Surface & Canvas: Deep obsidian and graphite tones */
+  --background: #07090e;
+  --foreground: #f1f5f9;
+  --foreground-muted: #94a3b8;
+  --foreground-subtle: #64748b;
+
+  /* Card & Glass Surfaces: Frosted obsidian glass with specular top-edge highlight */
+  --card-bg: rgba(13, 17, 27, 0.72);
+  --card-bg-elevated: rgba(18, 24, 38, 0.85);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-border-subtle: rgba(255, 255, 255, 0.05);
+  --card-highlight: rgba(255, 255, 255, 0.12);
+
+  /* Accents: Precision Cyan (non-neon) & Deep Sapphire */
+  --accent-cyan: #00d2f0;
+  --accent-cyan-light: #38bdf8;
+  --accent-blue: #3b82f6;
   --accent-teal: #14b8a6;
-  --accent-cyan-light: #22d3ee;
-  --accent-glow: rgba(6, 182, 212, 0.28);
-  --night-950: #040711;
-  --night-900: #060b17;
-  --night-800: #0a1122;
+  --accent-glow: rgba(0, 210, 240, 0.14);
+
+  /* Obsidian & Graphite Palette */
+  --obsidian-950: #05070a;
+  --obsidian-900: #090d14;
+  --obsidian-850: #0e131d;
+  --obsidian-800: #141a27;
+
+  /* Legacy Backward Compatibility Aliases */
+  --night-950: #05070a;
+  --night-900: #090d14;
+  --night-800: #0e131d;
+
+  /* Elevation Shadows */
+  --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  --shadow-elevated: 0 12px 32px -4px rgba(0, 0, 0, 0.7), 0 4px 12px -2px rgba(0, 0, 0, 0.45);
 }
+
+/* ==========================================================================
+   BASE STYLES & ACCESSIBILITY
+   ========================================================================== */
 
 html {
   scroll-behavior: smooth;
@@ -42,72 +112,164 @@ body {
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  letter-spacing: -0.011em;
+  transition: background-color 0.25s var(--ease-apple), color 0.25s var(--ease-apple);
   overflow-x: hidden;
 }
 
 /* Accessible focus outlines across all interactive elements */
 :focus-visible {
-  outline: 2px solid #22d3ee;
+  outline: 2px solid var(--accent-cyan);
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
-/* Glassmorphism panel matching the reference UI */
+/* ==========================================================================
+   GLASSMORPHISM & SURFACE UTILITIES
+   ========================================================================== */
+
+/* Glassmorphism panel with specular top-edge reflection */
 .glass-panel {
   background: var(--card-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--card-border);
+  box-shadow: inset 0 1px 0 0 var(--card-highlight), var(--shadow-subtle);
 }
 
+/* Elevated glass panel for modals, popovers, and featured cards */
+.glass-panel-elevated {
+  background: var(--card-bg-elevated);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--card-border);
+  box-shadow: inset 0 1px 0 0 var(--card-highlight), var(--shadow-elevated);
+}
+
+/* Navigation bar glassmorphism */
 .glass-nav {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+  background: rgba(251, 251, 253, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--card-border);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
 }
 
 .dark .glass-nav {
-  background: rgba(4, 7, 17, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(34, 211, 238, 0.12);
+  background: rgba(7, 9, 14, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
 }
 
-/* Cyan & Teal hover glow */
+/* Subtle top-edge highlight reflection helper */
+.specular-border {
+  box-shadow: inset 0 1px 0 0 var(--card-highlight);
+}
+
+/* ==========================================================================
+   INTERACTIVE STATES & ACCENT HIGHLIGHTS
+   ========================================================================== */
+
+/* Cyan & Blue hover glow — restrained, non-neon */
 .cyan-border-hover {
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  transition: border-color 0.25s var(--ease-apple),
+              box-shadow 0.25s var(--ease-apple),
+              transform 0.25s var(--ease-apple);
 }
 
 .cyan-border-hover:hover {
-  border-color: rgba(34, 211, 238, 0.45);
-  box-shadow: 0 0 28px -4px rgba(6, 182, 212, 0.2);
+  border-color: rgba(0, 210, 240, 0.35);
+  box-shadow: inset 0 1px 0 0 var(--card-highlight), 0 0 20px -3px var(--accent-glow);
 }
 
+:root:not(.dark) .cyan-border-hover:hover {
+  border-color: rgba(2, 132, 199, 0.35);
+  box-shadow: inset 0 1px 0 0 var(--card-highlight), 0 0 16px -2px var(--accent-glow);
+}
+
+/* Glow cyan utility */
 .glow-cyan {
-  box-shadow: 0 0 32px -4px rgba(6, 182, 212, 0.35);
+  box-shadow: 0 0 24px -4px var(--accent-glow);
 }
 
-/* Subtle background stars & grid pattern */
+/* Unified smooth transition */
+.transition-smooth {
+  transition: all 0.25s var(--ease-apple);
+}
+
+/* ==========================================================================
+   BACKGROUND ATMOSPHERE & GRID
+   ========================================================================== */
+
 .bg-grid-pattern {
-  background-size: 40px 40px;
+  background-size: 48px 48px;
   background-image: 
-    linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
 }
 
 .dark .bg-grid-pattern {
-  background-size: 40px 40px;
+  background-size: 48px 48px;
   background-image: 
-    radial-gradient(ellipse at 50% 0%, rgba(6, 182, 212, 0.12) 0%, transparent 60%),
-    linear-gradient(to right, rgba(34, 211, 238, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(34, 211, 238, 0.035) 1px, transparent 1px);
+    radial-gradient(ellipse at 50% 0%, rgba(0, 210, 240, 0.08) 0%, transparent 65%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
 }
 
-/* Custom scrollbars */
+/* ==========================================================================
+   TYPOGRAPHY & CONTENT REFINEMENTS
+   ========================================================================== */
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+.heading-hero {
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.heading-section {
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.caption-label {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.badge-subtle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--foreground-muted);
+  box-shadow: inset 0 1px 0 0 var(--card-highlight);
+}
+
+/* ==========================================================================
+   SCROLLBAR STYLING
+   ========================================================================== */
+
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -115,24 +277,33 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.25);
+  background: rgba(100, 116, 139, 0.2);
   border-radius: 9999px;
 }
 
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.35);
+}
+
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(34, 211, 238, 0.2);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(34, 211, 238, 0.4);
+  background: rgba(0, 210, 240, 0.35);
 }
 
-/* Print optimizations */
+/* ==========================================================================
+   PRINT OPTIMIZATIONS
+   ========================================================================== */
+
 @media print {
-  .glass-panel {
+  .glass-panel,
+  .glass-panel-elevated {
     background: transparent !important;
     border: 1px solid #cbd5e1 !important;
     backdrop-filter: none !important;
+    box-shadow: none !important;
   }
   
   nav, footer, .no-print {
@@ -140,7 +311,10 @@ body {
   }
 }
 
-/* Reduced motion preference respect */
+/* ==========================================================================
+   ACCESSIBILITY: REDUCED MOTION PREFERENCE
+   ========================================================================== */
+
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
@@ -150,7 +324,10 @@ body {
   }
 }
 
-/* Security Gate Form Shake Animation */
+/* ==========================================================================
+   SECURITY GATE SHAKE ANIMATION
+   ========================================================================== */
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   15%, 45%, 75% { transform: translateX(-7px); }
@@ -160,3 +337,4 @@ body {
 .animate-shake {
   animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
+

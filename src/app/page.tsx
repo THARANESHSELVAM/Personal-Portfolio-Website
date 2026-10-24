@@ -49,7 +49,7 @@ export default function Home() {
 
   // Authenticated workspace: Render Navbar + active tab view + Footer
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900 dark:bg-[#060b14] dark:text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-900 dark:selection:text-cyan-200 transition-colors duration-200">
+    <div className="flex min-h-screen flex-col bg-transparent text-foreground selection:bg-cyan-500/30 selection:text-cyan-900 dark:selection:text-cyan-200 transition-colors duration-200">
       <Navbar />
 
       <main className="flex-1">

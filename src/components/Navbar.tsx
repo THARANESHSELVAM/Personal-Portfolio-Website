@@ -83,7 +83,7 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 glass-nav shadow-sm dark:shadow-lg dark:shadow-black/40 py-2.5 border-b border-slate-200/80 dark:border-cyan-950/40 bg-white/85 dark:bg-[#040711]/90 backdrop-blur-md transition-all duration-300">
+    <header className="sticky top-0 z-50 glass-nav py-2.5 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           

@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
-    { media: "(prefers-color-scheme: dark)", color: "#090d16" },
+    { media: "(prefers-color-scheme: light)", color: "#fbfbfd" },
+    { media: "(prefers-color-scheme: dark)", color: "#07090e" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -64,7 +64,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased min-h-screen bg-slate-50 dark:bg-[#040711] text-slate-900 dark:text-slate-100 bg-grid-pattern selection:bg-cyan-500/25 selection:text-cyan-200`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased min-h-screen bg-grid-pattern selection:bg-cyan-500/25 selection:text-cyan-200`}
       >
         <ThemeProvider
           attribute="class"
