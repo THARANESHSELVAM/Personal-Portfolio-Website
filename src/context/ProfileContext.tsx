@@ -42,6 +42,7 @@ export interface SkillGapInsight {
 }
 
 export interface ProfileContextType {
+  isUnlocked: boolean;
   activeUserId: string | null;
   currentUser: UserIdentity | null;
   activeTab: WorkspaceTab;
@@ -102,6 +103,7 @@ export interface ProfileContextType {
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
+  const [isUnlocked, setIsUnlocked] = useState(false);
   const [activeUserId, setActiveUserId] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<UserIdentity | null>(null);
   const [activeTab, setActiveTabState] = useState<WorkspaceTab>("home");
@@ -145,112 +147,14 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      // 2. Strict Session Validation: verify active session against authorized credentials
-      const sessionToken = localStorage.getItem(AUTH_SESSION_KEY);
-      const isSessionValid = validateSessionToken(sessionToken);
-
-      if (!isSessionValid) {
-        // Not authenticated: clear stored credentials and force Authentication Gate
-        clearAuthSession();
-        localStorage.removeItem(ACTIVE_USER_KEY);
-        setActiveUserId(null);
-        setCurrentUser(null);
-        setIsHydrated(true);
-        return;
-      }
-
-      // Valid session authenticated
-      const storedUserId = localStorage.getItem(ACTIVE_USER_KEY) || "tharanesh-selvam";
-      setActiveUserId(storedUserId);
-
-      const storageKey = getWorkspaceStorageKey(storedUserId);
-      const saved = localStorage.getItem(storageKey);
-
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && Array.isArray(parsed.learnings) && Array.isArray(parsed.projects)) {
-          // If parsed.isBlankSlate is true, strictly do NOT merge INITIAL_PROJECTS, keep parsed.projects as-is
-          let resolvedProjects = parsed.projects;
-          if (!parsed.isBlankSlate) {
-            resolvedProjects = parsed.projects.map((proj: Project) => {
-              const initial = INITIAL_PROJECTS.find((p: Project) => p.id === proj.id);
-              if (initial && initial.caseStudy) {
-                return {
-                  ...initial,
-                  ...proj,
-                  noveltySnippet: initial.noveltySnippet || proj.noveltySnippet,
-                  caseStudy: {
-                    ...initial.caseStudy,
-                    ...(proj.caseStudy || {}),
-                    projectUse: proj.caseStudy?.projectUse || initial.caseStudy.projectUse,
-                    problemStatement: proj.caseStudy?.problemStatement || initial.caseStudy.problemStatement,
-                    expertSolution: proj.caseStudy?.expertSolution || initial.caseStudy.expertSolution,
-                    novelty: proj.caseStudy?.novelty || initial.caseStudy.novelty,
-                    noveltyHighlights: (proj.caseStudy?.noveltyHighlights && proj.caseStudy.noveltyHighlights.length > 0)
-                      ? proj.caseStudy.noveltyHighlights
-                      : initial.caseStudy.noveltyHighlights,
-                    benchmarks: (proj.caseStudy?.benchmarks && proj.caseStudy.benchmarks.length > 0)
-                      ? proj.caseStudy.benchmarks
-                      : initial.caseStudy.benchmarks,
-                  },
-                };
-              }
-              return proj;
-            });
-          }
-
-          setState({ ...parsed, projects: resolvedProjects });
-          setCurrentUser({
-            userId: storedUserId,
-            name: parsed.name || "Portfolio Owner",
-            fullName: parsed.name || "Portfolio Owner",
-            email: parsed.contact?.email || "",
-            title: parsed.title || "Software Engineer",
-            location: parsed.contact?.location || "Remote",
-            phone: parsed.contact?.phone || "",
-            github: parsed.contact?.github || "",
-            linkedin: parsed.contact?.linkedin || "",
-          });
-        }
-      } else {
-        // No saved workspace for this active user yet
-        const foundProfile = findRegisteredProfile(storedUserId);
-        if (foundProfile && foundProfile.isBlankSlate) {
-          const blankIdentity: UserIdentity = {
-            userId: foundProfile.userId,
-            name: foundProfile.name,
-            fullName: foundProfile.name,
-            email: foundProfile.email,
-            title: foundProfile.title,
-            location: foundProfile.location || "",
-            github: foundProfile.github || "",
-            linkedin: foundProfile.linkedin || "",
-          };
-          const blankWs = createBlankWorkspace(blankIdentity);
-          setState(blankWs);
-          setCurrentUser(blankIdentity);
-          localStorage.setItem(storageKey, JSON.stringify(blankWs));
-        } else {
-          // Default to Tharanesh Selvam starter workspace
-          const defaultIdentity: UserIdentity = {
-            userId: storedUserId,
-            name: "Tharanesh Selvam",
-            fullName: "Tharanesh Selvam",
-            email: storedUserId.includes("@") ? storedUserId : "tharanesh.selvam@gmail.com",
-            title: "Aspiring Full-Stack Software Engineer",
-            location: "India / Open to Remote & Relocation",
-            github: "https://github.com/THARANESHSELVAM",
-            linkedin: "https://linkedin.com/in/tharanesh-selvam",
-          };
-          const starter = createStarterWorkspace(defaultIdentity);
-          setState(starter);
-          setCurrentUser(defaultIdentity);
-          localStorage.setItem(storageKey, JSON.stringify(starter));
-          localStorage.setItem(ACTIVE_USER_KEY, storedUserId);
-        }
-      }
+      // 2. Strict Session Security & Profile Persistence Separation:
+      // Every fresh full-page load starts locked at the SecurityGate.
+      // Profile data remains safely stored locally, but workspace is never auto-unlocked on load or reload.
+      setIsUnlocked(false);
+      setActiveUserId(null);
+      setCurrentUser(null);
     } catch (e) {
-      console.error("Failed to hydrate user workspace from localStorage:", e);
+      console.error("Failed to initialize profile context:", e);
     } finally {
       setIsHydrated(true);
     }
@@ -258,7 +162,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
   // Save to user-scoped localStorage whenever state changes
   useEffect(() => {
-    if (isHydrated && activeUserId) {
+    if (isHydrated && isUnlocked && activeUserId) {
       try {
         const storageKey = getWorkspaceStorageKey(activeUserId);
         localStorage.setItem(storageKey, JSON.stringify(state));
@@ -266,9 +170,9 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         console.error("Failed to save workspace state to localStorage:", e);
       }
     }
-  }, [state, activeUserId, isHydrated]);
+  }, [state, activeUserId, isHydrated, isUnlocked]);
 
-  // Login / Switch to user workspace
+  // Login / Verify and unlock user workspace
   const loginUser = useCallback(
     (
       identity: UserIdentity,
@@ -305,23 +209,54 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       const storageKey = getWorkspaceStorageKey(rawId);
       const existing = localStorage.getItem(storageKey);
 
-      if (existing && !options?.loadStarterData && !options?.isBlankSlate) {
+      // If workspace data already exists for this profile, preserve it completely
+      if (existing) {
         try {
           const parsed = JSON.parse(existing);
-          if (parsed && Array.isArray(parsed.learnings)) {
+          if (parsed && Array.isArray(parsed.learnings) && Array.isArray(parsed.projects)) {
+            let resolvedProjects = parsed.projects;
+            if (!parsed.isBlankSlate && !isBlank) {
+              resolvedProjects = parsed.projects.map((proj: Project) => {
+                const initial = INITIAL_PROJECTS.find((p: Project) => p.id === proj.id);
+                if (initial && initial.caseStudy) {
+                  return {
+                    ...initial,
+                    ...proj,
+                    noveltySnippet: initial.noveltySnippet || proj.noveltySnippet,
+                    caseStudy: {
+                      ...initial.caseStudy,
+                      ...(proj.caseStudy || {}),
+                      projectUse: proj.caseStudy?.projectUse || initial.caseStudy.projectUse,
+                      problemStatement: proj.caseStudy?.problemStatement || initial.caseStudy.problemStatement,
+                      expertSolution: proj.caseStudy?.expertSolution || initial.caseStudy.expertSolution,
+                      novelty: proj.caseStudy?.novelty || initial.caseStudy.novelty,
+                      noveltyHighlights: (proj.caseStudy?.noveltyHighlights && proj.caseStudy.noveltyHighlights.length > 0)
+                        ? proj.caseStudy.noveltyHighlights
+                        : initial.caseStudy.noveltyHighlights,
+                      benchmarks: (proj.caseStudy?.benchmarks && proj.caseStudy.benchmarks.length > 0)
+                        ? proj.caseStudy.benchmarks
+                        : initial.caseStudy.benchmarks,
+                    },
+                  };
+                }
+                return proj;
+              });
+            }
             setState({
               ...parsed,
+              projects: resolvedProjects,
               name: identity.name || parsed.name,
               title: identity.title || parsed.title,
               contact: {
                 ...parsed.contact,
-                email: identity.email || parsed.contact.email,
-                location: identity.location || parsed.contact.location,
-                github: identity.github || parsed.contact.github,
-                linkedin: identity.linkedin || parsed.contact.linkedin,
-                phone: identity.phone || parsed.contact.phone,
+                email: identity.email || parsed.contact?.email,
+                location: identity.location || parsed.contact?.location,
+                github: identity.github || parsed.contact?.github,
+                linkedin: identity.linkedin || parsed.contact?.linkedin,
+                phone: identity.phone || parsed.contact?.phone,
               },
             });
+            setIsUnlocked(true);
             return;
           }
         } catch (err) {
@@ -329,18 +264,19 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      // Initialize workspace
+      // Initialize fresh workspace only when no prior workspace data exists
       const newWorkspace = isBlank
         ? createBlankWorkspace(identity)
         : createStarterWorkspace(identity);
 
       setState(newWorkspace);
       localStorage.setItem(storageKey, JSON.stringify(newWorkspace));
+      setIsUnlocked(true);
     },
     [refreshRegisteredProfiles]
   );
 
-  // Switch active profile seamlessly
+  // Switch active profile seamlessly within an unlocked session
   const switchProfile = useCallback(
     (userId: string) => {
       const target = findRegisteredProfile(userId);
@@ -363,6 +299,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
       setActiveUserId(target.userId);
       setCurrentUser(identity);
+      setIsUnlocked(true);
 
       const storageKey = getWorkspaceStorageKey(target.userId);
       const saved = localStorage.getItem(storageKey);
@@ -406,6 +343,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       sessionStorage.setItem("myresume_onboarding_mode", "new");
     }
     clearAuthSession();
+    setIsUnlocked(false);
     setActiveUserId(null);
     setCurrentUser(null);
     localStorage.removeItem(ACTIVE_USER_KEY);
@@ -418,6 +356,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       sessionStorage.removeItem("myresume_onboarding_mode");
     }
     clearAuthSession();
+    setIsUnlocked(false);
     setActiveUserId(null);
     setCurrentUser(null);
     localStorage.removeItem(ACTIVE_USER_KEY);
@@ -841,6 +780,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   return (
     <ProfileContext.Provider
       value={{
+        isUnlocked,
         activeUserId,
         currentUser,
         activeTab,

@@ -230,31 +230,31 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
                   <span className="font-semibold text-slate-900 dark:text-white">Frontend: </span>
                   {extractedSkills.Frontend.length > 0
                     ? extractedSkills.Frontend.join(", ")
-                    : state.isBlankSlate ? "Awaiting entries" : "TypeScript, React, Next.js, Modern Web"}
+                    : "Awaiting entries"}
                 </div>
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Backend: </span>
                   {extractedSkills.Backend.length > 0
                     ? extractedSkills.Backend.join(", ")
-                    : state.isBlankSlate ? "Awaiting entries" : "Go, Node.js, REST APIs, Microservices"}
+                    : "Awaiting entries"}
                 </div>
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Cloud &amp; DevOps: </span>
                   {extractedSkills["Cloud & DevOps"].length > 0
                     ? extractedSkills["Cloud & DevOps"].join(", ")
-                    : state.isBlankSlate ? "Awaiting entries" : "Docker, Kubernetes, CI/CD, Cloud Architecture"}
+                    : "Awaiting entries"}
                 </div>
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Data &amp; AI: </span>
                   {extractedSkills["Data & AI"].length > 0
                     ? extractedSkills["Data & AI"].join(", ")
-                    : state.isBlankSlate ? "Awaiting entries" : "PostgreSQL, Redis, Vector Databases"}
+                    : "Awaiting entries"}
                 </div>
                 <div className="sm:col-span-2">
                   <span className="font-semibold text-slate-900 dark:text-white">System Design &amp; Architecture: </span>
                   {extractedSkills["System Design"].length > 0
                     ? extractedSkills["System Design"].join(", ")
-                    : state.isBlankSlate ? "Awaiting entries" : "High Availability, Event-Driven Architecture, Fault Tolerance"}
+                    : "Awaiting entries"}
                 </div>
               </div>
             </div>

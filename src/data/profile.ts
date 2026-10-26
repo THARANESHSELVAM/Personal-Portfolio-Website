@@ -21,6 +21,61 @@ export interface LearningEntry {
   tags: string[];
 }
 
+export type SkillEvidenceType =
+  | "project-and-learning"
+  | "project-backed"
+  | "learning-documented";
+
+export interface ProjectEvidenceRef {
+  id: string;
+  title: string;
+  domainTag: string;
+  matchedTech: string;
+  repoUrl?: string;
+  liveUrl?: string;
+}
+
+export interface LearningEvidenceRef {
+  id: string;
+  technology: string;
+  category: CompetencyArea;
+  dateLogged: string;
+  masteryLevel: MasteryLevel;
+  keyTakeaway: string;
+  repoOrDemoUrl?: string;
+  tags: string[];
+}
+
+export interface NormalizedSkillRecord {
+  id: string;
+  canonicalName: string;
+  displayName: string;
+  versionLabel?: string;
+  category: CompetencyArea;
+  allCategories: CompetencyArea[];
+  evidenceType: SkillEvidenceType;
+  projectRefs: ProjectEvidenceRef[];
+  learningRefs: LearningEvidenceRef[];
+  sourceLabels: string[];
+}
+
+export interface ProfileSkillsEvidence {
+  skills: NormalizedSkillRecord[];
+  byCategory: Record<CompetencyArea, NormalizedSkillRecord[]>;
+  totalCount: number;
+  projectBackedCount: number;
+  learningDocumentedCount: number;
+  bothCount: number;
+}
+
+export interface ParsedCanonicalSkill {
+  canonicalId: string;
+  canonicalName: string;
+  displayName: string;
+  versionLabel?: string;
+  suggestedCategory: CompetencyArea;
+}
+
 export interface BenchmarkItem {
   metric: string;
   before: string;
@@ -205,8 +260,8 @@ export const INITIAL_PROJECTS: Project[] = [
     solution: "A modern, responsive portfolio built with Next.js, React and Tailwind CSS featuring dynamic GitHub sync and accessible UI.",
     techStack: ["Next.js", "React", "Tailwind CSS"],
     metrics: [
-      "⚡ 100% Type-Safe TypeScript Architecture",
-      "📱 100% Responsive on Mobile, Tablet & Desktop",
+      "⚡ Strict TypeScript Compiler Configuration",
+      "📱 Responsive Across Mobile, Tablet & Desktop",
       "🚀 Instant Deployment via Vercel Edge",
     ],
     liveUrl: "https://personal-portfolio-website-nine-lac.vercel.app",
@@ -277,7 +332,7 @@ export const INITIAL_PROJECTS: Project[] = [
     solution: "Machine learning models and data analysis experiments implementing regression, classification, pipelines, and visual performance metrics.",
     techStack: ["Python", "Pandas", "Scikit-learn"],
     metrics: [
-      "📊 92%+ classification accuracy",
+      "📊 Cross-validation & evaluation metrics",
       "📈 Automated EDA pipelines",
       "🧪 Reproducible notebook workflows",
     ],
@@ -482,120 +537,482 @@ export function classifyDomainCategory(tech: string): CompetencyArea {
 }
 
 /**
- * Normalizes raw/compound skill strings into canonical, discrete skills
+ * Normalizes raw/compound skill strings into canonical, discrete skills with version retention.
  */
-export function extractCanonicalSkills(
+export function parseCanonicalSkills(
   raw: string,
   preferredCategory?: CompetencyArea
-): Array<{ name: string; category: CompetencyArea }> {
-  const lower = raw.toLowerCase().trim();
+): ParsedCanonicalSkill[] {
+  if (!raw || typeof raw !== "string") return [];
+  const trimmed = raw.trim();
+  if (!trimmed) return [];
 
-  // Compound Next.js & React
+  // If input contains multiple comma-separated technologies (e.g. "React, TypeScript"), parse each
+  if (trimmed.includes(",")) {
+    const parts = trimmed.split(",").map((p) => p.trim()).filter(Boolean);
+    if (parts.length > 1) {
+      const results: ParsedCanonicalSkill[] = [];
+      parts.forEach((part) => {
+        results.push(...parseCanonicalSkills(part, preferredCategory));
+      });
+      return results;
+    }
+  }
+
+  const lower = trimmed.toLowerCase();
+
+  // Compound Next.js & React (e.g., "Next.js & React 19 App Router")
   if (lower.includes("next") && lower.includes("react")) {
+    const hasReact19 = /\b19\b/.test(trimmed) || lower.includes("react 19");
+    const hasNext15 = /\b15\b/.test(trimmed) || lower.includes("next 15") || lower.includes("next.js 15");
     return [
-      { name: "Next.js", category: "Frontend" },
-      { name: "React", category: "Frontend" },
+      {
+        canonicalId: "nextjs",
+        canonicalName: "Next.js",
+        displayName: hasNext15 ? "Next.js 15" : "Next.js",
+        versionLabel: hasNext15 ? "15" : undefined,
+        suggestedCategory: "Frontend",
+      },
+      {
+        canonicalId: "react",
+        canonicalName: "React",
+        displayName: hasReact19 ? "React 19" : "React",
+        versionLabel: hasReact19 ? "19" : undefined,
+        suggestedCategory: "Frontend",
+      },
     ];
   }
 
   // Next.js alone
   if (lower.includes("next")) {
-    return [{ name: "Next.js", category: "Frontend" }];
+    const hasNext15 = /\b15\b/.test(trimmed) || lower.includes("next 15") || lower.includes("next.js 15");
+    return [
+      {
+        canonicalId: "nextjs",
+        canonicalName: "Next.js",
+        displayName: hasNext15 ? "Next.js 15" : "Next.js",
+        versionLabel: hasNext15 ? "15" : undefined,
+        suggestedCategory: "Frontend",
+      },
+    ];
   }
 
-  // React alone (ensure it does not mistakenly catch words like 'reactive')
-  if (/\b(react|reactjs|react 19|react 18)\b/i.test(raw) || (lower.includes("react") && !lower.includes("reactive"))) {
-    return [{ name: "React", category: "Frontend" }];
+  // React alone (safeguard against 'reactive')
+  if (/\b(react|reactjs|react 19|react 18)\b/i.test(trimmed) || (lower.includes("react") && !lower.includes("reactive"))) {
+    const hasReact19 = /\b19\b/.test(trimmed) || lower.includes("react 19");
+    const hasReact18 = /\b18\b/.test(trimmed) || lower.includes("react 18");
+    const versionLabel = hasReact19 ? "19" : hasReact18 ? "18" : undefined;
+    return [
+      {
+        canonicalId: "react",
+        canonicalName: "React",
+        displayName: versionLabel ? `React ${versionLabel}` : "React",
+        versionLabel,
+        suggestedCategory: "Frontend",
+      },
+    ];
   }
 
   // Tailwind CSS
   if (lower.includes("tailwind")) {
-    return [{ name: "Tailwind CSS", category: "Frontend" }];
+    return [
+      {
+        canonicalId: "tailwind",
+        canonicalName: "Tailwind CSS",
+        displayName: "Tailwind CSS",
+        suggestedCategory: "Frontend",
+      },
+    ];
   }
 
   // TypeScript
-  if (lower.includes("typescript")) {
-    return [{ name: "TypeScript", category: "Frontend" }];
+  if (lower.includes("typescript") || lower === "ts") {
+    return [
+      {
+        canonicalId: "typescript",
+        canonicalName: "TypeScript",
+        displayName: "TypeScript",
+        suggestedCategory: "Frontend",
+      },
+    ];
   }
 
   // JavaScript
-  if (lower.includes("javascript") && !lower.includes("typescript")) {
-    return [{ name: "JavaScript", category: "Frontend" }];
+  if (lower.includes("javascript") || lower === "js" || lower.includes("es6")) {
+    return [
+      {
+        canonicalId: "javascript",
+        canonicalName: "JavaScript",
+        displayName: "JavaScript",
+        suggestedCategory: "Frontend",
+      },
+    ];
   }
 
   // Web Accessibility / HTML
   if (lower.includes("wcag") || lower.includes("accessibility") || lower.includes("semantic html") || lower.includes("a11y")) {
-    return [{ name: "Web Accessibility (WCAG)", category: "Frontend" }];
+    return [
+      {
+        canonicalId: "web-accessibility",
+        canonicalName: "Web Accessibility (WCAG)",
+        displayName: "Web Accessibility (WCAG)",
+        suggestedCategory: "Frontend",
+      },
+    ];
+  }
+
+  // HTML5 & CSS3
+  if (lower.includes("html5") || lower.includes("css3") || lower === "html" || lower === "css") {
+    return [
+      {
+        canonicalId: "html-css",
+        canonicalName: "HTML5 & CSS3",
+        displayName: "HTML5 & CSS3",
+        suggestedCategory: "Frontend",
+      },
+    ];
   }
 
   // GitHub REST API / REST APIs
   if (lower.includes("rest api") || lower.includes("restapi") || lower.includes("github api") || lower.includes("rest & external") || lower.includes("restful")) {
+    if (lower.includes("github")) {
+      return [
+        {
+          canonicalId: "rest-apis",
+          canonicalName: "REST APIs",
+          displayName: "REST APIs",
+          suggestedCategory: "Backend",
+        },
+        {
+          canonicalId: "github-api",
+          canonicalName: "GitHub API",
+          displayName: "GitHub API",
+          suggestedCategory: "Backend",
+        },
+      ];
+    }
     return [
-      { name: "REST APIs", category: "Backend" },
-      { name: "GitHub API", category: "Backend" }
+      {
+        canonicalId: "rest-apis",
+        canonicalName: "REST APIs",
+        displayName: "REST APIs",
+        suggestedCategory: "Backend",
+      },
     ];
   }
 
-  // Git / GitHub / Version Control
-  if ((lower.includes("git") || lower.includes("version control")) && !lower.includes("digital")) {
-    return [{ name: "Git & GitHub", category: "Cloud & DevOps" }];
+  // Git & GitHub
+  if ((lower.includes("git") || lower.includes("version control")) && !lower.includes("digital") && !lower.includes("github api")) {
+    return [
+      {
+        canonicalId: "git-github",
+        canonicalName: "Git & GitHub",
+        displayName: "Git & GitHub",
+        suggestedCategory: "Cloud & DevOps",
+      },
+    ];
   }
 
-  // Pandas -> Data & AI
-  if (lower.includes("pandas")) {
-    return [{ name: "Pandas", category: "Data & AI" }];
+  // GIS / PostGIS -> System Design / Geospatial
+  if (lower.includes("postgis") || lower.includes("gis") || lower.includes("cadastral") || lower.includes("geospatial")) {
+    return [
+      {
+        canonicalId: "gis-postgis",
+        canonicalName: "GIS / PostGIS",
+        displayName: "GIS / PostGIS",
+        suggestedCategory: "System Design",
+      },
+    ];
   }
 
-  // Scikit-learn -> Data & AI
-  if (lower.includes("scikit") || lower.includes("sklearn")) {
-    return [{ name: "Scikit-learn", category: "Data & AI" }];
-  }
-
-  // NumPy -> Data & AI
-  if (lower.includes("numpy")) {
-    return [{ name: "NumPy", category: "Data & AI" }];
-  }
-
-  // Python -> Backend
-  if (lower === "python" || lower.startsWith("python ")) {
-    return [{ name: "Python", category: "Backend" }];
-  }
-
-  // Node.js -> Backend
-  if (lower.includes("node")) {
-    return [{ name: "Node.js", category: "Backend" }];
-  }
-
-  // PostgreSQL / Postgres -> Backend
+  // PostgreSQL (distinct from spatial GIS extensions)
   if (lower.includes("postgres")) {
-    return [{ name: "PostgreSQL", category: "Backend" }];
+    return [
+      {
+        canonicalId: "postgresql",
+        canonicalName: "PostgreSQL",
+        displayName: "PostgreSQL",
+        suggestedCategory: "Backend",
+      },
+    ];
   }
 
-  // Redis -> Backend
+  // Redis
   if (lower.includes("redis")) {
-    return [{ name: "Redis", category: "Backend" }];
+    return [
+      {
+        canonicalId: "redis",
+        canonicalName: "Redis",
+        displayName: "Redis",
+        suggestedCategory: "Backend",
+      },
+    ];
   }
 
-  // Docker -> Cloud & DevOps
+  // Node.js
+  if (lower.includes("node")) {
+    return [
+      {
+        canonicalId: "nodejs",
+        canonicalName: "Node.js",
+        displayName: "Node.js",
+        suggestedCategory: "Backend",
+      },
+    ];
+  }
+
+  // Express
+  if (lower.includes("express")) {
+    return [
+      {
+        canonicalId: "express",
+        canonicalName: "Express",
+        displayName: "Express",
+        suggestedCategory: "Backend",
+      },
+    ];
+  }
+
+  // Pandas
+  if (lower.includes("pandas")) {
+    return [
+      {
+        canonicalId: "pandas",
+        canonicalName: "Pandas",
+        displayName: "Pandas",
+        suggestedCategory: "Data & AI",
+      },
+    ];
+  }
+
+  // Scikit-learn
+  if (lower.includes("scikit") || lower.includes("sklearn")) {
+    return [
+      {
+        canonicalId: "scikit-learn",
+        canonicalName: "Scikit-learn",
+        displayName: "Scikit-learn",
+        suggestedCategory: "Data & AI",
+      },
+    ];
+  }
+
+  // NumPy
+  if (lower.includes("numpy")) {
+    return [
+      {
+        canonicalId: "numpy",
+        canonicalName: "NumPy",
+        displayName: "NumPy",
+        suggestedCategory: "Data & AI",
+      },
+    ];
+  }
+
+  // Python
+  if (lower === "python" || lower.startsWith("python ") || lower.includes("python")) {
+    return [
+      {
+        canonicalId: "python",
+        canonicalName: "Python",
+        displayName: "Python",
+        suggestedCategory: preferredCategory || "Backend",
+      },
+    ];
+  }
+
+  // Docker
   if (lower.includes("docker")) {
-    return [{ name: "Docker", category: "Cloud & DevOps" }];
+    return [
+      {
+        canonicalId: "docker",
+        canonicalName: "Docker",
+        displayName: "Docker",
+        suggestedCategory: "Cloud & DevOps",
+      },
+    ];
   }
 
-  // Kubernetes -> Cloud & DevOps
+  // Kubernetes
   if (lower.includes("kubernetes") || lower.includes("k8s")) {
-    return [{ name: "Kubernetes", category: "Cloud & DevOps" }];
+    return [
+      {
+        canonicalId: "kubernetes",
+        canonicalName: "Kubernetes",
+        displayName: "Kubernetes",
+        suggestedCategory: "Cloud & DevOps",
+      },
+    ];
   }
 
-  // Fallback classification using domain classifier rules
-  const category = preferredCategory || classifyDomainCategory(raw);
-  return [{ name: raw.trim(), category }];
+  // Fallback for user-created technologies or arbitrary tools
+  const slug = trimmed.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "skill";
+  const category = preferredCategory || classifyDomainCategory(trimmed);
+  return [
+    {
+      canonicalId: slug,
+      canonicalName: trimmed,
+      displayName: trimmed,
+      suggestedCategory: category,
+    },
+  ];
 }
 
 /**
- * Dynamically extract categorized, deduplicated skills from verified learning logs and project tech stacks
+ * Backward-compatible helper for legacy consumers expecting array of { name, category }.
  */
-export function extractSkillsFromState(state: ProfileState): Record<CompetencyArea, string[]> {
-  const result: Record<CompetencyArea, string[]> = {
+export function extractCanonicalSkills(
+  raw: string,
+  preferredCategory?: CompetencyArea
+): Array<{ name: string; category: CompetencyArea }> {
+  return parseCanonicalSkills(raw, preferredCategory).map((item) => ({
+    name: item.displayName,
+    category: preferredCategory || item.suggestedCategory,
+  }));
+}
+
+/**
+ * Pure, strictly-typed evidence cross-referencing helper.
+ * Scans active profile's learning diary entries and project tech stacks,
+ * normalizes skill identities, and maps each skill to its tangible evidence.
+ */
+export function getProfileSkillsEvidence(state: ProfileState): ProfileSkillsEvidence {
+  const recordMap = new Map<string, NormalizedSkillRecord>();
+
+  // 1. Ingest evidence from Learning Diary entries
+  if (Array.isArray(state?.learnings)) {
+    state.learnings.forEach((entry) => {
+      if (!entry || !entry.technology) return;
+      const parsedItems = parseCanonicalSkills(entry.technology, entry.category);
+
+      parsedItems.forEach((item) => {
+        let record = recordMap.get(item.canonicalId);
+        const effectiveCat = entry.category || item.suggestedCategory;
+
+        if (!record) {
+          record = {
+            id: item.canonicalId,
+            canonicalName: item.canonicalName,
+            displayName: item.displayName,
+            versionLabel: item.versionLabel,
+            category: effectiveCat,
+            allCategories: [effectiveCat],
+            evidenceType: "learning-documented",
+            projectRefs: [],
+            learningRefs: [],
+            sourceLabels: [entry.technology.trim()],
+          };
+          recordMap.set(item.canonicalId, record);
+        } else {
+          // If a version was detected on this entry and not previously recorded, preserve it
+          if (item.versionLabel && !record.versionLabel) {
+            record.versionLabel = item.versionLabel;
+            record.displayName = item.displayName;
+          }
+          if (!record.allCategories.includes(effectiveCat)) {
+            record.allCategories.push(effectiveCat);
+          }
+          if (!record.sourceLabels.includes(entry.technology.trim())) {
+            record.sourceLabels.push(entry.technology.trim());
+          }
+        }
+
+        // Attach learning entry reference if not already attached
+        const alreadyAttached = record.learningRefs.some((l) => l.id === entry.id);
+        if (!alreadyAttached) {
+          record.learningRefs.push({
+            id: entry.id,
+            technology: entry.technology,
+            category: entry.category,
+            dateLogged: entry.dateLogged,
+            masteryLevel: entry.masteryLevel,
+            keyTakeaway: entry.keyTakeaway,
+            repoOrDemoUrl: entry.repoOrDemoUrl,
+            tags: Array.isArray(entry.tags) ? entry.tags : [],
+          });
+        }
+      });
+    });
+  }
+
+  // 2. Ingest evidence from Project tech stacks
+  if (Array.isArray(state?.projects)) {
+    state.projects.forEach((proj) => {
+      if (!proj || !Array.isArray(proj.techStack)) return;
+
+      const projectContextCategory: CompetencyArea | undefined = 
+        proj.domainTag?.toLowerCase().includes("ai") || proj.category?.toLowerCase().includes("ai")
+          ? "Data & AI"
+          : proj.domainTag?.toLowerCase().includes("geospatial")
+          ? "System Design"
+          : undefined;
+
+      proj.techStack.forEach((tech) => {
+        if (!tech || typeof tech !== "string" || !tech.trim()) return;
+        const parsedItems = parseCanonicalSkills(tech, projectContextCategory);
+
+        parsedItems.forEach((item) => {
+          let record = recordMap.get(item.canonicalId);
+          const effectiveCat = item.suggestedCategory;
+
+          if (!record) {
+            record = {
+              id: item.canonicalId,
+              canonicalName: item.canonicalName,
+              displayName: item.displayName,
+              versionLabel: item.versionLabel,
+              category: effectiveCat,
+              allCategories: [effectiveCat],
+              evidenceType: "project-backed",
+              projectRefs: [],
+              learningRefs: [],
+              sourceLabels: [tech.trim()],
+            };
+            recordMap.set(item.canonicalId, record);
+          } else {
+            if (item.versionLabel && !record.versionLabel) {
+              record.versionLabel = item.versionLabel;
+              record.displayName = item.displayName;
+            }
+            if (!record.allCategories.includes(effectiveCat)) {
+              record.allCategories.push(effectiveCat);
+            }
+            if (!record.sourceLabels.includes(tech.trim())) {
+              record.sourceLabels.push(tech.trim());
+            }
+          }
+
+          // Attach project reference if not already attached
+          const alreadyAttached = record.projectRefs.some((p) => p.id === proj.id);
+          if (!alreadyAttached) {
+            record.projectRefs.push({
+              id: proj.id,
+              title: proj.title,
+              domainTag: proj.domainTag,
+              matchedTech: tech.trim(),
+              repoUrl: proj.repoUrl,
+              liveUrl: proj.liveUrl,
+            });
+          }
+        });
+      });
+    });
+  }
+
+  // 3. Finalize evidence classification for each skill
+  const allSkills = Array.from(recordMap.values());
+  allSkills.forEach((record) => {
+    if (record.projectRefs.length > 0 && record.learningRefs.length > 0) {
+      record.evidenceType = "project-and-learning";
+    } else if (record.projectRefs.length > 0) {
+      record.evidenceType = "project-backed";
+    } else {
+      record.evidenceType = "learning-documented";
+    }
+  });
+
+  // 4. Group by CompetencyArea
+  const byCategory: Record<CompetencyArea, NormalizedSkillRecord[]> = {
     Frontend: [],
     Backend: [],
     "Cloud & DevOps": [],
@@ -603,71 +1020,53 @@ export function extractSkillsFromState(state: ProfileState): Record<CompetencyAr
     "System Design": [],
   };
 
-  const seenSkills = new Set<string>();
-
-  const addSkill = (name: string, category: CompetencyArea) => {
-    const cleanName = name.trim();
-    if (!cleanName) return;
-    const lowerKey = cleanName.toLowerCase();
-
-    // Deduplication check
-    if (seenSkills.has(lowerKey)) return;
-    seenSkills.add(lowerKey);
-
-    // Register common aliases so variations like "Tailwind" and "Tailwind CSS",
-    // "React" and "React.js", "Next.js" and "NextJS" do not appear twice.
-    if (lowerKey === "tailwind" || lowerKey === "tailwindcss" || lowerKey === "tailwind css") {
-      seenSkills.add("tailwind");
-      seenSkills.add("tailwindcss");
-      seenSkills.add("tailwind css");
+  const sortSkills = (a: NormalizedSkillRecord, b: NormalizedSkillRecord) => {
+    const priority = {
+      "project-and-learning": 0,
+      "project-backed": 1,
+      "learning-documented": 2,
+    };
+    if (priority[a.evidenceType] !== priority[b.evidenceType]) {
+      return priority[a.evidenceType] - priority[b.evidenceType];
     }
-    if (lowerKey === "react" || lowerKey === "react.js" || lowerKey === "reactjs") {
-      seenSkills.add("react");
-      seenSkills.add("react.js");
-      seenSkills.add("reactjs");
-    }
-    if (lowerKey === "next.js" || lowerKey === "nextjs" || lowerKey === "next") {
-      seenSkills.add("next");
-      seenSkills.add("next.js");
-      seenSkills.add("nextjs");
-    }
-    if (lowerKey === "scikit-learn" || lowerKey === "scikitlearn" || lowerKey === "sklearn") {
-      seenSkills.add("scikit-learn");
-      seenSkills.add("scikitlearn");
-      seenSkills.add("sklearn");
-    }
-    if (lowerKey === "node" || lowerKey === "node.js" || lowerKey === "nodejs") {
-      seenSkills.add("node");
-      seenSkills.add("node.js");
-      seenSkills.add("nodejs");
-    }
-
-    if (result[category]) {
-      result[category].push(cleanName);
-    } else {
-      result["System Design"].push(cleanName);
-    }
+    return a.displayName.localeCompare(b.displayName);
   };
 
-  // 1. Ingest from verified learning entries with canonical extraction
-  state.learnings.forEach((entry) => {
-    const extracted = extractCanonicalSkills(entry.technology, entry.category);
-    extracted.forEach((item) => {
-      addSkill(item.name, item.category);
-    });
+  allSkills.forEach((skill) => {
+    if (byCategory[skill.category]) {
+      byCategory[skill.category].push(skill);
+    } else {
+      byCategory["System Design"].push(skill);
+    }
   });
 
-  // 2. Ingest from project tech stacks intelligently
-  state.projects.forEach((proj) => {
-    proj.techStack.forEach((tech) => {
-      const extracted = extractCanonicalSkills(tech);
-      extracted.forEach((item) => {
-        addSkill(item.name, item.category);
-      });
-    });
+  (Object.keys(byCategory) as CompetencyArea[]).forEach((cat) => {
+    byCategory[cat].sort(sortSkills);
   });
 
-  return result;
+  return {
+    skills: allSkills.sort(sortSkills),
+    byCategory,
+    totalCount: allSkills.length,
+    projectBackedCount: allSkills.filter((s) => s.projectRefs.length > 0).length,
+    learningDocumentedCount: allSkills.filter((s) => s.learningRefs.length > 0).length,
+    bothCount: allSkills.filter((s) => s.evidenceType === "project-and-learning").length,
+  };
+}
+
+/**
+ * Dynamically extract categorized, deduplicated skills from verified learning logs and project tech stacks.
+ * Fully backward-compatible with ATS resume generation, ProfileContext, and Hero.
+ */
+export function extractSkillsFromState(state: ProfileState): Record<CompetencyArea, string[]> {
+  const evidence = getProfileSkillsEvidence(state);
+  return {
+    Frontend: evidence.byCategory.Frontend.map((s) => s.displayName),
+    Backend: evidence.byCategory.Backend.map((s) => s.displayName),
+    "Cloud & DevOps": evidence.byCategory["Cloud & DevOps"].map((s) => s.displayName),
+    "Data & AI": evidence.byCategory["Data & AI"].map((s) => s.displayName),
+    "System Design": evidence.byCategory["System Design"].map((s) => s.displayName),
+  };
 }
 
 /**
@@ -720,11 +1119,11 @@ ${autoSummary}
 --------------------------------------------------------------------------------
 DYNAMICALLY EXTRACTED TECHNICAL COMPETENCIES (Derived from Logs & Projects)
 --------------------------------------------------------------------------------
-* Frontend: ${categorizedSkills.Frontend.length > 0 ? categorizedSkills.Frontend.join(", ") : state.isBlankSlate ? "Awaiting entries" : "Modern Web Frameworks, TypeScript"}
-* Backend: ${categorizedSkills.Backend.length > 0 ? categorizedSkills.Backend.join(", ") : state.isBlankSlate ? "Awaiting entries" : "Microservices, Distributed Streaming"}
-* Cloud & DevOps: ${categorizedSkills["Cloud & DevOps"].length > 0 ? categorizedSkills["Cloud & DevOps"].join(", ") : state.isBlankSlate ? "Awaiting entries" : "AWS, Kubernetes, CI/CD"}
-* Data & AI: ${categorizedSkills["Data & AI"].length > 0 ? categorizedSkills["Data & AI"].join(", ") : state.isBlankSlate ? "Awaiting entries" : "Columnar DBs, Vector Search"}
-* System Design: ${categorizedSkills["System Design"].length > 0 ? categorizedSkills["System Design"].join(", ") : state.isBlankSlate ? "Awaiting entries" : "High Availability, Event-Driven Architecture"}
+* Frontend: ${categorizedSkills.Frontend.length > 0 ? categorizedSkills.Frontend.join(", ") : "Awaiting entries"}
+* Backend: ${categorizedSkills.Backend.length > 0 ? categorizedSkills.Backend.join(", ") : "Awaiting entries"}
+* Cloud & DevOps: ${categorizedSkills["Cloud & DevOps"].length > 0 ? categorizedSkills["Cloud & DevOps"].join(", ") : "Awaiting entries"}
+* Data & AI: ${categorizedSkills["Data & AI"].length > 0 ? categorizedSkills["Data & AI"].join(", ") : "Awaiting entries"}
+* System Design: ${categorizedSkills["System Design"].length > 0 ? categorizedSkills["System Design"].join(", ") : "Awaiting entries"}
 
 ${experienceText}
 

@@ -85,23 +85,23 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 glass-nav py-2.5 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2 md:gap-2.5 xl:gap-4 min-w-0">
           
           {/* Logo & Portfolio Branding */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={() => handleTabClick("home")}
-              className="group flex items-center gap-2.5 font-bold tracking-tight text-slate-900 dark:text-white text-left focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-lg p-1"
+              className="group flex items-center gap-2 font-bold tracking-tight text-slate-900 dark:text-white text-left focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-lg p-0.5 sm:p-1 cursor-pointer"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/10 border border-cyan-500/40 dark:border-cyan-400/40 flex items-center justify-center text-cyan-600 dark:text-cyan-400 font-extrabold text-xs shadow-sm dark:shadow-md dark:shadow-cyan-500/10 group-hover:border-cyan-400 transition-all duration-200">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/10 border border-cyan-500/40 dark:border-cyan-400/40 flex items-center justify-center text-cyan-600 dark:text-cyan-400 font-extrabold text-xs shadow-sm dark:shadow-md dark:shadow-cyan-500/10 group-hover:border-cyan-400 transition-all duration-200 shrink-0">
                 {initials}
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs sm:text-sm font-extrabold tracking-wider text-slate-900 group-hover:text-cyan-600 dark:text-white dark:group-hover:text-cyan-300 transition-colors uppercase truncate max-w-[200px]">
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs sm:text-sm font-extrabold tracking-wider text-slate-900 group-hover:text-cyan-600 dark:text-white dark:group-hover:text-cyan-300 transition-colors uppercase truncate max-w-[110px] xs:max-w-[130px] md:max-w-[140px] xl:max-w-[220px]">
                   {displayName}
                 </span>
-                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 -mt-0.5 hidden sm:block truncate max-w-[220px]">
+                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 -mt-0.5 hidden xl:block truncate max-w-[220px]">
                   {currentUser?.title || state.title || "Software Engineer & Cloud Architect"}
                 </span>
               </div>
@@ -111,7 +111,7 @@ export function Navbar() {
           {/* Desktop Navigation Tabs */}
           <nav 
             aria-label="Main Navigation"
-            className="hidden md:flex items-center gap-1 bg-slate-100/90 dark:bg-[#090f1d]/90 px-2 py-1 rounded-full border border-slate-200 dark:border-cyan-900/30 backdrop-blur-md shadow-inner"
+            className="hidden md:flex items-center gap-0.5 xl:gap-1 bg-slate-100/90 dark:bg-[#090f1d]/90 px-1 xl:px-2 py-1 rounded-full border border-slate-200 dark:border-cyan-900/30 backdrop-blur-md shadow-inner shrink-0"
           >
             {navTabs.map((tab) => {
               const Icon = tab.icon;
@@ -122,18 +122,18 @@ export function Navbar() {
                   type="button"
                   onClick={() => handleTabClick(tab.id)}
                   aria-current={isActive ? "page" : undefined}
-                  className={`relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+                  className={`relative flex items-center gap-1 sm:gap-1.5 px-2 lg:px-2.5 xl:px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 whitespace-nowrap cursor-pointer focus-visible:ring-2 focus-visible:ring-cyan-400 ${
                     isActive
                       ? "text-cyan-700 font-semibold bg-cyan-100/80 border border-cyan-300 dark:text-cyan-300 dark:bg-cyan-950/60 dark:border-cyan-500/40 shadow-sm shadow-cyan-500/10"
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/50"
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-cyan-600 dark:text-cyan-400" : "text-slate-500 dark:text-slate-400"}`} />
+                  <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-cyan-600 dark:text-cyan-400" : "text-slate-500 dark:text-slate-400"}`} />
                   <span>{tab.name}</span>
                   {tab.isLive && (
                     <span className="flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-mono ml-0.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
-                      <span className="hidden lg:inline text-[9px] text-emerald-700 dark:text-emerald-300">Online</span>
+                      <span className="hidden xl:inline text-[9px] text-emerald-700 dark:text-emerald-300">Online</span>
                     </span>
                   )}
                   {isActive && (
@@ -145,7 +145,7 @@ export function Navbar() {
           </nav>
 
           {/* Right Actions: Theme Toggle, User Profile Switcher Pill, Mobile Hamburger */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 xl:gap-3 shrink-0">
             <ThemeToggle />
 
             {/* User Profile Pill & Dropdown Switcher */}
@@ -153,12 +153,12 @@ export function Navbar() {
               <button
                 type="button"
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-xs text-slate-700 hover:border-cyan-500 hover:text-slate-900 dark:bg-[#0a1122] dark:border-cyan-900/30 dark:text-slate-200 dark:hover:border-cyan-400/40 dark:hover:text-white transition-all focus-visible:ring-2 focus-visible:ring-cyan-400 shadow-sm"
+                className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-xs text-slate-700 hover:border-cyan-500 hover:text-slate-900 dark:bg-[#0a1122] dark:border-cyan-900/30 dark:text-slate-200 dark:hover:border-cyan-400/40 dark:hover:text-white transition-all focus-visible:ring-2 focus-visible:ring-cyan-400 shadow-sm cursor-pointer"
               >
                 <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-500 text-white dark:text-slate-950 font-bold text-[10px] flex items-center justify-center shrink-0">
                   {initials}
                 </div>
-                <span className="font-medium text-xs hidden md:inline truncate max-w-[130px]">{displayName}</span>
+                <span className="font-medium text-xs hidden xl:inline truncate max-w-[130px]">{displayName}</span>
                 <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${userDropdownOpen ? "rotate-180" : ""}`} />
               </button>
 
@@ -278,7 +278,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl border border-slate-200 dark:border-cyan-900/30 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-cyan-400/40 bg-slate-100 dark:bg-[#090f1d] focus-visible:ring-2 focus-visible:ring-cyan-400 md:hidden"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border border-slate-200 dark:border-cyan-900/30 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-cyan-400/40 bg-slate-100 dark:bg-[#090f1d] focus-visible:ring-2 focus-visible:ring-cyan-400 md:hidden cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5 text-cyan-600 dark:text-cyan-400" /> : <Menu className="w-5 h-5" />}
@@ -288,7 +288,7 @@ export function Navbar() {
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-3 pt-3 border-t border-slate-200 dark:border-slate-800/80 space-y-2 pb-2 max-h-[calc(100vh-5rem)] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="md:hidden mt-3 pt-3 border-t border-slate-200 dark:border-slate-800/80 space-y-2 pb-2 max-h-[calc(100dvh-5rem)] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
             {/* Active Mobile Profile Badge */}
             <div className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -306,7 +306,7 @@ export function Navbar() {
                   setMobileMenuOpen(false);
                   promptCreateProfile();
                 }}
-                className="text-[11px] font-semibold text-cyan-600 dark:text-cyan-400 hover:underline"
+                className="text-[11px] font-semibold text-cyan-600 dark:text-cyan-400 hover:underline min-h-[36px] flex items-center"
               >
                 + New Profile
               </button>
@@ -322,7 +322,7 @@ export function Navbar() {
                     key={tab.id}
                     type="button"
                     onClick={() => handleTabClick(tab.id)}
-                    className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                    className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold min-h-[44px] transition-all cursor-pointer ${
                       isActive
                         ? "bg-cyan-100/80 text-cyan-800 border border-cyan-300 dark:bg-cyan-950/60 dark:text-cyan-300 dark:border-cyan-500/40"
                         : "text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/50"
@@ -360,7 +360,7 @@ export function Navbar() {
                           setMobileMenuOpen(false);
                           if (!isActive) switchProfile(p.userId);
                         }}
-                        className={`w-full text-left px-3 py-1.5 rounded-xl text-xs flex items-center justify-between ${
+                        className={`w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between min-h-[40px] cursor-pointer ${
                           isActive
                             ? "bg-cyan-50 text-cyan-800 font-bold dark:bg-cyan-950/40 dark:text-cyan-300"
                             : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
@@ -382,7 +382,7 @@ export function Navbar() {
                 setMobileMenuOpen(false);
                 logoutUser();
               }}
-              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all border border-rose-200 dark:border-rose-900/30 mt-2"
+              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all border border-rose-200 dark:border-rose-900/30 mt-2 min-h-[44px] cursor-pointer"
             >
               <div className="flex items-center gap-2.5">
                 <LogOut className="w-4 h-4" />

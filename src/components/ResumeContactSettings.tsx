@@ -76,7 +76,7 @@ export function ResumeContactSettings() {
     <section 
       id="resume-contact-settings" 
       aria-label="Resume Contact Header Settings"
-      className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 backdrop-blur-md space-y-6 dark:bg-[#090f1d]/80 dark:border-cyan-900/30 shadow-sm"
+      className="rounded-3xl bg-white border border-slate-200 p-4 sm:p-6 lg:p-8 backdrop-blur-md space-y-6 dark:bg-[#090f1d]/80 dark:border-cyan-900/30 shadow-sm"
     >
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
@@ -96,7 +96,7 @@ export function ResumeContactSettings() {
         <button
           type="button"
           onClick={handleNavigateToResume}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 transition-colors border border-slate-200 dark:border-slate-700 self-start sm:self-auto shrink-0 shadow-sm"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 transition-colors border border-slate-200 dark:border-slate-700 self-start sm:self-auto shrink-0 shadow-sm min-h-[44px]"
         >
           <FileText className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
           <span>View Live ATS Resume</span>
@@ -270,7 +270,7 @@ export function ResumeContactSettings() {
           <div className="flex items-center gap-3">
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-cyan-500/20 transition-all active:scale-95"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-cyan-500/20 transition-all active:scale-95 min-h-[44px]"
             >
               {isSaved ? (
                 <>

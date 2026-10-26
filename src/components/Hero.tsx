@@ -8,24 +8,12 @@ import {
   Check, 
   GraduationCap, 
   Terminal,
-  Code2,
-  FolderKanban,
-  Sparkles,
-  Layers,
   ArrowUpRight,
-  Database,
   Globe2,
   Cpu,
-  Activity,
   Compass,
   Play,
-  RotateCcw,
-  Sliders,
-  CheckCircle2,
-  Layers3,
-  MapPin,
-  ShieldCheck,
-  Zap
+  ShieldCheck
 } from "lucide-react";
 import { LinkedinIcon, GithubIcon } from "@/components/Icons";
 import { useProfile } from "@/context/ProfileContext";
@@ -198,9 +186,9 @@ export function Hero() {
       {/* Specular Radial Spotlight: Restrained obsidian atmosphere */}
       <div 
         aria-hidden="true" 
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[380px] pointer-events-none -z-10 overflow-hidden opacity-25 dark:opacity-70"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[380px] pointer-events-none -z-10 overflow-hidden opacity-20 dark:opacity-60"
       >
-        <div className="w-full h-full bg-[radial-gradient(ellipse_at_top,rgba(0,210,240,0.04),transparent_68%)]" />
+        <div className="w-full h-full bg-[radial-gradient(ellipse_at_top,rgba(2,132,199,0.06),transparent_70%)] dark:bg-[radial-gradient(ellipse_at_top,rgba(0,210,240,0.05),transparent_70%)]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-14 lg:space-y-16">
@@ -211,9 +199,9 @@ export function Hero() {
           {/* ================= LEFT WING: Identity, Headline & Actions (7 Cols) ================= */}
           <div className="lg:col-span-7 space-y-6 text-left">
             
-            {/* Status & Credential Beacon */}
-            <div className="flex flex-wrap items-center gap-2.5 text-xs">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-200/50 dark:bg-white/[0.04] border border-slate-300/60 dark:border-white/[0.08] text-slate-800 dark:text-slate-200 text-xs font-medium backdrop-blur-sm shadow-xs">
+            {/* Status & Credential Beacon: Purposeful, uncrowded */}
+            <div className="flex flex-wrap items-center gap-3 text-xs">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/[0.08] dark:bg-emerald-500/10 border border-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-medium">
                 <span className="relative flex h-2 w-2" aria-hidden="true">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -223,7 +211,7 @@ export function Hero() {
 
               <span className="text-slate-300 dark:text-slate-700 hidden sm:inline" aria-hidden="true">•</span>
 
-              <div className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 font-mono text-[11px] tracking-wide uppercase">
+              <div className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 font-medium text-xs">
                 <GraduationCap className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 shrink-0" aria-hidden="true" />
                 <span>
                   {state.tagline || (state.resume?.education?.[0]?.degree || (isBlank ? "Engineering Portfolio" : "M.Tech CSE Scholar"))}
@@ -231,16 +219,16 @@ export function Hero() {
               </div>
             </div>
 
-            {/* Dominant Editorial Headline */}
+            {/* Dominant Editorial Headline: Confident visual entry point */}
             <div className="space-y-3">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] xl:text-[48px] font-extrabold tracking-[-0.035em] text-slate-900 dark:text-white leading-[1.14] text-balance">
+              <h1 className="text-[26px] xs:text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[50px] font-extrabold tracking-[-0.03em] sm:tracking-[-0.035em] text-slate-900 dark:text-white leading-[1.15] sm:leading-[1.12] text-balance break-words">
                 I turn complex problems into thoughtful digital experiences.
               </h1>
               
-              <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-base sm:text-lg font-medium text-slate-700 dark:text-slate-300 tracking-tight">
-                <span className="font-semibold text-slate-900 dark:text-white">{state.name || "Tharanesh Selvam"}</span>
-                <span className="text-slate-400 dark:text-slate-600 hidden sm:inline" aria-hidden="true">•</span>
-                <span className="text-cyan-700 dark:text-cyan-400 font-mono text-sm sm:text-base">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm sm:text-base md:text-lg font-normal text-slate-700 dark:text-slate-300 tracking-tight">
+                <span className="font-semibold text-slate-900 dark:text-white shrink-0">{state.name || "Tharanesh Selvam"}</span>
+                <span className="text-slate-400 dark:text-slate-600 hidden xs:inline" aria-hidden="true">—</span>
+                <span className="text-cyan-700 dark:text-cyan-400 font-medium break-words">
                   {state.title || "Full-Stack Software Engineer & Cloud Architect"}
                 </span>
               </div>
@@ -254,11 +242,11 @@ export function Hero() {
             </p>
 
             {/* Primary & Secondary Actions */}
-            <div className="flex flex-wrap items-center gap-3.5 pt-1">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1 w-full sm:w-auto">
               <button
                 type="button"
                 onClick={handleNavigateToProjects}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98] group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500"
+                className="w-full sm:w-auto min-h-[46px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98] group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500"
               >
                 <span>Explore Selected Work</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
@@ -267,7 +255,7 @@ export function Hero() {
               <button
                 type="button"
                 onClick={handleNavigateToResume}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-50 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/[0.1] font-medium text-xs sm:text-sm shadow-xs transition-all duration-200 active:scale-[0.98] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500"
+                className="w-full sm:w-auto min-h-[46px] inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-50 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/[0.1] font-medium text-xs sm:text-sm shadow-xs transition-all duration-200 active:scale-[0.98] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500"
               >
                 <FileText className="w-4 h-4 text-cyan-600 dark:text-cyan-400" aria-hidden="true" />
                 <span>View ATS Resume</span>
@@ -275,23 +263,23 @@ export function Hero() {
             </div>
 
             {/* Contact Coordinates & Direct Channels */}
-            <div className="pt-2 flex flex-wrap items-center gap-3.5 text-xs text-slate-500 dark:text-slate-400">
+            <div className="pt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-slate-500 dark:text-slate-400">
               <button
                 type="button"
                 onClick={copyEmail}
-                className="inline-flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
+                className="inline-flex items-center gap-1.5 min-h-[36px] py-1 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
                 title="Copy verified email to clipboard"
                 aria-label="Copy email address"
               >
                 {copied ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-emerald-500" aria-hidden="true" />
+                    <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
                     <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Copied!</span>
                   </>
                 ) : (
                   <>
-                    <Mail className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform" aria-hidden="true" />
-                    <span className="font-mono text-[11px]">{state.contact?.email || "tharanesh.selvam@gmail.com"}</span>
+                    <Mail className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform shrink-0" aria-hidden="true" />
+                    <span className="font-mono text-[11px] truncate max-w-[200px] xs:max-w-none">{state.contact?.email || "tharanesh.selvam@gmail.com"}</span>
                   </>
                 )}
               </button>
@@ -302,10 +290,10 @@ export function Hero() {
                 href={state.contact?.github || "https://github.com/THARANESHSELVAM"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
+                className="inline-flex items-center gap-1.5 min-h-[36px] py-1 hover:text-slate-900 dark:hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
                 aria-label="GitHub Profile (opens in new tab)"
               >
-                <GithubIcon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
+                <GithubIcon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 shrink-0" />
                 <span>GitHub ↗</span>
               </a>
 
@@ -315,10 +303,10 @@ export function Hero() {
                 href={state.contact?.linkedin || "https://linkedin.com/in/tharanesh-selvam"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
+                className="inline-flex items-center gap-1.5 min-h-[36px] py-1 hover:text-slate-900 dark:hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
                 aria-label="LinkedIn Profile (opens in new tab)"
               >
-                <LinkedinIcon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
+                <LinkedinIcon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 shrink-0" />
                 <span>LinkedIn ↗</span>
               </a>
 
@@ -327,162 +315,170 @@ export function Hero() {
               <button
                 type="button"
                 onClick={handleJumpToContactSettings}
-                className="text-slate-500 hover:text-cyan-600 dark:text-slate-400 dark:hover:text-cyan-300 font-mono text-[11px] inline-flex items-center gap-1 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
+                className="text-slate-500 hover:text-cyan-600 dark:text-slate-400 dark:hover:text-cyan-300 font-mono text-[11px] inline-flex items-center gap-1 min-h-[36px] py-1 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
                 aria-label="Jump to ATS contact header coordinates editor"
               >
                 <span>Edit Coordinates ↓</span>
               </button>
             </div>
 
-            {/* Core Stack Strip */}
-            <div className="pt-1 flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1">
-                Engineering Pillars:
+            {/* Core Stack Manifest: Typographic metadata strip instead of competing pills */}
+            <div className="pt-2 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              <span className="font-semibold text-slate-800 dark:text-slate-200 shrink-0">
+                Core Disciplines:
               </span>
-              {[
-                { label: "Next.js 16 / React 19", color: "text-sky-700 dark:text-sky-300" },
-                { label: "TypeScript", color: "text-blue-700 dark:text-blue-300" },
-                { label: "Geospatial GIS & PostGIS", color: "text-emerald-700 dark:text-emerald-300" },
-                { label: "AI & Data Pipelines", color: "text-violet-700 dark:text-violet-300" }
-              ].map((tech) => (
-                <span
-                  key={tech.label}
-                  className={`px-2.5 py-1 rounded-md bg-slate-100 dark:bg-white/[0.03] border border-slate-200/70 dark:border-white/[0.06] text-[11px] font-mono ${tech.color}`}
-                >
-                  {tech.label}
-                </span>
-              ))}
+              <span className="inline-flex items-center">Next.js 16 &amp; React 19</span>
+              <span className="text-slate-300 dark:text-slate-700 hidden xs:inline" aria-hidden="true">•</span>
+              <span className="inline-flex items-center">TypeScript</span>
+              <span className="text-slate-300 dark:text-slate-700 hidden xs:inline" aria-hidden="true">•</span>
+              <span className="inline-flex items-center">Geospatial GIS &amp; PostGIS</span>
+              <span className="text-slate-300 dark:text-slate-700 hidden xs:inline" aria-hidden="true">•</span>
+              <span className="inline-flex items-center">Applied AI Pipelines</span>
             </div>
 
           </div>
 
           {/* ================= RIGHT WING: Interactive Engineering Workstation (5 Cols) ================= */}
           <div className="lg:col-span-5">
-            <div className="relative rounded-2xl p-1 bg-gradient-to-b from-slate-200 via-slate-100 to-slate-200 dark:from-white/[0.12] dark:via-white/[0.04] dark:to-white/[0.02] shadow-xl dark:shadow-2xl">
-              <div className="rounded-[14px] bg-slate-950 dark:bg-[#07090e] border border-slate-800 dark:border-white/[0.08] overflow-hidden text-left font-mono">
-                
-                {/* Workstation Top Navigation Tabs with W3C ARIA Tablist */}
-                <div className="px-3.5 py-2.5 bg-slate-900/90 dark:bg-[#05070a] border-b border-slate-800 dark:border-white/[0.06] flex items-center justify-between gap-2">
-                  <div 
-                    role="tablist"
-                    aria-label="Workstation Engineering Modes"
-                    onKeyDown={handleTabKeyDown}
-                    className="flex items-center gap-1 p-0.5 rounded-lg bg-white/[0.04] border border-white/[0.06] overflow-x-auto"
+            <div className="relative rounded-2xl bg-slate-950 dark:bg-[#080b11] border border-slate-800 dark:border-white/[0.08] shadow-xl dark:shadow-2xl overflow-hidden text-left font-mono">
+              
+              {/* Workstation Top Navigation Tabs with W3C ARIA Tablist */}
+              <div className="px-2.5 xs:px-3.5 py-2.5 bg-slate-900/90 dark:bg-[#05070a] border-b border-slate-800 dark:border-white/[0.06] flex items-center justify-between gap-1.5 xs:gap-2">
+                <div 
+                  role="tablist"
+                  aria-label="Workstation Engineering Modes"
+                  onKeyDown={handleTabKeyDown}
+                  className="flex items-center gap-1 p-0.5 rounded-lg bg-white/[0.04] border border-white/[0.06] overflow-x-auto no-scrollbar scroll-smooth max-w-full"
+                  style={{ WebkitOverflowScrolling: "touch" }}
+                >
+                  <button
+                    id="workstation-tab-web"
+                    role="tab"
+                    type="button"
+                    aria-selected={activePillar === "web"}
+                    aria-controls="workstation-panel-web"
+                    tabIndex={activePillar === "web" ? 0 : -1}
+                    ref={(el) => { tabRefs.current["web"] = el; }}
+                    onClick={() => setActivePillar("web")}
+                    className={`shrink-0 px-2.5 xs:px-3 py-1.5 rounded-md text-[11px] font-medium transition-all cursor-pointer min-h-[36px] flex items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-cyan-400 ${
+                      activePillar === "web"
+                        ? "bg-cyan-500/15 text-cyan-300 font-semibold shadow-xs"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
                   >
-                    <button
-                      id="workstation-tab-web"
-                      role="tab"
-                      type="button"
-                      aria-selected={activePillar === "web"}
-                      aria-controls="workstation-panel-web"
-                      tabIndex={activePillar === "web" ? 0 : -1}
-                      ref={(el) => { tabRefs.current["web"] = el; }}
-                      onClick={() => setActivePillar("web")}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-cyan-400 ${
-                        activePillar === "web"
-                          ? "bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shadow-xs"
-                          : "text-slate-400 hover:text-white"
-                      }`}
-                    >
-                      Web Engine
-                    </button>
-                    <button
-                      id="workstation-tab-gis"
-                      role="tab"
-                      type="button"
-                      aria-selected={activePillar === "gis"}
-                      aria-controls="workstation-panel-gis"
-                      tabIndex={activePillar === "gis" ? 0 : -1}
-                      ref={(el) => { tabRefs.current["gis"] = el; }}
-                      onClick={() => setActivePillar("gis")}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-emerald-400 ${
-                        activePillar === "gis"
-                          ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-xs"
-                          : "text-slate-400 hover:text-white"
-                      }`}
-                    >
-                      GIS Spatial
-                    </button>
-                    <button
-                      id="workstation-tab-ai"
-                      role="tab"
-                      type="button"
-                      aria-selected={activePillar === "ai"}
-                      aria-controls="workstation-panel-ai"
-                      tabIndex={activePillar === "ai" ? 0 : -1}
-                      ref={(el) => { tabRefs.current["ai"] = el; }}
-                      onClick={() => setActivePillar("ai")}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-violet-400 ${
-                        activePillar === "ai"
-                          ? "bg-violet-500/15 text-violet-300 border border-violet-500/30 shadow-xs"
-                          : "text-slate-400 hover:text-white"
-                      }`}
-                    >
-                      AI Pipeline
-                    </button>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-mono shrink-0">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" aria-hidden="true" />
-                    <span className="hidden sm:inline">INTERACTIVE SIMULATOR</span>
-                  </div>
+                    Web Engine
+                  </button>
+                  <button
+                    id="workstation-tab-gis"
+                    role="tab"
+                    type="button"
+                    aria-selected={activePillar === "gis"}
+                    aria-controls="workstation-panel-gis"
+                    tabIndex={activePillar === "gis" ? 0 : -1}
+                    ref={(el) => { tabRefs.current["gis"] = el; }}
+                    onClick={() => setActivePillar("gis")}
+                    className={`shrink-0 px-2.5 xs:px-3 py-1.5 rounded-md text-[11px] font-medium transition-all cursor-pointer min-h-[36px] flex items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-emerald-400 ${
+                      activePillar === "gis"
+                        ? "bg-emerald-500/15 text-emerald-300 font-semibold shadow-xs"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    GIS Spatial
+                  </button>
+                  <button
+                    id="workstation-tab-ai"
+                    role="tab"
+                    type="button"
+                    aria-selected={activePillar === "ai"}
+                    aria-controls="workstation-panel-ai"
+                    tabIndex={activePillar === "ai" ? 0 : -1}
+                    ref={(el) => { tabRefs.current["ai"] = el; }}
+                    onClick={() => setActivePillar("ai")}
+                    className={`shrink-0 px-2.5 xs:px-3 py-1.5 rounded-md text-[11px] font-medium transition-all cursor-pointer min-h-[36px] flex items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-violet-400 ${
+                      activePillar === "ai"
+                        ? "bg-violet-500/15 text-violet-300 font-semibold shadow-xs"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    AI Pipeline
+                  </button>
                 </div>
 
-                {/* ================= WORKSTATION BODY: PILLAR 1 (WEB ENGINE) ================= */}
-                {activePillar === "web" && (
-                  <div 
-                    id="workstation-panel-web"
-                    role="tabpanel"
-                    aria-labelledby="workstation-tab-web"
-                    tabIndex={0}
-                    className="p-4 sm:p-5 space-y-4 focus-visible:outline-hidden"
-                  >
-                    <div className="flex items-center justify-between text-[11px] text-slate-300 border-b border-white/[0.06] pb-2">
-                      <div className="flex items-center gap-1.5 text-cyan-400 font-semibold">
-                        <Globe2 className="w-3.5 h-3.5" aria-hidden="true" />
-                        <span>Next.js 16 App Router &amp; State Isolation</span>
-                      </div>
-                      <span className="text-slate-400 text-[10px] bg-white/[0.04] px-2 py-0.5 rounded">Architecture Model</span>
-                    </div>
+                <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono shrink-0 pl-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" aria-hidden="true" />
+                  <span className="hidden sm:inline">Demo Simulator</span>
+                </div>
+              </div>
 
-                    {/* Architectural Pipeline Flow */}
-                    <div className="space-y-2 text-[11px]">
+              {/* ================= WORKSTATION BODY: PILLAR 1 (WEB ENGINE) ================= */}
+              {activePillar === "web" && (
+                <div 
+                  id="workstation-panel-web"
+                  role="tabpanel"
+                  aria-labelledby="workstation-tab-web"
+                  tabIndex={0}
+                  className="p-3.5 xs:p-4 sm:p-5 space-y-4 focus-visible:outline-hidden"
+                >
+                  <div className="flex items-center justify-between text-xs text-slate-300 border-b border-white/[0.06] pb-2.5 gap-2">
+                    <div className="flex items-center gap-2 text-cyan-400 font-medium min-w-0">
+                      <Globe2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                      <span className="truncate">Next.js 16 App Router &amp; State Architecture</span>
+                    </div>
+                    <span className="text-slate-400 text-[10px] shrink-0">Simulation Model</span>
+                  </div>
+
+                  {/* Architectural Pipeline: Streamlined Stepper Flow */}
+                  <div className="relative pl-6 space-y-3.5 text-xs before:absolute before:left-2 before:top-2.5 before:bottom-2.5 before:w-0.5 before:bg-white/[0.08]">
+                    
+                    {/* Step 1 */}
+                    <div className="relative">
+                      <span className={`absolute -left-6 top-1 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold ${
+                        isSimulating 
+                           ? "bg-cyan-500 text-slate-950 ring-4 ring-cyan-500/20" 
+                          : "bg-white/[0.08] text-slate-400"
+                      }`} aria-hidden="true">
+                        1
+                      </span>
                       <div className={`p-2.5 rounded-lg border transition-all ${
                         isSimulating 
-                          ? "bg-cyan-950/40 border-cyan-500/50 text-cyan-200" 
+                          ? "bg-cyan-950/40 border-cyan-500/40 text-cyan-200" 
                           : "bg-white/[0.02] border-white/[0.06] text-slate-300"
                       }`}>
-                        <div className="flex items-center justify-between">
-                          <span className="font-semibold text-slate-200">1. Client Interaction Event</span>
-                          <span className="text-[10px] text-slate-400 font-mono">Simulated Event #{simulatedMutationCount}</span>
+                        <div className="flex items-center justify-between text-[11px]">
+                          <span className="font-semibold text-slate-200">Client Action Event</span>
+                          <span className="text-[10px] text-slate-400">Event #{simulatedMutationCount}</span>
                         </div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">
-                          Atomic Action: <code className="text-cyan-300">UPDATE_PROFILE_COORDINATES</code>
+                        <div className="text-[10px] text-slate-400 mt-0.5 break-words">
+                          Atomic Action: <code className="text-cyan-300 break-all xs:break-normal">UPDATE_PROFILE_COORDINATES</code>
                         </div>
                       </div>
+                    </div>
 
-                      <div className="flex justify-center -my-1 text-slate-600" aria-hidden="true">
-                        ↓
-                      </div>
-
+                    {/* Step 2 */}
+                    <div className="relative">
+                      <span className="absolute -left-6 top-1 w-4 h-4 rounded-full bg-white/[0.08] text-slate-400 flex items-center justify-center text-[9px] font-bold" aria-hidden="true">
+                        2
+                      </span>
                       <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-slate-300">
-                        <div className="flex items-center justify-between">
-                          <span className="font-semibold text-slate-200">2. ProfileContext Atomic Store</span>
-                          <span className="text-[10px] text-emerald-400 font-mono">Zero-Loss Fallback</span>
+                        <div className="flex items-center justify-between text-[11px]">
+                          <span className="font-semibold text-slate-200">ProfileContext Atomic Store</span>
+                          <span className="text-[10px] text-emerald-400">Zero-Loss Fallback</span>
                         </div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">
-                          Multi-tenant localStorage isolation (<code className="text-teal-300">user_{state.name.toLowerCase().replace(/\s+/g, "_")}</code>)
+                        <div className="text-[10px] text-slate-400 mt-0.5 break-words">
+                          Local-first storage schema (<code className="text-teal-300 break-all xs:break-normal">user_{state.name.toLowerCase().replace(/\s+/g, "_")}</code>)
                         </div>
                       </div>
+                    </div>
 
-                      <div className="flex justify-center -my-1 text-slate-600" aria-hidden="true">
-                        ↓
-                      </div>
-
+                    {/* Step 3 */}
+                    <div className="relative">
+                      <span className="absolute -left-6 top-1 w-4 h-4 rounded-full bg-white/[0.08] text-slate-400 flex items-center justify-center text-[9px] font-bold" aria-hidden="true">
+                        3
+                      </span>
                       <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-slate-300">
-                        <div className="flex items-center justify-between">
-                          <span className="font-semibold text-slate-200">3. Synchronized Re-Render</span>
-                          <span className="text-[10px] text-sky-400 font-mono">Target: &lt;14ms</span>
+                        <div className="flex items-center justify-between text-[11px]">
+                          <span className="font-semibold text-slate-200">Synchronized View Hydration</span>
+                          <span className="text-[10px] text-cyan-400">Target: &lt;14ms</span>
                         </div>
                         <div className="text-[10px] text-slate-400 mt-0.5">
                           Hydrated across Home, ATS Resume &amp; Projects views
@@ -490,161 +486,158 @@ export function Hero() {
                       </div>
                     </div>
 
-                    {/* Interactive Trigger */}
-                    <div className="pt-1 flex items-center justify-between gap-3">
-                      <button
-                        type="button"
-                        onClick={triggerSimulatedMutation}
-                        disabled={isSimulating}
-                        aria-label="Dispatch simulated state mutation across views"
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[11px] font-semibold transition-all cursor-pointer active:scale-95 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400"
-                      >
-                        <Play className="w-3 h-3 text-cyan-400" aria-hidden="true" />
-                        <span>{isSimulating ? "Simulating Dispatch..." : "Test State Mutation Flow"}</span>
-                      </button>
+                  </div>
 
-                      <div className="text-[10px] text-slate-400 font-mono text-right shrink-0">
-                        Target HMR: <span className="text-slate-300">~20ms</span>
-                      </div>
-                    </div>
+                  {/* Interactive Trigger */}
+                  <div className="pt-1 flex flex-col xs:flex-row xs:items-center justify-between gap-2.5">
+                    <button
+                      type="button"
+                      onClick={triggerSimulatedMutation}
+                      disabled={isSimulating}
+                      aria-label="Dispatch simulated state mutation across views"
+                      className="w-full xs:flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 min-h-[44px] rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-semibold transition-all cursor-pointer active:scale-95 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400"
+                    >
+                      <Play className="w-3 h-3 text-cyan-400 shrink-0" aria-hidden="true" />
+                      <span>{isSimulating ? "Simulating Dispatch..." : "Dispatch State Mutation"}</span>
+                    </button>
 
-                    <div className="text-[10px] text-slate-400 italic">
-                      * Interactive architecture diagram illustrating client-side atomic state propagation.
+                    <div className="text-[10px] text-slate-400 font-mono text-center xs:text-right shrink-0">
+                      Target HMR: <span className="text-slate-300">~20ms</span>
                     </div>
                   </div>
-                )}
 
-                {/* ================= WORKSTATION BODY: PILLAR 2 (GIS SPATIAL — LAND STACK) ================= */}
-                {activePillar === "gis" && (
-                  <div 
-                    id="workstation-panel-gis"
-                    role="tabpanel"
-                    aria-labelledby="workstation-tab-gis"
-                    tabIndex={0}
-                    className="p-4 sm:p-5 space-y-3.5 focus-visible:outline-hidden"
-                  >
-                    <div className="flex items-center justify-between text-[11px] text-slate-300 border-b border-white/[0.06] pb-2">
-                      <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-                        <Compass className="w-3.5 h-3.5" aria-hidden="true" />
-                        <span>Land Stack: Cadastral Boundary Inspector</span>
-                      </div>
-                      <span className="text-slate-400 text-[10px] bg-white/[0.04] px-2 py-0.5 rounded">Sample PostGIS Dataset</span>
+                  <div className="text-[10px] text-slate-400 italic">
+                    * Interactive demonstration illustrating client-side atomic state propagation.
+                  </div>
+                </div>
+              )}
+
+              {/* ================= WORKSTATION BODY: PILLAR 2 (GIS SPATIAL — LAND STACK) ================= */}
+              {activePillar === "gis" && (
+                <div 
+                  id="workstation-panel-gis"
+                  role="tabpanel"
+                  aria-labelledby="workstation-tab-gis"
+                  tabIndex={0}
+                  className="p-3.5 xs:p-4 sm:p-5 space-y-3.5 focus-visible:outline-hidden"
+                >
+                  <div className="flex items-center justify-between text-xs text-slate-300 border-b border-white/[0.06] pb-2.5 gap-2">
+                    <div className="flex items-center gap-2 text-emerald-400 font-medium min-w-0">
+                      <Compass className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                      <span className="truncate">Land Stack: Cadastral Boundary Inspector</span>
                     </div>
+                    <span className="text-slate-400 text-[10px] shrink-0">PostGIS Sample Records</span>
+                  </div>
 
-                    {/* Interactive Cadastral Map Visual with Enhanced Accessibility */}
-                    <div className="grid grid-cols-2 gap-2 text-center text-[10px]">
-                      {(["A", "B", "C", "D"] as const).map((key) => {
-                        const isSelected = selectedParcel === key;
-                        return (
-                          <button
-                            key={key}
-                            type="button"
-                            aria-label={`Select sample parcel ${key}, ${parcelData[key].area}, status: ${parcelData[key].status}`}
-                            aria-pressed={isSelected}
-                            onClick={() => setSelectedParcel(key)}
-                            className={`p-3 rounded-lg border transition-all text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-emerald-400 ${
-                              isSelected
-                                ? "bg-emerald-950/40 border-emerald-500/60 shadow-xs ring-1 ring-emerald-500/30"
-                                : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.15]"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between mb-1">
-                              <span className={`font-bold ${isSelected ? "text-emerald-300" : "text-slate-200"}`}>
-                                Parcel #{key}
-                              </span>
-                              {isSelected ? (
-                                <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                                  SELECTED
-                                </span>
-                              ) : (
-                                <span className="text-[10px] font-mono text-slate-400">
-                                  {parcelData[key].area}
-                                </span>
-                              )}
-                            </div>
-                            <div className="text-[10px] font-mono text-slate-300 truncate">
-                              {parcelData[key].id}
-                            </div>
-                            <div className="mt-1 flex items-center gap-1 text-[10px] text-emerald-400">
-                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
-                              <span className="truncate">{parcelData[key].status}</span>
-                            </div>
-                          </button>
-                        );
-                      })}
+                  {/* Interactive Cadastral Map Visual with Refined Parcel Tiles */}
+                  <div className="grid grid-cols-2 gap-2 text-[10px]">
+                    {(["A", "B", "C", "D"] as const).map((key) => {
+                      const isSelected = selectedParcel === key;
+                      return (
+                        <button
+                          key={key}
+                          type="button"
+                          aria-label={`Select sample parcel ${key}, ${parcelData[key].area}, status: ${parcelData[key].status}`}
+                          aria-pressed={isSelected}
+                          onClick={() => setSelectedParcel(key)}
+                          className={`p-2 xs:p-2.5 rounded-lg border transition-all text-left cursor-pointer min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-emerald-400 ${
+                            isSelected
+                              ? "bg-emerald-950/40 border-emerald-500/60 shadow-xs ring-1 ring-emerald-500/30"
+                              : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.15]"
+                          }`}
+                        >
+                          <div className="flex flex-col xs:flex-row xs:items-center justify-between mb-1 gap-0.5">
+                            <span className={`font-semibold ${isSelected ? "text-emerald-300" : "text-slate-200"}`}>
+                              Parcel #{key}
+                            </span>
+                            <span className={`text-[9px] xs:text-[10px] font-mono ${isSelected ? "text-emerald-300 font-semibold" : "text-slate-400"}`}>
+                              {parcelData[key].area}
+                            </span>
+                          </div>
+                          <div className="text-[9px] xs:text-[10px] font-mono text-slate-400 truncate">
+                            {parcelData[key].id}
+                          </div>
+                          <div className="mt-1 flex items-center gap-1 text-[9px] xs:text-[10px] text-emerald-400">
+                            <ShieldCheck className="w-3 h-3 text-emerald-400 shrink-0" aria-hidden="true" />
+                            <span className="truncate">{parcelData[key].status}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Selected Parcel Telemetry */}
+                  <div className="p-2.5 rounded-lg bg-black/40 border border-white/[0.06] text-[10px] space-y-1.5 text-slate-300 font-mono">
+                    <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-0.5">
+                      <span className="text-slate-400 shrink-0">Sample Coordinate:</span>
+                      <span className="text-slate-200 text-left xs:text-right break-words">{parcelData[selectedParcel].bBox} (Chennai Zone)</span>
                     </div>
-
-                    {/* Selected Parcel Telemetry */}
-                    <div className="p-2.5 rounded-lg bg-black/40 border border-white/[0.06] text-[10px] space-y-1 text-slate-300 font-mono">
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">Sample Coordinate:</span>
-                        <span className="text-slate-200">{parcelData[selectedParcel].bBox} (Chennai Zone)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">Illustrative Hash:</span>
-                        <span className="text-teal-300">{parcelData[selectedParcel].hash}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">Zoning Designation:</span>
-                        <span className="text-slate-300">{parcelData[selectedParcel].zone}</span>
-                      </div>
+                    <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-0.5">
+                      <span className="text-slate-400 shrink-0">Spatial Hash:</span>
+                      <span className="text-teal-300 text-left xs:text-right break-all">{parcelData[selectedParcel].hash}</span>
                     </div>
-
-                    <div className="text-[10px] text-slate-400 italic">
-                      * Interactive demonstration of Land Stack&apos;s PostGIS spatial indexing &amp; cadastral boundary data structure.
+                    <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-0.5">
+                      <span className="text-slate-400 shrink-0">Zoning Designation:</span>
+                      <span className="text-slate-300 text-left xs:text-right break-words">{parcelData[selectedParcel].zone}</span>
                     </div>
                   </div>
-                )}
 
-                {/* ================= WORKSTATION BODY: PILLAR 3 (AI/ML PIPELINE) ================= */}
-                {activePillar === "ai" && (
-                  <div 
-                    id="workstation-panel-ai"
-                    role="tabpanel"
-                    aria-labelledby="workstation-tab-ai"
-                    tabIndex={0}
-                    className="p-4 sm:p-5 space-y-3.5 focus-visible:outline-hidden"
-                  >
-                    <div className="flex items-center justify-between text-[11px] text-slate-300 border-b border-white/[0.06] pb-2">
-                      <div className="flex items-center gap-1.5 text-violet-400 font-semibold">
-                        <Cpu className="w-3.5 h-3.5" aria-hidden="true" />
-                        <span>Interactive Validation Simulation</span>
-                      </div>
-                      <span className="text-slate-400 text-[10px] bg-white/[0.04] px-2 py-0.5 rounded">Scikit-Learn Concept</span>
+                  <div className="text-[10px] text-slate-400 italic">
+                    * Interactive demonstration of Land Stack&apos;s PostGIS spatial indexing &amp; cadastral boundary data structure.
+                  </div>
+                </div>
+              )}
+
+              {/* ================= WORKSTATION BODY: PILLAR 3 (AI/ML PIPELINE) ================= */}
+              {activePillar === "ai" && (
+                <div 
+                  id="workstation-panel-ai"
+                  role="tabpanel"
+                  aria-labelledby="workstation-tab-ai"
+                  tabIndex={0}
+                  className="p-3.5 xs:p-4 sm:p-5 space-y-3.5 focus-visible:outline-hidden"
+                >
+                  <div className="flex items-center justify-between text-xs text-slate-300 border-b border-white/[0.06] pb-2.5 gap-2">
+                    <div className="flex items-center gap-2 text-violet-400 font-medium min-w-0">
+                      <Cpu className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                      <span className="truncate">Model Validation &amp; Threshold Tuning</span>
                     </div>
+                    <span className="text-slate-400 text-[10px] shrink-0">Scikit-Learn Concept</span>
+                  </div>
 
-                    {/* Pipeline Telemetry Metric Cards */}
-                    <div className="grid grid-cols-3 gap-2 text-center">
-                      <div className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.06]">
-                        <div className="text-[9px] text-slate-400 uppercase font-semibold">Simulated Accuracy</div>
-                        <div className="text-base font-extrabold text-violet-300 mt-0.5 font-mono">
-                          {calculatedAccuracy}%
-                        </div>
-                      </div>
-                      <div className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.06]">
-                        <div className="text-[9px] text-slate-400 uppercase font-semibold">Simulated F1</div>
-                        <div className="text-base font-extrabold text-sky-300 mt-0.5 font-mono">
-                          {calculatedF1}
-                        </div>
-                      </div>
-                      <div className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.06]">
-                        <div className="text-[9px] text-slate-400 uppercase font-semibold">Target Latency</div>
-                        <div className="text-base font-extrabold text-emerald-300 mt-0.5 font-mono">
-                          ~{calculatedLatency}ms
-                        </div>
+                  {/* Pipeline Telemetry Metric Tiles */}
+                  <div className="grid grid-cols-3 gap-1.5 xs:gap-2 text-center">
+                    <div className="p-2 xs:p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] min-w-0">
+                      <div className="text-[8px] xs:text-[9px] text-slate-400 font-medium truncate">Accuracy <span className="hidden xs:inline">(simulated)</span></div>
+                      <div className="text-sm xs:text-base font-extrabold text-violet-300 mt-0.5 font-mono">
+                        {calculatedAccuracy}%
                       </div>
                     </div>
-
-                    {/* Dynamic Threshold Slider with Full ARIA Metadata */}
-                    <div className="space-y-1.5 pt-1">
-                      <div className="flex items-center justify-between text-[11px] text-slate-300">
-                        <label htmlFor="confidence-threshold-slider" className="cursor-pointer font-medium">
-                          Simulated Confidence Threshold:
-                        </label>
-                        <span className="text-violet-300 font-semibold font-mono">
-                          {(confidenceThreshold * 100).toFixed(0)}%
-                        </span>
+                    <div className="p-2 xs:p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] min-w-0">
+                      <div className="text-[8px] xs:text-[9px] text-slate-400 font-medium truncate">F1 Score <span className="hidden xs:inline">(simulated)</span></div>
+                      <div className="text-sm xs:text-base font-extrabold text-sky-300 mt-0.5 font-mono">
+                        {calculatedF1}
                       </div>
+                    </div>
+                    <div className="p-2 xs:p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] min-w-0">
+                      <div className="text-[8px] xs:text-[9px] text-slate-400 font-medium truncate">Latency <span className="hidden xs:inline">(target)</span></div>
+                      <div className="text-sm xs:text-base font-extrabold text-emerald-300 mt-0.5 font-mono">
+                        ~{calculatedLatency}ms
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Dynamic Threshold Slider with Full ARIA Metadata */}
+                  <div className="space-y-1.5 pt-1">
+                    <div className="flex items-center justify-between text-[11px] text-slate-300">
+                      <label htmlFor="confidence-threshold-slider" className="cursor-pointer font-medium">
+                        Confidence Threshold:
+                      </label>
+                      <span className="text-violet-300 font-semibold font-mono">
+                        {(confidenceThreshold * 100).toFixed(0)}%
+                      </span>
+                    </div>
+                    <div className="py-1">
                       <input
                         id="confidence-threshold-slider"
                         type="range"
@@ -658,47 +651,47 @@ export function Hero() {
                         aria-valuemax={0.95}
                         aria-valuenow={confidenceThreshold}
                         aria-valuetext={`${Math.round(confidenceThreshold * 100)} percent confidence threshold`}
-                        className="w-full accent-violet-500 cursor-pointer h-2 bg-slate-800 rounded-lg appearance-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+                        className="w-full accent-violet-500 cursor-pointer h-2 bg-slate-800 rounded-lg appearance-none min-h-[36px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
                       />
-                      <div className="text-[10px] text-slate-400 italic">
-                        * Moving the slider demonstrates how confidence thresholds shift precision-recall trade-offs.
-                      </div>
                     </div>
-
-                    {/* Confusion Matrix Sample Row */}
-                    <div className="p-2 rounded-lg bg-black/40 border border-white/[0.06] text-[10px] text-slate-300 font-mono space-y-1">
-                      <div className="text-[9px] text-slate-400 uppercase tracking-wider font-semibold">
-                        Illustrative Confusion Matrix (Sample Dataset):
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span>True Positives: <strong className="text-emerald-400">924</strong></span>
-                        <span>False Positives: <strong className="text-amber-400">32</strong></span>
-                        <span>Precision: <strong className="text-violet-300">0.93</strong></span>
-                      </div>
+                    <div className="text-[10px] text-slate-400 italic">
+                      * Moving the slider demonstrates how confidence thresholds shift precision-recall trade-offs.
                     </div>
                   </div>
-                )}
 
-                {/* Workstation Footer Status Bar */}
-                <div className="px-4 py-2 bg-slate-900/70 dark:bg-[#05070a]/90 border-t border-slate-800 dark:border-white/[0.06] flex items-center justify-between text-[10px] text-slate-400 font-mono">
-                  <div className="flex items-center gap-2">
-                    <Terminal className="w-3 h-3 text-cyan-400" aria-hidden="true" />
-                    <span>Architecture Simulator</span>
-                    <span className="text-slate-600" aria-hidden="true">•</span>
-                    <span className="text-slate-300">Next.js 16</span>
+                  {/* Confusion Matrix Sample Row */}
+                  <div className="p-2.5 rounded-lg bg-black/40 border border-white/[0.06] text-[10px] text-slate-300 font-mono space-y-1.5">
+                    <div className="text-[9px] text-slate-400 uppercase tracking-wider font-semibold">
+                      Sample Dataset Confusion Matrix:
+                    </div>
+                    <div className="grid grid-cols-1 xs:grid-cols-3 gap-1 text-[10px]">
+                      <div>True Positives: <strong className="text-emerald-400">924</strong></div>
+                      <div>False Positives: <strong className="text-amber-400">32</strong></div>
+                      <div>Precision: <strong className="text-violet-300">0.93</strong></div>
+                    </div>
                   </div>
-                  <span className="text-slate-400">Illustrative Demonstration</span>
                 </div>
+              )}
 
+              {/* Workstation Footer Status Bar */}
+              <div className="px-3.5 xs:px-4 py-2 bg-slate-900/70 dark:bg-[#05070a]/90 border-t border-slate-800 dark:border-white/[0.06] flex items-center justify-between text-[10px] text-slate-400 font-mono gap-2">
+                <div className="flex items-center gap-2 truncate">
+                  <Terminal className="w-3 h-3 text-cyan-400 shrink-0" aria-hidden="true" />
+                  <span className="truncate">Architecture Simulator</span>
+                  <span className="text-slate-600 hidden xs:inline" aria-hidden="true">•</span>
+                  <span className="text-slate-300 hidden xs:inline">Next.js 16</span>
+                </div>
+                <span className="text-slate-500 shrink-0">Simulation Model</span>
               </div>
+
             </div>
           </div>
 
         </div>
 
         {/* ================= EDITORIAL METRICS & EVIDENCE RIBBON ================= */}
-        <div className="p-6 sm:p-7 rounded-2xl glass-panel text-left">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 dark:divide-white/[0.08]">
+        <div className="p-4 xs:p-5 sm:p-7 rounded-2xl glass-panel text-left">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-7 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 dark:divide-white/[0.08]">
             
             {/* Metric 1: Applied Projects */}
             <div 
@@ -711,11 +704,11 @@ export function Hero() {
                   handleNavigateToProjects();
                 }
               }}
-              className="sm:pr-4 space-y-1 group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-xl"
+              className="sm:pr-4 space-y-1 group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-xl min-h-[44px]"
               aria-label={`View ${projectCountDisplay} applied projects`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                   Applied Projects
                 </span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" aria-hidden="true" />
@@ -739,11 +732,11 @@ export function Hero() {
                   handleNavigateToSkills();
                 }
               }}
-              className="pt-4 sm:pt-0 sm:px-4 space-y-1 group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-xl"
+              className="pt-4 sm:pt-0 sm:px-4 space-y-1 group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-xl min-h-[44px]"
               aria-label={`View ${skillsCountDisplay} verified technical skills matrix`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                   Technical Skills
                 </span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" aria-hidden="true" />
@@ -758,7 +751,7 @@ export function Hero() {
 
             {/* Metric 3: Core Domains */}
             <div className="pt-4 sm:pt-0 sm:px-4 space-y-1">
-              <div className="text-xs font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
                 Core Domains
               </div>
               <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -771,10 +764,10 @@ export function Hero() {
 
             {/* Metric 4: Continuous Learning as Craft */}
             <div className="pt-4 sm:pt-0 sm:pl-4 space-y-1">
-              <div className="text-xs font-mono uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
+              <div className="text-xs font-medium text-cyan-600 dark:text-cyan-400">
                 Engineering Philosophy
               </div>
-              <div className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 italic leading-snug">
+              <div className="text-xs xs:text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 italic leading-snug break-words">
                 &quot;Continuous learning is the key to growth.&quot;
               </div>
               <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400">

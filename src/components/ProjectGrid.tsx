@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useProfile } from "@/context/ProfileContext";
 import { Project, CompetencyArea } from "@/data/profile";
 import { CaseStudyModal } from "./CaseStudyModal";
@@ -38,6 +38,7 @@ import {
   Globe
 } from "lucide-react";
 import { GithubIcon } from "@/components/Icons";
+import { ProjectVisualPreview } from "./project-previews/ProjectVisualPreview";
 
 export function ProjectGrid() {
   const {
@@ -56,6 +57,40 @@ export function ProjectGrid() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+
+  // Listen for direct case-study navigation requests (e.g. from Evidence Inspector)
+  useEffect(() => {
+    const checkAndOpenTargetProject = (targetId: string) => {
+      const match = state.projects.find((p) => p.id === targetId);
+      if (match) {
+        if (selectedFilter !== "All" && match.category !== selectedFilter) {
+          setSelectedFilter("All");
+        }
+        setActiveCaseStudyProject(match);
+      }
+    };
+
+    const handleOpenCaseStudyEvent = (e: CustomEvent<{ projectId?: string }>) => {
+      const targetId = e.detail?.projectId;
+      if (targetId) {
+        checkAndOpenTargetProject(targetId);
+      }
+    };
+
+    // Check pending target from cross-tab navigation in sessionStorage
+    if (typeof window !== "undefined") {
+      const pendingId = sessionStorage.getItem("portfolio_target_case_study");
+      if (pendingId) {
+        sessionStorage.removeItem("portfolio_target_case_study");
+        checkAndOpenTargetProject(pendingId);
+      }
+    }
+
+    window.addEventListener("open-case-study", handleOpenCaseStudyEvent as EventListener);
+    return () => {
+      window.removeEventListener("open-case-study", handleOpenCaseStudyEvent as EventListener);
+    };
+  }, [state.projects, selectedFilter]);
 
   // GitHub Repository Browser Modal state
   const [isGitHubBrowserOpen, setIsGitHubBrowserOpen] = useState(false);
@@ -110,7 +145,7 @@ export function ProjectGrid() {
     solution: "",
     novelty: "",
     techStackInput: "",
-    metric1: "⚡ 100% TypeScript typed with strict compiler mode",
+    metric1: "⚡ Strict TypeScript compiler configuration",
     metric2: "🎯 95+ Lighthouse score across performance & accessibility",
     metric3: "♿ WCAG 2.1 AA keyboard navigable design system",
     liveUrl: "",
@@ -173,7 +208,7 @@ export function ProjectGrid() {
         solution: data.description,
         novelty: data.suggestedNovelty,
         techStackInput: Array.from(new Set([...data.languages, ...data.topics])).join(", "),
-        metric1: data.suggestedMetrics[0] || "⚡ 100% Type-Safe Architecture",
+        metric1: data.suggestedMetrics[0] || "⚡ Strict TypeScript Architecture",
         metric2: data.suggestedMetrics[1] || "📈 High Concurrent Throughput",
         metric3: data.suggestedMetrics[2] || "💰 Optimized Cloud Infrastructure",
         liveUrl: data.homepage || "",
@@ -259,7 +294,7 @@ export function ProjectGrid() {
       solution: data.description,
       novelty: data.suggestedNovelty,
       techStackInput: Array.from(new Set([...data.languages, ...data.topics])).join(", "),
-      metric1: data.suggestedMetrics[0] || "⚡ 100% Type-Safe Architecture",
+      metric1: data.suggestedMetrics[0] || "⚡ Strict TypeScript Architecture",
       metric2: data.suggestedMetrics[1] || "📈 High Concurrent Throughput",
       metric3: data.suggestedMetrics[2] || "💰 Optimized Cloud Infrastructure",
       liveUrl: data.homepage || "",
@@ -810,6 +845,7 @@ export function ProjectGrid() {
                     <div className="pt-4 mt-6 border-t border-slate-200/80 dark:border-white/10 flex flex-wrap items-center gap-2.5">
                       <button
                         type="button"
+                        id={`case-study-btn-${featuredProject.id}`}
                         onClick={() => setActiveCaseStudyProject(featuredProject)}
                         aria-label={`View architectural case study for ${featuredProject.title}`}
                         className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-semibold text-xs sm:text-sm shadow-sm hover:shadow transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500"
@@ -846,98 +882,13 @@ export function ProjectGrid() {
                     </div>
                   </div>
 
-                  {/* Right Column: Legible CSS-Based Architecture / Topology Treatment */}
-                  <div className="lg:col-span-5 flex flex-col justify-between rounded-2xl bg-slate-50/70 dark:bg-[#070a12]/90 text-slate-900 dark:text-slate-100 p-5 sm:p-6 border border-slate-200/70 dark:border-white/5 shadow-sm dark:shadow-lg relative">
-                    <div>
-                      {/* Window Title Header */}
-                      <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/60 dark:border-white/5 mb-5">
-                        <div className="flex items-center gap-1.5">
-                          <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-                          <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                          <span className="text-xs font-mono text-slate-600 dark:text-slate-400 ml-2">architecture-topology.spec</span>
-                        </div>
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20">
-                          System Blueprint
-                        </span>
-                      </div>
-
-                      {/* System Topology Nodes: Connected pipeline with softened outlines */}
-                      <div className="relative pl-5 space-y-4 border-l border-cyan-500/30 dark:border-cyan-500/20 ml-2 py-1">
-                        {/* Step 01 */}
-                        <div className="relative">
-                          <span className="absolute -left-[25px] top-1 w-2.5 h-2.5 rounded-full bg-cyan-500 ring-4 ring-slate-50 dark:ring-[#070a12]" />
-                          <div className="text-[11px] font-mono font-semibold text-cyan-700 dark:text-cyan-400 uppercase tracking-wider">
-                            01 / Presentation Layer
-                          </div>
-                          <div className="text-slate-900 dark:text-slate-100 font-semibold font-sans text-sm sm:text-base mt-0.5">
-                            Next.js 16 App Router &amp; React 19 SSR
-                          </div>
-                          <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans leading-relaxed mt-0.5">
-                            Turbopack compilation &amp; static prerendering
-                          </div>
-                        </div>
-
-                        {/* Step 02 */}
-                        <div className="relative">
-                          <span className="absolute -left-[25px] top-1 w-2.5 h-2.5 rounded-full bg-cyan-500 ring-4 ring-slate-50 dark:ring-[#070a12]" />
-                          <div className="text-[11px] font-mono font-semibold text-cyan-700 dark:text-cyan-400 uppercase tracking-wider">
-                            02 / State &amp; Sync Engine
-                          </div>
-                          <div className="text-slate-900 dark:text-slate-100 font-semibold font-sans text-sm sm:text-base mt-0.5">
-                            ProfileContext + LocalStorage Atomicity
-                          </div>
-                          <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans leading-relaxed mt-0.5">
-                            Zero-loss typed JSON state persistence
-                          </div>
-                        </div>
-
-                        {/* Step 03 */}
-                        <div className="relative">
-                          <span className="absolute -left-[25px] top-1 w-2.5 h-2.5 rounded-full bg-cyan-500 ring-4 ring-slate-50 dark:ring-[#070a12]" />
-                          <div className="text-[11px] font-mono font-semibold text-cyan-700 dark:text-cyan-400 uppercase tracking-wider">
-                            03 / Data Ingestion
-                          </div>
-                          <div className="text-slate-900 dark:text-slate-100 font-semibold font-sans text-sm sm:text-base mt-0.5">
-                            GitHub REST API Ingestion
-                          </div>
-                          <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans leading-relaxed mt-0.5">
-                            1-click repo ingest &amp; ATS resume export
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      {/* Quality Targets Strip: Clearly identified as targets, softened borders */}
-                      <div className="mt-5 pt-4 border-t border-slate-200/60 dark:border-white/5">
-                        <div className="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-semibold tracking-wider mb-2.5">
-                          Engineering Quality Targets
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div className="p-3 rounded-xl bg-white/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/5 text-center">
-                            <div className="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 font-medium">Performance Goal</div>
-                            <div className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-mono mt-0.5">Target: 95+</div>
-                            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">Lighthouse Target</div>
-                          </div>
-                          <div className="p-3 rounded-xl bg-white/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/5 text-center">
-                            <div className="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 font-medium">Accessibility Goal</div>
-                            <div className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-mono mt-0.5">Target: 95+</div>
-                            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">Keyboard &amp; Focus</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Interactive Trigger to Case Study */}
-                      <button
-                        type="button"
-                        onClick={() => setActiveCaseStudyProject(featuredProject)}
-                        className="mt-3.5 pt-3 border-t border-slate-200/60 dark:border-white/5 flex items-center justify-between text-xs font-mono font-medium text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors w-full cursor-pointer focus-visible:outline-2 focus-visible:outline-cyan-500"
-                      >
-                        <span>Inspect Full Architecture Breakdown</span>
-                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                      </button>
-                    </div>
+                  {/* Right Column: Distinctive Interface Preview */}
+                  <div className="lg:col-span-5 flex flex-col justify-between">
+                    <ProjectVisualPreview
+                      project={featuredProject}
+                      onOpenCaseStudy={() => setActiveCaseStudyProject(featuredProject)}
+                      isFeatured={true}
+                    />
                   </div>
                 </div>
               </article>
@@ -1011,6 +962,15 @@ export function ProjectGrid() {
                           </h3>
                         </div>
 
+                        {/* Distinctive Project Visual Storytelling Presentation */}
+                        <div className="my-4">
+                          <ProjectVisualPreview
+                            project={project}
+                            onOpenCaseStudy={() => setActiveCaseStudyProject(project)}
+                            isFeatured={false}
+                          />
+                        </div>
+
                         {/* Problem & Solution (Clean editorial styling, readable typography) */}
                         <div className="space-y-3 text-sm leading-relaxed">
                           <div>
@@ -1035,15 +995,22 @@ export function ProjectGrid() {
                         {/* Verified Highlights / Benchmarks from data */}
                         {project.metrics && project.metrics.length > 0 && (
                           <div className="pt-3 border-t border-slate-100 dark:border-white/5 space-y-1.5">
-                            {project.metrics.slice(0, 2).map((metric, i) => (
-                              <div
-                                key={i}
-                                className="text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2 font-mono"
-                              >
-                                <span className="text-cyan-500 shrink-0 font-bold">›</span>
-                                <span className="truncate">{metric}</span>
-                              </div>
-                            ))}
+                            {project.metrics.slice(0, 2).map((metric, i) => {
+                              const displayMetric = metric.includes("92%")
+                                ? "📊 Cross-validation & metric evaluation"
+                                : metric.includes("100% Type-Safe")
+                                ? "⚡ Strict TypeScript Compiler Configuration"
+                                : metric;
+                              return (
+                                <div
+                                  key={i}
+                                  className="text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2 font-mono"
+                                >
+                                  <span className="text-cyan-500 shrink-0 font-bold">›</span>
+                                  <span className="truncate">{displayMetric}</span>
+                                </div>
+                              );
+                            })}
                           </div>
                         )}
 
@@ -1094,6 +1061,7 @@ export function ProjectGrid() {
 
                         <button
                           type="button"
+                          id={`case-study-btn-${project.id}`}
                           onClick={() => setActiveCaseStudyProject(project)}
                           aria-label={`View architectural case study for ${project.title}`}
                           className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-cyan-500"

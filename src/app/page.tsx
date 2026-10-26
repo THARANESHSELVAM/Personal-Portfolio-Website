@@ -13,7 +13,7 @@ import { Footer } from "@/components/Footer";
 import { Terminal } from "lucide-react";
 
 export default function Home() {
-  const { isHydrated, activeUserId, activeTab, state } = useProfile();
+  const { isUnlocked, activeUserId, activeTab, state } = useProfile();
 
   // Dynamically update document title based on the active user identity
   useEffect(() => {
@@ -23,23 +23,8 @@ export default function Home() {
     }
   }, [state.name]);
 
-  // Prevent hydration flash before localStorage user state is resolved
-  if (!isHydrated) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#040711] text-white p-6 space-y-4">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-teal-400 to-cyan-500 flex items-center justify-center text-slate-950 shadow-xl shadow-cyan-500/25 animate-pulse font-mono font-bold">
-          <Terminal className="w-6 h-6" />
-        </div>
-        <div className="flex items-center gap-2 text-sm font-mono text-cyan-400">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-          <span>INITIALIZING DEVELOPER PORTFOLIO...</span>
-        </div>
-      </div>
-    );
-  }
-
   // If no user is authenticated / workspace is locked, show Security Gate
-  if (!activeUserId) {
+  if (!isUnlocked || !activeUserId) {
     return (
       <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#060b14] dark:text-slate-100 transition-colors duration-200">
         <SecurityGate />

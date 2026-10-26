@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useProfile } from "@/context/ProfileContext";
 import { CompetencyArea, MasteryLevel } from "@/data/profile";
 import confetti from "canvas-confetti";
@@ -48,6 +48,7 @@ export function LearningLog() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [highlightedEntryId, setHighlightedEntryId] = useState<string | null>(null);
 
   // GitHub Modal & Quick-Fetch state for Learning Diary
   const [isGitHubModalOpen, setIsGitHubModalOpen] = useState<boolean>(false);
@@ -101,6 +102,49 @@ export function LearningLog() {
       return matchesCategory && matchesMastery && matchesSearch;
     });
   }, [state.learnings, selectedCategory, selectedMastery, searchQuery]);
+
+  // Listen for direct learning entry navigation requests (e.g. from Evidence Inspector)
+  useEffect(() => {
+    const focusAndHighlightEntry = (targetId: string) => {
+      setSelectedCategory("All");
+      setSelectedMastery("All");
+      setSearchQuery("");
+      setHighlightedEntryId(targetId);
+
+      setTimeout(() => {
+        const el = document.getElementById(`learning-entry-${targetId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          el.focus();
+        }
+      }, 150);
+
+      const timer = setTimeout(() => {
+        setHighlightedEntryId((current) => (current === targetId ? null : current));
+      }, 4000);
+      return () => clearTimeout(timer);
+    };
+
+    const handleHighlightEvent = (e: CustomEvent<{ entryId?: string }>) => {
+      const targetId = e.detail?.entryId;
+      if (targetId) {
+        focusAndHighlightEntry(targetId);
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      const pendingId = sessionStorage.getItem("portfolio_target_learning_entry");
+      if (pendingId) {
+        sessionStorage.removeItem("portfolio_target_learning_entry");
+        focusAndHighlightEntry(pendingId);
+      }
+    }
+
+    window.addEventListener("highlight-learning-entry", handleHighlightEvent as EventListener);
+    return () => {
+      window.removeEventListener("highlight-learning-entry", handleHighlightEvent as EventListener);
+    };
+  }, []);
 
   // 1-Click Repo Fetch inside Learning Diary Form
   const handleQuickFetchRepoForDiary = async () => {
@@ -733,7 +777,13 @@ export function LearningLog() {
             {filteredLearnings.map((entry) => (
               <div
                 key={entry.id}
-                className="glass-panel p-5 sm:p-6 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 hover:border-cyan-400/50 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between group"
+                id={`learning-entry-${entry.id}`}
+                tabIndex={highlightedEntryId === entry.id ? 0 : undefined}
+                className={`glass-panel p-5 sm:p-6 rounded-3xl border transition-all duration-300 flex flex-col justify-between group ${
+                  highlightedEntryId === entry.id
+                    ? "border-cyan-500 ring-4 ring-cyan-500/40 shadow-xl shadow-cyan-500/25 bg-cyan-500/[0.04]"
+                    : "border-slate-200/90 dark:border-slate-800/90 hover:border-cyan-400/50 shadow-sm hover:shadow-lg"
+                }`}
               >
                 <div className="space-y-3">
                   {/* Top Bar: Category, Mastery, Date */}
