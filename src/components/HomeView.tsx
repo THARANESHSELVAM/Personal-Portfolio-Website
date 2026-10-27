@@ -53,7 +53,7 @@ export function HomeView() {
   };
 
   return (
-    <div className="space-y-16 sm:space-y-20 lg:space-y-24 pb-24">
+    <div id="home" className="space-y-16 sm:space-y-20 lg:space-y-24 pb-24">
       {/* 1. Hero & Interactive Engineering Workstation */}
       <Hero />
 

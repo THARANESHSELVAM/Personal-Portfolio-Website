@@ -68,7 +68,7 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
     <section id="resume" className="py-20 relative">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
+        <div className="no-print flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold text-cyan-700 bg-cyan-50 border border-cyan-200 dark:text-cyan-400 dark:bg-cyan-500/10 dark:border-cyan-500/20 mb-3">
             <FileText className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             <span>LIVE AUTO-GENERATED ATS ENGINE</span>
@@ -82,7 +82,7 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
         </div>
 
         {/* View Mode Toggle & Actions Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 mb-8 shadow-sm">
+        <div className="no-print flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 mb-8 shadow-sm">
           {/* Toggle Button */}
           <div className="flex items-center bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200 dark:border-slate-700/60 w-full sm:w-auto">
             <button
@@ -157,11 +157,12 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
         {/* =========================================================================
             VIEW 1: CLEAN ATS DOCUMENT VIEW (Live Synchronized Single-Column Layout)
             ========================================================================= */}
-        {viewMode === "ats" ? (
-          <div
-            id="resume-document-container"
-            className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-slate-900/90 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-xl space-y-8 font-sans"
-          >
+        <div
+          id="resume-document-container"
+          className={`p-8 sm:p-12 rounded-3xl bg-white dark:bg-slate-900/90 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-xl space-y-8 font-sans ${
+            viewMode === "ats" ? "block" : "hidden print:block"
+          }`}
+        >
             {/* Header */}
             <div className="border-b border-slate-300 dark:border-slate-800 pb-6 text-center space-y-2">
               <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase text-slate-900 dark:text-white">
@@ -186,7 +187,8 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
                   <>
                     <span>•</span>
                     <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="hover:underline text-cyan-400">
-                      LinkedIn
+                      <span className="print:hidden">LinkedIn</span>
+                      <span className="hidden print:inline">{contact.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</span>
                     </a>
                   </>
                 )}
@@ -194,7 +196,8 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
                   <>
                     <span>•</span>
                     <a href={contact.github} target="_blank" rel="noopener noreferrer" className="hover:underline text-cyan-400">
-                      GitHub
+                      <span className="print:hidden">GitHub</span>
+                      <span className="hidden print:inline">{contact.github.replace(/^https?:\/\/(www\.)?/, '')}</span>
                     </a>
                   </>
                 )}
@@ -278,7 +281,7 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
                   <button
                     type="button"
                     onClick={() => setActiveTab("projects")}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20 transition-all"
+                    className="no-print inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20 transition-all"
                   >
                     <PlusCircle className="w-3.5 h-3.5" />
                     <span>+ Add First Project</span>
@@ -367,7 +370,7 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
                   <button
                     type="button"
                     onClick={() => setActiveTab("diary")}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20 transition-all"
+                    className="no-print inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20 transition-all"
                   >
                     <PlusCircle className="w-3.5 h-3.5" />
                     <span>+ Log First Learning Entry</span>
@@ -448,7 +451,7 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
                   <button
                     type="button"
                     onClick={() => setActiveTab("skills")}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs border border-slate-300 dark:border-slate-700 transition-all"
+                    className="no-print inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs border border-slate-300 dark:border-slate-700 transition-all"
                   >
                     <PlusCircle className="w-3.5 h-3.5 text-cyan-500" />
                     <span>+ Add Education / Bio</span>
@@ -474,11 +477,12 @@ export function ResumeHub({ initialLiveATS = false }: { initialLiveATS?: boolean
               </div>
             )}
           </div>
-        ) : (
-          /* =========================================================================
-             VIEW 2: VISUAL TIMELINE VIEW (Chronological Learning & Project Feed)
-             ========================================================================= */
-          <div className="space-y-8 animate-in fade-in duration-300">
+
+        {/* =========================================================================
+            VIEW 2: VISUAL TIMELINE VIEW (Chronological Learning & Project Feed)
+            ========================================================================= */}
+        {viewMode === "timeline" && (
+          <div id="resume-timeline-container" className="no-print print:hidden space-y-8 animate-in fade-in duration-300">
             {projects.length === 0 && learnings.length === 0 ? (
               <div className="text-center py-14 px-6 glass-panel rounded-3xl border border-slate-200 dark:border-slate-800 max-w-md mx-auto space-y-4">
                 <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">

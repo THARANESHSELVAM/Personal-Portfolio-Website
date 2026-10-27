@@ -1,11 +1,10 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, useRef, useSyncExternalStore } from "react";
 import {
   ProfileState,
   LearningEntry,
   Project,
-  GoalItem,
   CompetencyArea,
   INITIAL_PROFILE_STATE,
   INITIAL_PROJECTS,
@@ -16,7 +15,6 @@ import {
   UserIdentity,
   ACTIVE_USER_KEY,
   getWorkspaceStorageKey,
-  sanitizeUserId,
   exportWorkspaceToJSON,
   importWorkspaceFromJSON,
   createBlankWorkspace,
@@ -24,8 +22,9 @@ import {
 } from "@/lib/datasetLoader";
 import {
   AUTH_SESSION_KEY,
+  REGISTERED_PROFILES_KEY,
+  DEFAULT_OWNER_PROFILE,
   createSessionToken,
-  validateSessionToken,
   clearAuthSession,
   RegisteredProfile,
   getRegisteredProfiles,
@@ -34,6 +33,30 @@ import {
 } from "@/lib/authConfig";
 
 export type WorkspaceTab = "home" | "profile" | "diary" | "projects" | "skills" | "resume" | "live-ats";
+
+/**
+ * Resolves any raw URL hash string into a canonical WorkspaceTab.
+ * Returns null if the hash is unknown or unsupported.
+ */
+export function resolveTabFromHash(rawHash: string): WorkspaceTab | null {
+  const clean = rawHash.replace(/^#/, "").trim().toLowerCase();
+  if (!clean || clean === "home" || clean === "profile") {
+    return "home";
+  }
+  if (clean === "diary" || clean === "learning-log" || clean === "journal") {
+    return "diary";
+  }
+  if (clean === "projects" || clean === "portfolio" || clean === "work") {
+    return "projects";
+  }
+  if (clean === "skills" || clean === "about" || clean === "competencies") {
+    return "skills";
+  }
+  if (clean === "resume" || clean === "live-ats" || clean === "ats" || clean === "ats-resume") {
+    return "resume";
+  }
+  return null;
+}
 
 export interface SkillGapInsight {
   type: "tip" | "warning" | "achievement";
@@ -102,6 +125,56 @@ export interface ProfileContextType {
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
+// External store subscriber for registered profiles to avoid cascading renders in React 19
+const profileStoreListeners = new Set<() => void>();
+
+let cachedProfilesRaw: string | null = null;
+let cachedProfilesList: RegisteredProfile[] = [DEFAULT_OWNER_PROFILE];
+
+function subscribeRegisteredProfiles(callback: () => void) {
+  profileStoreListeners.add(callback);
+  const handleStorage = (e: StorageEvent) => {
+    if (e.key === null || e.key === REGISTERED_PROFILES_KEY) {
+      cachedProfilesRaw = null;
+      callback();
+    }
+  };
+  if (typeof window !== "undefined") {
+    window.addEventListener("storage", handleStorage);
+  }
+  return () => {
+    profileStoreListeners.delete(callback);
+    if (typeof window !== "undefined") {
+      window.removeEventListener("storage", handleStorage);
+    }
+  };
+}
+
+function getRegisteredProfilesSnapshot(): RegisteredProfile[] {
+  if (typeof window === "undefined") {
+    return [DEFAULT_OWNER_PROFILE];
+  }
+  try {
+    const raw = localStorage.getItem(REGISTERED_PROFILES_KEY);
+    if (raw !== cachedProfilesRaw) {
+      cachedProfilesRaw = raw;
+      cachedProfilesList = getRegisteredProfiles();
+    }
+  } catch {
+    return cachedProfilesList;
+  }
+  return cachedProfilesList;
+}
+
+function getRegisteredProfilesServerSnapshot(): RegisteredProfile[] {
+  return [DEFAULT_OWNER_PROFILE];
+}
+
+export function notifyRegisteredProfilesChanged() {
+  cachedProfilesRaw = null;
+  profileStoreListeners.forEach((listener) => listener());
+}
+
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [activeUserId, setActiveUserId] = useState<string | null>(null);
@@ -109,56 +182,122 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [activeTab, setActiveTabState] = useState<WorkspaceTab>("home");
   const [state, setState] = useState<ProfileState>(INITIAL_PROFILE_STATE);
   const [isHydrated, setIsHydrated] = useState(false);
-  const [registeredProfiles, setRegisteredProfiles] = useState<RegisteredProfile[]>([]);
+  const registeredProfiles = useSyncExternalStore(
+    subscribeRegisteredProfiles,
+    getRegisteredProfilesSnapshot,
+    getRegisteredProfilesServerSnapshot
+  );
+
+  const activeTabRef = useRef<WorkspaceTab>("home");
+
+  // Helper to construct history state that preserves Next.js internal router markers (__NA)
+  const createSafeHistoryState = (tab: WorkspaceTab) => {
+    if (typeof window === "undefined") return { tab, __NA: true };
+    const current = (window.history.state && typeof window.history.state === "object") ? window.history.state : {};
+    return {
+      ...current,
+      tab,
+      __NA: true,
+    };
+  };
 
   // Refresh registered profiles from localStorage
   const refreshRegisteredProfiles = useCallback(() => {
-    if (typeof window !== "undefined") {
-      setRegisteredProfiles(getRegisteredProfiles());
-    }
+    notifyRegisteredProfilesChanged();
   }, []);
 
-  // Sync tab with URL hash if present
+  // History-aware tab navigation: updates active tab and pushes new browser history entry (pushState)
   const setActiveTab = useCallback((tab: WorkspaceTab) => {
-    setActiveTabState(tab);
+    const canonicalTab: WorkspaceTab =
+      tab === "profile" ? "home" : tab === "live-ats" ? "resume" : tab;
+
     if (typeof window !== "undefined") {
-      window.history.replaceState(null, "", `#${tab}`);
+      const currentHash = window.location.hash.replace(/^#/, "").trim().toLowerCase();
+      const isCurrentHashMatching =
+        currentHash === canonicalTab ||
+        (canonicalTab === "home" && (currentHash === "" || currentHash === "home"));
+
+      // Avoid creating redundant history entries when the current tab and hash already match
+      if (activeTabRef.current !== canonicalTab || !isCurrentHashMatching) {
+        window.history.pushState(createSafeHistoryState(canonicalTab), "", `#${canonicalTab}`);
+      }
     }
+
+    activeTabRef.current = canonicalTab;
+    setActiveTabState(canonicalTab);
+  }, []);
+
+  // Listen for browser Back and Forward navigation (popstate & hashchange)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const syncFromLocation = (stateTab?: unknown) => {
+      let resolvedTab: WorkspaceTab | null = null;
+
+      // 1. Check if history state object explicitly stored the tab
+      if (typeof stateTab === "string") {
+        resolvedTab = resolveTabFromHash(stateTab);
+      }
+
+      // 2. Fall back to current URL hash
+      if (!resolvedTab) {
+        resolvedTab = resolveTabFromHash(window.location.hash);
+      }
+
+      // 3. Fall back to "home" if unknown or empty
+      const targetTab: WorkspaceTab = resolvedTab || "home";
+
+      // Update tab state without pushing history
+      activeTabRef.current = targetTab;
+      setActiveTabState(targetTab);
+
+      // 4. Safely normalize unrecognized hashes without crashing
+      if (!resolvedTab && window.location.hash && window.location.hash !== "#" && window.location.hash !== "#home") {
+        window.history.replaceState(createSafeHistoryState("home"), "", "#home");
+      }
+    };
+
+    const handlePopState = (e: PopStateEvent) => {
+      syncFromLocation(e.state?.tab);
+    };
+
+    const handleHashChange = () => {
+      syncFromLocation();
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("hashchange", handleHashChange);
+    };
   }, []);
 
   // Initial client hydration from user-scoped localStorage
   useEffect(() => {
     try {
-      refreshRegisteredProfiles();
-
-      // 1. Check if hash specifies a tab
-      if (typeof window !== "undefined" && window.location.hash) {
-        const hash = window.location.hash.replace("#", "").toLowerCase();
-        if (hash === "home" || hash === "profile") {
-          setActiveTabState("home");
-        } else if (hash === "diary" || hash === "projects" || hash === "skills" || hash === "resume") {
-          setActiveTabState(hash as WorkspaceTab);
-        } else if (hash === "live-ats" || hash === "ats" || hash === "ats-resume") {
-          setActiveTabState("resume");
-        } else if (hash === "learning-log") {
-          setActiveTabState("diary");
-        } else if (hash === "about") {
-          setActiveTabState("skills");
+      // 1. Interpret initial URL hash and initialize history state
+      if (typeof window !== "undefined") {
+        const resolved = resolveTabFromHash(window.location.hash);
+        const initialTab = resolved || "home";
+        activeTabRef.current = initialTab;
+        if (initialTab !== "home") {
+          setTimeout(() => {
+            setActiveTabState(initialTab);
+          }, 0);
         }
-      }
 
-      // 2. Strict Session Security & Profile Persistence Separation:
-      // Every fresh full-page load starts locked at the SecurityGate.
-      // Profile data remains safely stored locally, but workspace is never auto-unlocked on load or reload.
-      setIsUnlocked(false);
-      setActiveUserId(null);
-      setCurrentUser(null);
+        // Normalize initial URL and history state using replaceState (does not create extra history entry)
+        const initialHash = resolved ? window.location.hash : "#home";
+        window.history.replaceState(createSafeHistoryState(initialTab), "", initialHash);
+      }
     } catch (e) {
       console.error("Failed to initialize profile context:", e);
     } finally {
       setIsHydrated(true);
     }
-  }, [refreshRegisteredProfiles]);
+  }, []);
 
   // Save to user-scoped localStorage whenever state changes
   useEffect(() => {
@@ -256,6 +395,9 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
                 phone: identity.phone || parsed.contact?.phone,
               },
             });
+            const targetTab = (typeof window !== "undefined" && resolveTabFromHash(window.location.hash)) || activeTabRef.current || "home";
+            activeTabRef.current = targetTab;
+            setActiveTabState(targetTab);
             setIsUnlocked(true);
             return;
           }
@@ -271,6 +413,9 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
       setState(newWorkspace);
       localStorage.setItem(storageKey, JSON.stringify(newWorkspace));
+      const targetTab = (typeof window !== "undefined" && resolveTabFromHash(window.location.hash)) || activeTabRef.current || "home";
+      activeTabRef.current = targetTab;
+      setActiveTabState(targetTab);
       setIsUnlocked(true);
     },
     [refreshRegisteredProfiles]
@@ -328,9 +473,11 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(storageKey, JSON.stringify(freshWorkspace));
       }
 
-      setActiveTabState("home");
+      const targetTab = (typeof window !== "undefined" && resolveTabFromHash(window.location.hash)) || activeTabRef.current || "home";
+      activeTabRef.current = targetTab;
+      setActiveTabState(targetTab);
       if (typeof window !== "undefined") {
-        window.history.replaceState(null, "", "#home");
+        window.history.replaceState(createSafeHistoryState(targetTab), "", `#${targetTab}`);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
     },
@@ -549,7 +696,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       id: `proj-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     };
 
-    let newLearningsToAppend: LearningEntry[] = [];
+    const newLearningsToAppend: LearningEntry[] = [];
 
     if (options?.syncToDiary && options.newSkills && options.newSkills.length > 0) {
       const existingTechs = new Set(state.learnings.map((l) => l.technology.toLowerCase().trim()));
@@ -606,7 +753,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     }
   ): { updatedProject: Project; addedLearningsCount: number } => {
     let updatedProjResult: Project | null = null;
-    let newLearningsToAppend: LearningEntry[] = [];
+    const newLearningsToAppend: LearningEntry[] = [];
 
     if (options?.syncToDiary && options.newSkills && options.newSkills.length > 0) {
       const existingTechs = new Set(state.learnings.map((l) => l.technology.toLowerCase().trim()));

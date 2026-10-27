@@ -19,11 +19,9 @@ import {
   Layers,
   Zap,
   TrendingUp,
-  Terminal,
   Code2,
   Workflow,
-  Edit3,
-  BookOpen
+  Edit3
 } from "lucide-react";
 import { GithubIcon } from "@/components/Icons";
 import { ProjectVisualPreview } from "@/components/project-previews/ProjectVisualPreview";
@@ -52,6 +50,12 @@ export function CaseStudyModal({
   onEditProject 
 }: CaseStudyModalProps) {
   const [activeTab, setActiveTab] = useState<string>("all");
+  const [prevProjectId, setPrevProjectId] = useState(project?.id);
+  if (project?.id !== prevProjectId) {
+    setPrevProjectId(project?.id);
+    setActiveTab("all");
+  }
+
   const [copiedSummary, setCopiedSummary] = useState(false);
   const [copiedDiagram, setCopiedDiagram] = useState(false);
 
@@ -181,9 +185,8 @@ export function CaseStudyModal({
     };
   }, [isOpen, handleClose, prevProject, nextProject, onSelectProject]);
 
-  // Reset tab to "all", scroll content to top, and manage focus sensibly on project change
+  // Scroll content to top and manage focus sensibly on project change
   useEffect(() => {
-    setActiveTab("all");
     if (contentBodyRef.current) {
       contentBodyRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }

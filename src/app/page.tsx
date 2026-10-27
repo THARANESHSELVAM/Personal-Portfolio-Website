@@ -10,7 +10,6 @@ import { LearningLog } from "@/components/LearningLog";
 import { ProjectGrid } from "@/components/ProjectGrid";
 import { ResumeHub } from "@/components/ResumeHub";
 import { Footer } from "@/components/Footer";
-import { Terminal } from "lucide-react";
 
 export default function Home() {
   const { isUnlocked, activeUserId, activeTab, state } = useProfile();
@@ -19,9 +18,10 @@ export default function Home() {
   useEffect(() => {
     if (typeof document !== "undefined") {
       const userName = state.name || "Tharanesh Selvam";
-      document.title = `${userName} — Aspiring Full-Stack Software Engineer | Portfolio`;
+      const userTitle = state.title || "Software Engineer & Technical Portfolio";
+      document.title = `${userName} | ${userTitle}`;
     }
-  }, [state.name]);
+  }, [state.name, state.title]);
 
   // If no user is authenticated / workspace is locked, show Security Gate
   if (!isUnlocked || !activeUserId) {

@@ -21,10 +21,45 @@ import { GithubIcon, LinkedinIcon } from "@/components/Icons";
 import { ThemeToggle } from "./ThemeToggle";
 import { verifyCredentials, findRegisteredProfile } from "@/lib/authConfig";
 
-export function SecurityGate() {
-  const { loginUser } = useProfile();
+function getInitialFormData() {
+  if (typeof window !== "undefined") {
+    if (sessionStorage.getItem("myresume_onboarding_mode") === "new") {
+      return {
+        userIdOrEmail: "",
+        email: "",
+        passcode: "",
+        name: "",
+        title: "",
+        location: "",
+        phone: "",
+        github: "",
+        linkedin: "",
+        starterOption: "new" as "existing" | "new",
+      };
+    }
 
-  const [formData, setFormData] = useState({
+    // Preserve the currently selected profile in the lock screen inputs if available
+    const lastActiveUserId = localStorage.getItem("myresume_active_user_id");
+    if (lastActiveUserId) {
+      const profile = findRegisteredProfile(lastActiveUserId);
+      if (profile && !profile.isOwner) {
+        return {
+          userIdOrEmail: profile.username || profile.userId,
+          email: profile.email,
+          passcode: profile.pin || "",
+          name: profile.name,
+          title: profile.title,
+          location: profile.location || "",
+          phone: profile.phone || "",
+          github: profile.github || "",
+          linkedin: profile.linkedin || "",
+          starterOption: "existing" as "existing" | "new",
+        };
+      }
+    }
+  }
+
+  return {
     userIdOrEmail: "THARANESHSELVAM",
     email: "tharaneshselvam@gmail.com",
     passcode: "2026",
@@ -35,55 +70,18 @@ export function SecurityGate() {
     github: "https://github.com/THARANESHSELVAM",
     linkedin: "https://linkedin.com/in/tharanesh-selvam",
     starterOption: "existing" as "existing" | "new",
-  });
+  };
+}
+
+export function SecurityGate() {
+  const { loginUser } = useProfile();
+
+  const [formData, setFormData] = useState(getInitialFormData);
 
   const [showPasscode, setShowPasscode] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-
-  // Check if directed to create new profile mode or restore last selected profile
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    if (sessionStorage.getItem("myresume_onboarding_mode") === "new") {
-      setFormData({
-        userIdOrEmail: "",
-        email: "",
-        passcode: "",
-        name: "",
-        title: "",
-        location: "",
-        phone: "",
-        github: "",
-        linkedin: "",
-        starterOption: "new",
-      });
-      setAuthError(null);
-      setFieldErrors({});
-      return;
-    }
-
-    // Preserve the currently selected profile in the lock screen inputs if available
-    const lastActiveUserId = localStorage.getItem("myresume_active_user_id");
-    if (lastActiveUserId) {
-      const profile = findRegisteredProfile(lastActiveUserId);
-      if (profile && !profile.isOwner) {
-        setFormData({
-          userIdOrEmail: profile.username || profile.userId,
-          email: profile.email,
-          passcode: profile.pin || "",
-          name: profile.name,
-          title: profile.title,
-          location: profile.location || "",
-          phone: profile.phone || "",
-          github: profile.github || "",
-          linkedin: profile.linkedin || "",
-          starterOption: "existing",
-        });
-      }
-    }
-  }, []);
 
   // Compute dynamic monogram / avatar initials
   const dynamicInitials = useMemo(() => {

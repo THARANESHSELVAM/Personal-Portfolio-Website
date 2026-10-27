@@ -15,18 +15,14 @@ import {
   PlusCircle,
   BookOpen,
   FolderGit2,
-  Filter,
-  Sparkles,
   Info,
   Calendar,
   X,
   RotateCcw,
-  Check,
   ArrowRight,
   ExternalLink,
   Briefcase,
-  Globe,
-  Tag
+  Globe
 } from "lucide-react";
 import { GithubIcon } from "@/components/Icons";
 import { 
@@ -115,7 +111,7 @@ export function SkillsView() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Inspector state
-  const [selectedSkillForInspection, setSelectedSkillForInspection] = useState<NormalizedSkillRecord | null>(null);
+  const [selectedSkillId, setSelectedSkillId] = useState<string | null>(null);
   const triggerElementRef = useRef<HTMLElement | null>(null);
   const inspectorRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -210,21 +206,11 @@ export function SkillsView() {
     return getProfileSkillsEvidence(state);
   }, [state]);
 
-  // Synchronize inspector with active profile updates (prevent stale cross-profile display)
-  useEffect(() => {
-    if (selectedSkillForInspection) {
-      const updated = skillsEvidence.skills.find(
-        (s) => s.id === selectedSkillForInspection.id
-      );
-      if (updated) {
-        if (updated !== selectedSkillForInspection) {
-          setSelectedSkillForInspection(updated);
-        }
-      } else {
-        setSelectedSkillForInspection(null);
-      }
-    }
-  }, [skillsEvidence, selectedSkillForInspection]);
+  // Selected skill derived directly from skillsEvidence and active ID during render
+  const selectedSkillForInspection = useMemo(() => {
+    if (!selectedSkillId) return null;
+    return skillsEvidence.skills.find((s) => s.id === selectedSkillId) || null;
+  }, [selectedSkillId, skillsEvidence]);
 
   // Open evidence inspector
   const handleOpenInspection = useCallback((skill: NormalizedSkillRecord) => {
@@ -232,13 +218,13 @@ export function SkillsView() {
     triggerElementRef.current = (activeEl && activeEl !== document.body)
       ? activeEl
       : (document.getElementById(`inspect-btn-${skill.id}`) || activeEl);
-    setSelectedSkillForInspection(skill);
+    setSelectedSkillId(skill.id);
   }, []);
 
   // Close evidence inspector and restore focus
   const handleCloseInspection = useCallback(() => {
     const targetTrigger = triggerElementRef.current;
-    setSelectedSkillForInspection(null);
+    setSelectedSkillId(null);
     setTimeout(() => {
       if (targetTrigger && document.contains(targetTrigger)) {
         targetTrigger.focus();
@@ -253,7 +239,7 @@ export function SkillsView() {
       sessionStorage.setItem("portfolio_target_case_study", projectId);
       window.dispatchEvent(new CustomEvent("open-case-study", { detail: { projectId } }));
     }
-    setSelectedSkillForInspection(null);
+    setSelectedSkillId(null);
     setActiveTab("projects");
   }, [setActiveTab]);
 
@@ -263,7 +249,7 @@ export function SkillsView() {
       sessionStorage.setItem("portfolio_target_learning_entry", entryId);
       window.dispatchEvent(new CustomEvent("highlight-learning-entry", { detail: { entryId } }));
     }
-    setSelectedSkillForInspection(null);
+    setSelectedSkillId(null);
     setActiveTab("diary");
   }, [setActiveTab]);
 
@@ -507,7 +493,7 @@ export function SkillsView() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10 sm:space-y-12 pb-24">
+    <div id="skills" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10 sm:space-y-12 pb-24">
       
       {/* 1. Primary Section: Engineering Competencies Matrix */}
       <section 
@@ -522,9 +508,9 @@ export function SkillsView() {
               <Code2 className="w-3.5 h-3.5" />
               <span>EVIDENCE-BASED VERIFICATION</span>
             </div>
-            <h2 id="matrix-heading" className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <h1 id="matrix-heading" className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Engineering Competencies
-            </h2>
+            </h1>
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
               An evidence-backed technology matrix connecting verified competencies directly to active project repositories, architectural implementations, and structured learning diary entries.
             </p>

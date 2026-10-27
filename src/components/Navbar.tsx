@@ -14,7 +14,6 @@ import {
   LogOut,
   FolderKanban,
   PlusCircle,
-  UserCheck,
   Check
 } from "lucide-react";
 
@@ -46,7 +45,7 @@ export function Navbar() {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }, [displayName]);
 
-  const navTabs: { id: WorkspaceTab; name: string; icon: any; isLive?: boolean }[] = [
+  const navTabs: { id: WorkspaceTab; name: string; icon: React.ComponentType<{ className?: string }>; isLive?: boolean }[] = [
     { 
       id: "home", 
       name: "Home", 
@@ -131,9 +130,13 @@ export function Navbar() {
                   <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-cyan-600 dark:text-cyan-400" : "text-slate-500 dark:text-slate-400"}`} />
                   <span>{tab.name}</span>
                   {tab.isLive && (
-                    <span className="flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-mono ml-0.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
-                      <span className="hidden xl:inline text-[9px] text-emerald-700 dark:text-emerald-300">Online</span>
+                    <span 
+                      className="flex items-center gap-1 text-[10px] text-cyan-700 dark:text-cyan-300 font-mono ml-0.5"
+                      title="Dynamically compiled from active diary entries & projects"
+                      aria-label="Dynamic resume generation"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 dark:bg-cyan-400 shrink-0" aria-hidden="true" />
+                      <span className="hidden xl:inline text-[9px] text-cyan-700 dark:text-cyan-300 font-medium">Dynamic</span>
                     </span>
                   )}
                   {isActive && (
@@ -333,9 +336,13 @@ export function Navbar() {
                       <span>{tab.name}</span>
                     </div>
                     {tab.isLive && (
-                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
-                        <span>Online</span>
+                      <span 
+                        className="text-[10px] text-cyan-700 dark:text-cyan-300 font-mono flex items-center gap-1.5 font-medium"
+                        title="Dynamically compiled from active diary entries & projects"
+                        aria-label="Dynamic resume generation"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 dark:bg-cyan-400 shrink-0" aria-hidden="true" />
+                        <span>Dynamic</span>
                       </span>
                     )}
                   </button>

@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ProfileProvider } from "@/context/ProfileContext";
 
+import { getSiteUrl, SITE_METADATA } from "@/lib/siteConfig";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -24,35 +26,31 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Tharanesh Selvam | Aspiring Full-Stack Software Engineer — Portfolio",
-  description:
-    "Personal portfolio and engineering showcase of Tharanesh Selvam, built with Next.js, React, TypeScript, and Tailwind CSS. Open to student internship and entry-level software development opportunities.",
-  keywords: [
-    "Tharanesh Selvam",
-    "Full-Stack Software Engineer",
-    "Frontend Developer",
-    "Software Engineering Intern",
-    "Next.js",
-    "React",
-    "TypeScript",
-    "Tailwind CSS",
-    "Developer Portfolio",
-  ],
-  authors: [{ name: "Tharanesh Selvam" }],
+  metadataBase: new URL(getSiteUrl()),
+  title: {
+    default: SITE_METADATA.defaultTitle,
+    template: SITE_METADATA.titleTemplate,
+  },
+  description: SITE_METADATA.description,
+  applicationName: SITE_METADATA.siteName,
+  keywords: [...SITE_METADATA.keywords],
+  authors: [{ name: SITE_METADATA.authorName }],
+  creator: SITE_METADATA.authorName,
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Tharanesh Selvam | Aspiring Full-Stack Software Engineer",
-    description:
-      "Modern developer portfolio and project showcase built with Next.js, React, and TypeScript. Exploring student internship and entry-level software development opportunities.",
-    url: "https://personal-portfolio-website-nine-lac.vercel.app",
-    siteName: "Tharanesh Selvam Portfolio",
-    locale: "en_US",
+    title: SITE_METADATA.defaultTitle,
+    description: SITE_METADATA.description,
+    url: "/",
+    siteName: SITE_METADATA.siteName,
+    locale: SITE_METADATA.locale,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tharanesh Selvam | Aspiring Full-Stack Software Engineer",
-    description:
-      "Modern developer portfolio and project showcase built with Next.js, React, and TypeScript.",
+    title: SITE_METADATA.defaultTitle,
+    description: SITE_METADATA.description,
   },
 };
 

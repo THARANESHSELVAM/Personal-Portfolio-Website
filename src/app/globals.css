@@ -313,20 +313,193 @@ html.dark .glass-nav {
 }
 
 /* ==========================================================================
-   PRINT OPTIMIZATIONS
+   PRINT & ATS RESUME PDF OPTIMIZATIONS — PHASE 6.4
    ========================================================================== */
 
+@page {
+  size: A4 portrait;
+  margin: 10mm 12mm 10mm 12mm;
+}
+
 @media print {
-  .glass-panel,
-  .glass-panel-elevated {
-    background: transparent !important;
-    border: 1px solid #cbd5e1 !important;
-    backdrop-filter: none !important;
-    box-shadow: none !important;
+  /* 1. Global Page Background & Isolation */
+  html,
+  body {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    font-size: 9.5pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
-  
-  nav, footer, .no-print {
+
+  /* 2. Hide all non-resume application chrome and timeline view */
+  header,
+  nav,
+  footer,
+  aside,
+  .no-print,
+  .print\:hidden,
+  #resume-timeline-container,
+  [role="dialog"],
+  [aria-modal="true"],
+  #resume-contact-settings {
     display: none !important;
+  }
+
+  /* Scope printing strictly: Inside #resume, ONLY #resume-document-container is displayed in print */
+  #resume > div > :not(#resume-document-container) {
+    display: none !important;
+  }
+
+  /* Print utility classes */
+  .print\:inline {
+    display: inline !important;
+  }
+
+  .print\:block {
+    display: block !important;
+  }
+
+  /* 3. Section and Container Reset */
+  #resume {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+
+  #resume > div {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* 4. Document Container: Pure White Paper with Crisp Black/Dark-Slate Text */
+  #resume-document-container {
+    display: block !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  }
+
+  /* 5. Force Dark Text Contrast Across All Themes */
+  #resume-document-container * {
+    text-shadow: none !important;
+  }
+
+  /* Candidate Name Heading */
+  #resume-document-container h1 {
+    color: #000000 !important;
+    font-size: 20pt !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 2pt !important;
+  }
+
+  /* Candidate Role / Professional Title */
+  #resume-document-container p.text-base.font-semibold {
+    color: #0369a1 !important;
+    font-size: 11pt !important;
+    font-weight: 600 !important;
+    margin-bottom: 4pt !important;
+  }
+
+  /* Contact Links & Items */
+  #resume-document-container a {
+    color: #0369a1 !important;
+    text-decoration: none !important;
+  }
+
+  #resume-document-container .text-slate-600,
+  #resume-document-container .dark\:text-slate-400,
+  #resume-document-container .text-slate-500 {
+    color: #334155 !important;
+  }
+
+  /* Section Headings */
+  #resume-document-container h2 {
+    color: #0f172a !important;
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
+    border-bottom: 1.5pt solid #cbd5e1 !important;
+    padding-bottom: 2pt !important;
+    margin-top: 10pt !important;
+    margin-bottom: 5pt !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Subheadings & Project Titles */
+  #resume-document-container h3 {
+    color: #0f172a !important;
+    font-size: 9.5pt !important;
+    font-weight: 700 !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  #resume-document-container p,
+  #resume-document-container li,
+  #resume-document-container span {
+    color: #1e293b !important;
+  }
+
+  #resume-document-container .text-cyan-400,
+  #resume-document-container .dark\:text-cyan-400 {
+    color: #0284c7 !important;
+  }
+
+  /* Lists and Bullet Points */
+  #resume-document-container ul {
+    margin-top: 3pt !important;
+    margin-bottom: 6pt !important;
+  }
+
+  #resume-document-container li {
+    color: #1e293b !important;
+    font-size: 9pt !important;
+    line-height: 1.4 !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Project and Experience Blocks: Keep together without awkward mid-paragraph breaks */
+  #resume-document-container .space-y-6 > div,
+  #resume-document-container .space-y-2,
+  #resume-document-container .space-y-3 {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 6pt !important;
+  }
+
+  /* Metadata Chips / Badges in Print */
+  #resume-document-container .bg-cyan-500\/10,
+  #resume-document-container .bg-slate-800,
+  #resume-document-container .bg-slate-50,
+  #resume-document-container .dark\:bg-slate-800\/50 {
+    background-color: #f1f5f9 !important;
+    color: #334155 !important;
+    border: 1px solid #cbd5e1 !important;
+  }
+
+  /* Dividers & Borders */
+  #resume-document-container .border-slate-200,
+  #resume-document-container .border-slate-300,
+  #resume-document-container .dark\:border-slate-800 {
+    border-color: #cbd5e1 !important;
   }
 }
 

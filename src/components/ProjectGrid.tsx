@@ -578,7 +578,7 @@ export function ProjectGrid() {
       setActiveCaseStudyProject({
         ...editingProject,
         ...updatedData,
-        caseStudy: updatedData.caseStudy as any,
+        caseStudy: updatedData.caseStudy,
       });
     }
 
@@ -603,9 +603,9 @@ export function ProjectGrid() {
               <Briefcase className="w-3.5 h-3.5 text-cyan-500" aria-hidden="true" />
               <span className="tracking-wider uppercase">Selected Engineering Work</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Featured Projects
-            </h2>
+            </h1>
             <p className="mt-3 text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
               Real-world web applications, geospatial systems, and machine learning models showcasing system architecture, problem solving, and verified implementations.
             </p>

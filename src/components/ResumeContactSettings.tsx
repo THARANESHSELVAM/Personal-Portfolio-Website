@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useProfile } from "@/context/ProfileContext";
 import { 
   Mail, 
@@ -9,8 +9,6 @@ import {
   Check, 
   Save, 
   FileText, 
-  Sparkles, 
-  RefreshCw, 
   ShieldCheck,
   ArrowRight,
   Briefcase
@@ -33,7 +31,12 @@ export function ResumeContactSettings() {
   const [isSaved, setIsSaved] = useState(false);
 
   // Sync state whenever external updates occur (e.g., identity login or profile restore)
-  useEffect(() => {
+  const [prevContact, setPrevContact] = useState(contact);
+  const [prevTitle, setPrevTitle] = useState(state.title);
+
+  if (contact !== prevContact || state.title !== prevTitle) {
+    setPrevContact(contact);
+    setPrevTitle(state.title);
     setFormValues({
       email: contact?.email || "",
       phone: contact?.phone || "",
@@ -42,7 +45,7 @@ export function ResumeContactSettings() {
       github: contact?.github || "",
       targetRole: state.title || "",
     });
-  }, [contact?.email, contact?.phone, contact?.location, contact?.linkedin, contact?.github, state.title]);
+  }
 
   const handleInputChange = (field: keyof typeof formValues, val: string) => {
     setFormValues((prev) => ({ ...prev, [field]: val }));

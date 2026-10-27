@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Project, CompetencyArea } from "@/data/profile";
 import {
   fetchUserRepos,
@@ -57,19 +57,49 @@ export function GitHubRepoBrowserModal({
   const [actionInProgressRepo, setActionInProgressRepo] = useState<string | null>(null);
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
 
-  // Sync default username if changed
-  useEffect(() => {
-    if (defaultUsername && !hasLoaded) {
+  // Adjust username if defaultUsername prop changes
+  const [prevDefaultUsername, setPrevDefaultUsername] = useState(defaultUsername);
+  if (defaultUsername !== prevDefaultUsername) {
+    setPrevDefaultUsername(defaultUsername);
+    if (!hasLoaded) {
       setUsername(defaultUsername);
     }
-  }, [defaultUsername, hasLoaded]);
+  }
+
+  const handleLoadRepositories = useCallback(async (targetUsername?: string) => {
+    const userToFetch = (targetUsername || username || "THARANESHSELVAM").trim();
+    if (!userToFetch) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const fetched = await fetchUserRepos(userToFetch, 1, 60);
+      setRepos(fetched);
+      setHasLoaded(true);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to load repositories from GitHub.";
+      setError(msg);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [username]);
 
   // Load repositories on initial modal open if not yet loaded
   useEffect(() => {
+    let ignore = false;
     if (isOpen && !hasLoaded && repos.length === 0) {
-      handleLoadRepositories();
+      const timer = setTimeout(() => {
+        if (!ignore) {
+          handleLoadRepositories();
+        }
+      }, 0);
+      return () => {
+        ignore = true;
+        clearTimeout(timer);
+      };
     }
-  }, [isOpen, hasLoaded]);
+  }, [isOpen, hasLoaded, repos.length, handleLoadRepositories]);
 
   // ESC key to close
   useEffect(() => {
@@ -88,27 +118,8 @@ export function GitHubRepoBrowserModal({
     };
   }, [isOpen, onClose]);
 
-  const handleLoadRepositories = async (targetUsername?: string) => {
-    const userToFetch = (targetUsername || username || "THARANESHSELVAM").trim();
-    if (!userToFetch) return;
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const fetched = await fetchUserRepos(userToFetch, 1, 60);
-      setRepos(fetched);
-      setHasLoaded(true);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Failed to load repositories from GitHub.";
-      setError(msg);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   // Find if a repo is already in saved projects
-  const findMatchingProject = (repo: GitHubRepoResponse): Project | undefined => {
+  const findMatchingProject = useCallback((repo: GitHubRepoResponse): Project | undefined => {
     const cleanHtmlUrl = repo.html_url.toLowerCase().replace(/\/+$/, "");
     const cleanRepoName = repo.name.toLowerCase();
 
@@ -123,7 +134,7 @@ export function GitHubRepoBrowserModal({
       if (p.id.toLowerCase() === cleanRepoName) return true;
       return false;
     });
-  };
+  }, [savedProjects]);
 
   // Unique languages for filter tabs
   const availableLanguages = useMemo(() => {
@@ -161,7 +172,7 @@ export function GitHubRepoBrowserModal({
       imported: importedCount,
       available: repos.length - importedCount,
     };
-  }, [repos, savedProjects]);
+  }, [repos, savedProjects, findMatchingProject]);
 
   // Handle Import Click (fetches full repo data with languages and opens editor)
   const handleImport = async (repo: GitHubRepoResponse) => {
