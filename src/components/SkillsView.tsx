@@ -217,7 +217,9 @@ export function SkillsView() {
         (s) => s.id === selectedSkillForInspection.id
       );
       if (updated) {
-        setSelectedSkillForInspection(updated);
+        if (updated !== selectedSkillForInspection) {
+          setSelectedSkillForInspection(updated);
+        }
       } else {
         setSelectedSkillForInspection(null);
       }
@@ -226,16 +228,20 @@ export function SkillsView() {
 
   // Open evidence inspector
   const handleOpenInspection = useCallback((skill: NormalizedSkillRecord) => {
-    triggerElementRef.current = (document.activeElement as HTMLElement) || null;
+    const activeEl = (document.activeElement as HTMLElement) || null;
+    triggerElementRef.current = (activeEl && activeEl !== document.body)
+      ? activeEl
+      : (document.getElementById(`inspect-btn-${skill.id}`) || activeEl);
     setSelectedSkillForInspection(skill);
   }, []);
 
   // Close evidence inspector and restore focus
   const handleCloseInspection = useCallback(() => {
+    const targetTrigger = triggerElementRef.current;
     setSelectedSkillForInspection(null);
     setTimeout(() => {
-      if (triggerElementRef.current && document.contains(triggerElementRef.current)) {
-        triggerElementRef.current.focus();
+      if (targetTrigger && document.contains(targetTrigger)) {
+        targetTrigger.focus();
       }
       triggerElementRef.current = null;
     }, 50);
@@ -289,12 +295,12 @@ export function SkillsView() {
         const last = focusableElements[focusableElements.length - 1];
 
         if (e.shiftKey) {
-          if (document.activeElement === first) {
+          if (document.activeElement === first || !inspectorRef.current.contains(document.activeElement)) {
             e.preventDefault();
             last.focus();
           }
         } else {
-          if (document.activeElement === last) {
+          if (document.activeElement === last || !inspectorRef.current.contains(document.activeElement)) {
             e.preventDefault();
             first.focus();
           }
@@ -1065,6 +1071,7 @@ export function SkillsView() {
                             <button
                               type="button"
                               onClick={() => handleInspectCaseStudy(projRef.id)}
+                              aria-label={`Inspect case study for ${projRef.title}`}
                               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 dark:bg-blue-500/10 dark:hover:bg-blue-500/20 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30 text-xs font-semibold transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-blue-500"
                             >
                               <Briefcase className="w-3.5 h-3.5" />
@@ -1170,6 +1177,7 @@ export function SkillsView() {
                           <button
                             type="button"
                             onClick={() => handleViewLearningEntry(learnRef.id)}
+                            aria-label={`View learning diary entry for ${learnRef.technology}`}
                             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 dark:bg-indigo-500/10 dark:hover:bg-indigo-500/20 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 text-xs font-semibold transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-indigo-500"
                           >
                             <BookOpen className="w-3.5 h-3.5" />
