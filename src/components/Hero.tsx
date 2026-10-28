@@ -264,27 +264,30 @@ export function Hero() {
 
             {/* Contact Coordinates & Direct Channels */}
             <div className="pt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-slate-500 dark:text-slate-400">
-              <button
-                type="button"
-                onClick={copyEmail}
-                className="inline-flex items-center gap-1.5 min-h-[36px] py-1 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
-                title="Copy verified email to clipboard"
-                aria-label="Copy email address"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
-                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Mail className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform shrink-0" aria-hidden="true" />
-                    <span className="font-mono text-[11px] truncate max-w-[200px] xs:max-w-none">{state.contact?.email || "tharanesh.selvam@gmail.com"}</span>
-                  </>
-                )}
-              </button>
-
-              <span className="text-slate-300 dark:text-slate-700 hidden sm:inline" aria-hidden="true">•</span>
+              {state.contact?.email ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={copyEmail}
+                    className="inline-flex items-center gap-1.5 min-h-[36px] py-1 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
+                    title="Copy verified email to clipboard"
+                    aria-label="Copy email address"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
+                        <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform shrink-0" aria-hidden="true" />
+                        <span className="font-mono text-[11px] truncate max-w-[200px] xs:max-w-none">{state.contact.email}</span>
+                      </>
+                    )}
+                  </button>
+                  <span className="text-slate-300 dark:text-slate-700 hidden sm:inline" aria-hidden="true">•</span>
+                </>
+              ) : null}
 
               <a
                 href={state.contact?.github || "https://github.com/THARANESHSELVAM"}
@@ -297,18 +300,21 @@ export function Hero() {
                 <span>GitHub ↗</span>
               </a>
 
-              <span className="text-slate-300 dark:text-slate-700 hidden sm:inline" aria-hidden="true">•</span>
-
-              <a
-                href={state.contact?.linkedin || "https://linkedin.com/in/tharanesh-selvam"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 min-h-[36px] py-1 hover:text-slate-900 dark:hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
-                aria-label="LinkedIn Profile (opens in new tab)"
-              >
-                <LinkedinIcon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 shrink-0" />
-                <span>LinkedIn ↗</span>
-              </a>
+              {state.contact?.linkedin ? (
+                <>
+                  <span className="text-slate-300 dark:text-slate-700 hidden sm:inline" aria-hidden="true">•</span>
+                  <a
+                    href={state.contact.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 min-h-[36px] py-1 hover:text-slate-900 dark:hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-sm"
+                    aria-label="LinkedIn Profile (opens in new tab)"
+                  >
+                    <LinkedinIcon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 shrink-0" />
+                    <span>LinkedIn ↗</span>
+                  </a>
+                </>
+              ) : null}
 
               <span className="text-slate-300 dark:text-slate-700 hidden sm:inline" aria-hidden="true">•</span>
 

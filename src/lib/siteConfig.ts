@@ -66,14 +66,15 @@ export function getAbsoluteUrl(path: string = "/"): string {
 
 export const SITE_METADATA = {
   authorName: "Tharanesh Selvam",
-  siteName: "Tharanesh Selvam — Software Engineering Portfolio",
+  siteName: "Tharanesh Selvam — Software Developer Portfolio",
   titleTemplate: "%s | Tharanesh Selvam",
-  defaultTitle: "Tharanesh Selvam | Software Engineer & Technical Portfolio",
+  defaultTitle: "Tharanesh Selvam | Software Developer | M.Tech CSE",
   description:
-    "Personal portfolio and engineering showcase of Tharanesh Selvam. Features full-stack web applications, GIS & cloud systems, applied data/AI implementations, verified learning milestones, and a dynamic ATS resume.",
+    "Personal engineering portfolio of Tharanesh Selvam (Software Developer | M.Tech CSE). Interactive web applications, GIS & cloud systems, applied machine learning, verified technical skills, and dynamic ATS résumé.",
   keywords: [
     "Tharanesh Selvam",
-    "Software Engineer",
+    "Software Developer",
+    "M.Tech CSE",
     "Full-Stack Developer",
     "Next.js App Router",
     "React 19",
@@ -82,6 +83,7 @@ export const SITE_METADATA = {
     "Geospatial Systems",
     "GIS",
     "Applied AI",
+    "Machine Learning",
     "Engineering Learning Journal",
     "ATS Resume Generator",
     "Technical Portfolio",

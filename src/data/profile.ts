@@ -364,11 +364,11 @@ export const INITIAL_PROFILE_STATE: ProfileState = {
     badgeText: "Open to Opportunities",
   },
   contact: {
-    email: "tharanesh.selvam@gmail.com",
+    email: "",
     location: "India / Open to Remote & Relocation",
     phone: "",
     github: "https://github.com/THARANESHSELVAM",
-    linkedin: "https://linkedin.com/in/tharanesh-selvam",
+    linkedin: "",
     twitter: "",
     calendlyUrl: "",
   },
@@ -381,18 +381,14 @@ export const INITIAL_PROFILE_STATE: ProfileState = {
   learnings: INITIAL_LEARNINGS,
   projects: INITIAL_PROJECTS,
   resume: {
-    summary: "Full-Stack Software Engineer & Cloud Architect with hands-on experience building modern, responsive web applications using Next.js, React, TypeScript, Node.js, and cloud platforms. Eager to solve real-world problems through clean code.",
+    summary: "Integrated M.Tech in Computer Science and Engineering candidate at Sri Krishna College of Engineering and Technology (2025–2030) with hands-on experience building modern, responsive web applications using Next.js, React, TypeScript, Node.js, and cloud platforms. Eager to solve real-world problems through clean code, robust architecture, and continuous learning.",
     experience: [],
     education: [
       {
-        degree: "M.Tech in Computer Science and Engineering",
-        institution: "Engineering College / University",
-        year: "2024 - 2026",
-      },
-      {
-        degree: "Bachelor of Technology / Engineering in Computer Science",
-        institution: "Engineering College / University",
-        year: "2020 - 2024",
+        degree: "Integrated M.Tech in Computer Science and Engineering",
+        institution: "Sri Krishna College of Engineering and Technology",
+        year: "2025–2030",
+        honors: "Pursuing • Five-Year Integrated Programme",
       },
     ],
     certifications: [
@@ -1107,9 +1103,9 @@ ${state.learnings.map((l) => `* [${l.masteryLevel.toUpperCase()}] ${l.technology
 ${name.toUpperCase()}
 ${title.toUpperCase()}
 ================================================================================
-Email: ${contact.email} | Phone: ${contact.phone || "Available Upon Request"}
+Email: ${contact.email || "Available Upon Request"} | Phone: ${contact.phone || "Available Upon Request"}
 Location: ${contact.location}
-GitHub: ${contact.github} | LinkedIn: ${contact.linkedin}
+GitHub: ${contact.github}${contact.linkedin ? ` | LinkedIn: ${contact.linkedin}` : ""}
 
 --------------------------------------------------------------------------------
 PROFESSIONAL SUMMARY

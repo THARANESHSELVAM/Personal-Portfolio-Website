@@ -1,6 +1,6 @@
 /**
- * Strict Owner Authentication Configuration & Multi-Profile Management
- * Supports both verified owner credentials and persistent custom registered profiles.
+ * Multi-Profile Management & Client-Side Demo Registry
+ * Supports both default owner profile and persistent custom registered demo profiles.
  */
 
 export interface AuthConfig {
@@ -32,12 +32,12 @@ export const REGISTERED_PROFILES_KEY = "myresume_registered_profiles";
 export const DEFAULT_OWNER_PROFILE: RegisteredProfile = {
   userId: "tharanesh-selvam",
   username: "THARANESHSELVAM",
-  email: "tharaneshselvam@gmail.com",
+  email: "",
   name: "Tharanesh Selvam",
   title: "Full-Stack Software Engineer & Cloud Architect",
   location: "India / Open to Remote & Relocation",
   github: "https://github.com/THARANESHSELVAM",
-  linkedin: "https://linkedin.com/in/tharanesh-selvam",
+  linkedin: "",
   pin: "2026",
   isOwner: true,
   createdAt: 1700000000000,
@@ -207,7 +207,7 @@ export function verifyCredentials(
     return { success: false, error: "Email ID is required." };
   }
   if (!normPass) {
-    return { success: false, error: "Security PIN / Passcode is required." };
+    return { success: false, error: "Demo passcode is required." };
   }
 
   // Mode 1: Registering a brand new profile
@@ -219,7 +219,7 @@ export function verifyCredentials(
       return { success: false, error: "Please enter a valid email address." };
     }
     if (normPass.length < 3) {
-      return { success: false, error: "Passcode PIN must be at least 3 digits/characters." };
+      return { success: false, error: "Passcode must be at least 3 digits/characters." };
     }
     return { success: true };
   }
@@ -233,7 +233,7 @@ export function verifyCredentials(
     }
     return {
       success: false,
-      error: "Access Denied: Invalid Security Passcode / PIN for this profile.",
+      error: "Verification Failed: Invalid passcode for this profile.",
     };
   }
 
@@ -257,14 +257,14 @@ export function verifyCredentials(
   if (!isUsernameValid || !isEmailValid) {
     return {
       success: false,
-      error: "Access Denied: Profile not found. Select 'Add New Profile Entry' to register a new profile.",
+      error: "Profile not found. Select 'Add New Profile Entry' to configure a new demo profile.",
     };
   }
 
   if (normPass !== config.securityPin) {
     return {
       success: false,
-      error: "Access Denied: Invalid Security Passcode / PIN. Please enter the authorized owner passcode.",
+      error: "Verification Failed: Incorrect passcode. (Default demo passcode: 2026).",
     };
   }
 

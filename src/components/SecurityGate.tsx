@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useProfile } from "@/context/ProfileContext";
 import { 
-  ShieldCheck, 
   User, 
   Briefcase, 
   MapPin, 
   ArrowRight, 
+  ArrowLeft,
   ShieldAlert,
   Eye,
   EyeOff,
@@ -15,8 +15,11 @@ import {
   KeyRound,
   PlusCircle,
   Sparkles,
-  UserCheck
+  UserCheck,
+  Info,
+  Lock
 } from "lucide-react";
+import Link from "next/link";
 import { GithubIcon, LinkedinIcon } from "@/components/Icons";
 import { ThemeToggle } from "./ThemeToggle";
 import { verifyCredentials, findRegisteredProfile } from "@/lib/authConfig";
@@ -61,14 +64,14 @@ function getInitialFormData() {
 
   return {
     userIdOrEmail: "THARANESHSELVAM",
-    email: "tharaneshselvam@gmail.com",
+    email: "",
     passcode: "2026",
     name: "Tharanesh Selvam",
     title: "Full-Stack Software Engineer & Cloud Architect",
     location: "India / Open to Remote & Relocation",
     phone: "",
     github: "https://github.com/THARANESHSELVAM",
-    linkedin: "https://linkedin.com/in/tharanesh-selvam",
+    linkedin: "",
     starterOption: "existing" as "existing" | "new",
   };
 }
@@ -99,14 +102,14 @@ export function SecurityGate() {
   const handleSelectExisting = () => {
     setFormData({
       userIdOrEmail: "THARANESHSELVAM",
-      email: "tharaneshselvam@gmail.com",
+      email: "",
       passcode: "2026",
       name: "Tharanesh Selvam",
       title: "Full-Stack Software Engineer & Cloud Architect",
       location: "India / Open to Remote & Relocation",
       phone: "",
       github: "https://github.com/THARANESHSELVAM",
-      linkedin: "https://linkedin.com/in/tharanesh-selvam",
+      linkedin: "",
       starterOption: "existing",
     });
     setAuthError(null);
@@ -151,9 +154,9 @@ export function SecurityGate() {
       errs.email = "Please enter a valid email address.";
     }
     if (!formData.passcode.trim()) {
-      errs.passcode = "Security Passcode / PIN is required.";
+      errs.passcode = "Demo passcode is required.";
     } else if (formData.passcode.trim().length < 3) {
-      errs.passcode = "PIN must be at least 3 digits.";
+      errs.passcode = "Passcode must be at least 3 digits.";
     }
     if (!formData.name.trim()) {
       errs.name = "Full Name is required.";
@@ -182,7 +185,7 @@ export function SecurityGate() {
     if (!verification.success) {
       setAuthError(
         verification.error ||
-        "Authentication failed. Please check your credentials and PIN."
+        "Verification failed. Please check your username and demo passcode."
       );
       setIsShaking(true);
       setTimeout(() => setIsShaking(false), 600);
@@ -225,7 +228,17 @@ export function SecurityGate() {
       <div className="absolute top-10 right-10 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none -z-10 opacity-30 dark:opacity-100" />
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl pointer-events-none -z-10 opacity-30 dark:opacity-100" />
 
-      {/* Floating Theme Switcher at Top-Right of Authentication Gate */}
+      {/* Floating Header Actions: Back to Public Portfolio & Theme Switcher */}
+      <div className="fixed top-5 left-5 z-50">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 bg-white/90 dark:bg-slate-900/90 hover:bg-slate-100 dark:hover:bg-slate-800 backdrop-blur-md px-3.5 py-2 rounded-full border border-slate-200 dark:border-slate-800 shadow-md text-xs font-semibold text-slate-700 dark:text-slate-200 transition-all hover:scale-[1.02] active:scale-95"
+        >
+          <ArrowLeft className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+          <span>← Back to Public Portfolio</span>
+        </Link>
+      </div>
+
       <div className="fixed top-5 right-5 z-50 flex items-center gap-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-md">
         <span className="text-[11px] font-mono text-slate-600 dark:text-slate-400 font-semibold hidden sm:inline">
           Theme
@@ -301,26 +314,39 @@ export function SecurityGate() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-cyan-900/30 pb-5">
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-50 text-cyan-700 border border-cyan-200 dark:bg-cyan-500/10 dark:text-cyan-400 dark:border-cyan-500/20">
-                <ShieldCheck className="w-3.5 h-3.5" />
+                <Lock className="w-3.5 h-3.5" />
                 <span>
                   {isNewMode
                     ? "➕ Add New Profile Entry • 100% Blank Slate Architecture"
-                    : "Strict Owner Authentication & Storage Isolation"}
+                    : "Interactive Demo Workspace • Local Profile Storage"}
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                Personal Engineering Diary &amp; ATS Engine
+                Interactive Engineering Workspace &amp; ATS Engine
               </h1>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
                 {isNewMode
-                  ? "Configure your personal engineering identity. Your ATS resume will be compiled dynamically from your actual learning entries and projects—starting with a 100% clean slate."
-                  : "\"This platform is my personal engineering diary where I log what I learn and what I build—and my ATS resume is dynamically generated from my actual entries, never from random placeholder text.\""}
+                  ? "Configure a custom demo engineering profile. Your ATS resume will compile dynamically from your actual entries in this session."
+                  : "Explore the interactive engineering diary, milestone logger, GitHub API repository importer, and dynamic ATS resume generator."}
               </p>
             </div>
 
             <span className="text-xs font-mono px-3 py-1 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 dark:bg-cyan-950/60 dark:text-cyan-300 dark:border-cyan-500/30 self-start sm:self-auto shrink-0">
-              v2.0 Architecture
+              Demo Environment
             </span>
+          </div>
+
+          {/* Client-Side Demo Notice */}
+          <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-xs flex items-start gap-3">
+            <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <p className="font-semibold text-[11px] uppercase tracking-wider font-mono text-amber-800 dark:text-amber-300">
+                Client-Side Demo Workspace Notice
+              </p>
+              <p className="text-[11px] leading-relaxed text-slate-700 dark:text-slate-300">
+                This workspace is an interactive demonstration stored locally in your browser (localStorage). The access passcode is a client-side presentation mechanism for demo profiles and storage isolation—<strong>not server-enforced authentication</strong>. Please do not enter confidential passwords or sensitive personal information.
+              </p>
+            </div>
           </div>
 
           {/* Access Denied Alert Banner */}
@@ -332,14 +358,14 @@ export function SecurityGate() {
               <ShieldAlert className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
               <div className="space-y-1 text-xs">
                 <p className="font-bold text-sm text-rose-950 dark:text-rose-100">
-                  Authentication Failed
+                  Passcode Verification Failed
                 </p>
                 <p className="leading-relaxed font-medium">
                   {authError}
                 </p>
                 {!isNewMode && (
                   <p className="text-[11px] text-rose-700 dark:text-rose-300 font-mono pt-1">
-                    💡 Verified Owner: <span className="font-bold">THARANESHSELVAM</span> / <span className="font-bold">tharaneshselvam@gmail.com</span> (PIN: 2026)
+                    💡 Demo Profile: Username <span className="font-bold">THARANESHSELVAM</span> (Demo Passcode: 2026)
                   </p>
                 )}
               </div>
@@ -414,15 +440,15 @@ export function SecurityGate() {
                 )}
               </div>
 
-              {/* Security PIN / Passcode */}
+              {/* Demo Passcode */}
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
                   <span className="flex items-center gap-1">
                     <KeyRound className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
-                    <span>Security PIN / Passcode <span className="text-rose-500">*</span></span>
+                    <span>Demo Passcode <span className="text-rose-500">*</span></span>
                   </span>
                   <span className="text-[10px] text-slate-400 font-mono">
-                    {isNewMode ? "Choose PIN" : "Default: 2026"}
+                    {isNewMode ? "Set Demo Passcode" : "Default: 2026"}
                   </span>
                 </label>
                 <div className="relative">
@@ -626,7 +652,7 @@ export function SecurityGate() {
                 <span>
                   {isNewMode 
                     ? "Creates isolated workspace in localStorage with zero seed fallback."
-                    : "🔒 Verified credentials required to unlock storage."}
+                    : "Demo workspace with local browser storage isolation."}
                 </span>
               </span>
 

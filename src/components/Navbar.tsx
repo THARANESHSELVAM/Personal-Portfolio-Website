@@ -14,10 +14,16 @@ import {
   LogOut,
   FolderKanban,
   PlusCircle,
-  Check
+  Check,
+  ArrowLeft
 } from "lucide-react";
+import Link from "next/link";
 
-export function Navbar() {
+interface NavbarProps {
+  isWorkspace?: boolean;
+}
+
+export function Navbar({ isWorkspace = false }: NavbarProps = {}) {
   const { 
     activeTab, 
     setActiveTab, 
@@ -97,9 +103,16 @@ export function Navbar() {
                 {initials}
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-xs sm:text-sm font-extrabold tracking-wider text-slate-900 group-hover:text-cyan-600 dark:text-white dark:group-hover:text-cyan-300 transition-colors uppercase truncate max-w-[110px] xs:max-w-[130px] md:max-w-[140px] xl:max-w-[220px]">
-                  {displayName}
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs sm:text-sm font-extrabold tracking-wider text-slate-900 group-hover:text-cyan-600 dark:text-white dark:group-hover:text-cyan-300 transition-colors uppercase truncate max-w-[110px] xs:max-w-[130px] md:max-w-[140px] xl:max-w-[220px]">
+                    {displayName}
+                  </span>
+                  {isWorkspace && (
+                    <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-cyan-100 text-cyan-800 dark:bg-cyan-950/60 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-500/30 hidden xs:inline">
+                      Workspace
+                    </span>
+                  )}
+                </div>
                 <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 -mt-0.5 hidden xl:block truncate max-w-[220px]">
                   {currentUser?.title || state.title || "Software Engineer & Cloud Architect"}
                 </span>
@@ -147,8 +160,19 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Right Actions: Theme Toggle, User Profile Switcher Pill, Mobile Hamburger */}
+          {/* Right Actions: Back to Public Portfolio, Theme Toggle, User Profile Switcher Pill, Mobile Hamburger */}
           <div className="flex items-center gap-2 xl:gap-3 shrink-0">
+            {/* Link back to public portfolio */}
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/[0.1] transition-all hover:scale-[1.02] active:scale-95 shadow-xs"
+              title="Return to the recruiter-ready public portfolio"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+              <span className="hidden sm:inline">Public Portfolio</span>
+              <span className="sm:hidden">Public</span>
+            </Link>
+
             <ThemeToggle />
 
             {/* User Profile Pill & Dropdown Switcher */}
@@ -243,12 +267,19 @@ export function Navbar() {
 
                   {/* Navigation Shortcuts */}
                   <div className="pt-1 border-t border-slate-100 dark:border-slate-800">
+                    <Link
+                      href="/"
+                      className="w-full text-left px-3 py-1.5 rounded-xl text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 flex items-center gap-1.5"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                      <span>Back to Public Portfolio</span>
+                    </Link>
                     <button
                       type="button"
                       onClick={() => handleTabClick("home")}
                       className="w-full text-left px-3 py-1.5 rounded-xl text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
                     >
-                      View Portfolio Overview
+                      View Workspace Overview
                     </button>
                     <button
                       type="button"
@@ -317,6 +348,14 @@ export function Navbar() {
 
             {/* Mobile Navigation Tabs */}
             <div className="space-y-1">
+              <Link
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-500/30 min-h-[44px]"
+              >
+                <ArrowLeft className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
+                <span>← Back to Public Portfolio</span>
+              </Link>
               {navTabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id || (tab.id === "home" && activeTab === "profile");

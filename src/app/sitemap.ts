@@ -6,10 +6,9 @@ import { getSiteUrl } from "@/lib/siteConfig";
  * Generates an XML sitemap referencing genuine public application routes.
  * 
  * Architectural Note:
- * This application is a single-page reactive App Router application where
- * Home, Projects, Skills, Diary, and ATS Resume are managed via client-side
- * tab state and URL hash fragments (#home, #projects, #skills, #diary, #resume).
- * Only genuine HTTP GET server endpoints are published to prevent 404 crawl errors.
+ * The recruiter-ready public portfolio landing page (/) is the primary indexed destination.
+ * The interactive workstation demo (/workspace) is omitted from the sitemap to ensure search
+ * engines index the verified candidate profile data, projects, and skills at root.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = getSiteUrl();

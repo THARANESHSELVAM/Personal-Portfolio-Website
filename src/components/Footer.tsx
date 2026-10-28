@@ -7,7 +7,7 @@ import { useMemo } from "react";
 
 export function Footer() {
   const { state, currentUser, setActiveTab } = useProfile();
-  const currentYear = new Date().getFullYear();
+  const currentYear = 2026;
 
   const displayName = (currentUser?.name || state.name || "").trim() || "Portfolio Owner";
   const displayTitle = (currentUser?.title || state.title || "").trim() || "Software Developer";
