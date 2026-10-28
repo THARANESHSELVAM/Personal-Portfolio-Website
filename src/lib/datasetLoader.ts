@@ -27,6 +27,137 @@ export function getWorkspaceStorageKey(userIdOrEmail: string): string {
   return `myresume_workspace_${sanitizeUserId(userIdOrEmail)}`;
 }
 
+export const CANONICAL_INTEGRATED_MTECH_EDUCATION = {
+  degree: "Integrated M.Tech in Computer Science and Engineering",
+  institution: "Sri Krishna College of Engineering and Technology",
+  year: "2025–2030",
+  honors: "Pursuing • Five-Year Integrated Programme",
+};
+
+export const CANONICAL_MTECH_SUMMARY =
+  "Integrated M.Tech in Computer Science and Engineering candidate at Sri Krishna College of Engineering and Technology (2025–2030) with hands-on experience building modern, responsive web applications using Next.js, React, TypeScript, Node.js, and cloud platforms. Eager to solve real-world problems through clean code, robust architecture, and continuous learning.";
+
+/**
+ * Checks if a given ProfileState or user ID belongs to the owner/demo profile (Tharanesh Selvam)
+ */
+export function isOwnerProfile(state?: ProfileState | null, rawId?: string): boolean {
+  if (rawId) {
+    const s = sanitizeUserId(rawId);
+    if (s === "tharanesh-selvam" || s === "tharaneshselvam" || s.startsWith("tharanesh")) {
+      return true;
+    }
+  }
+  if (!state) return false;
+  const name = (state.name || "").trim().toLowerCase();
+  return name === "tharanesh selvam" || name === "tharanesh";
+}
+
+/**
+ * Checks if an education list contains obsolete records (separate Bachelor's degree, 2020-2024, or 2024-2026 M.Tech)
+ */
+export function hasObsoleteEducation(education?: Array<{ degree: string; institution?: string; year?: string }>): boolean {
+  if (!education || !Array.isArray(education)) return false;
+  return education.some((edu) => {
+    const deg = (edu.degree || "").toLowerCase();
+    const yr = (edu.year || "");
+    const inst = (edu.institution || "").toLowerCase();
+    return (
+      deg.includes("bachelor") ||
+      deg.includes("b.tech") ||
+      deg.includes("b.e.") ||
+      yr.includes("2020 - 2024") ||
+      yr.includes("2020–2024") ||
+      yr.includes("2024 - 2026") ||
+      yr.includes("2024–2026") ||
+      inst.includes("engineering college / university")
+    );
+  });
+}
+
+/**
+ * Safely and idempotently migrates owner profile state to replace obsolete education with the single canonical integrated M.Tech entry.
+ * Non-owner/custom profiles are NOT altered. Idempotent.
+ */
+export function migrateOwnerEducationIfNeeded(
+  state: ProfileState,
+  rawId?: string
+): { migrated: boolean; state: ProfileState } {
+  if (!isOwnerProfile(state, rawId)) {
+    return { migrated: false, state };
+  }
+
+  const currentEducation = state.resume?.education || [];
+  const needsMigration =
+    hasObsoleteEducation(currentEducation) ||
+    currentEducation.length > 1 ||
+    (currentEducation.length === 1 &&
+      (currentEducation[0].degree !== CANONICAL_INTEGRATED_MTECH_EDUCATION.degree ||
+        currentEducation[0].institution !== CANONICAL_INTEGRATED_MTECH_EDUCATION.institution ||
+        currentEducation[0].year !== CANONICAL_INTEGRATED_MTECH_EDUCATION.year));
+
+  if (!needsMigration) {
+    return { migrated: false, state };
+  }
+
+  const migratedState: ProfileState = {
+    ...state,
+    resume: {
+      ...state.resume,
+      summary:
+        !state.resume?.summary ||
+        state.resume.summary.includes("2024") ||
+        state.resume.summary.includes("Engineering College")
+          ? CANONICAL_MTECH_SUMMARY
+          : state.resume.summary,
+      education: [CANONICAL_INTEGRATED_MTECH_EDUCATION],
+    },
+  };
+
+  return { migrated: true, state: migratedState };
+}
+
+/**
+ * Scans known owner workspace storage keys in localStorage and migrates any stale education records safely in-place.
+ * Leaves unrelated custom profiles untouched. Idempotent.
+ */
+export function migrateStoredOwnerWorkspacesInLocalStorage(): boolean {
+  if (typeof window === "undefined" || !window.localStorage) return false;
+
+  let anyMigrated = false;
+  const candidateKeys = [
+    getWorkspaceStorageKey("tharanesh-selvam"),
+    getWorkspaceStorageKey("THARANESHSELVAM"),
+    getWorkspaceStorageKey("tharaneshselvam@gmail.com"),
+    getWorkspaceStorageKey("tharanesh.selvam@gmail.com"),
+  ];
+
+  try {
+    const activeUser = localStorage.getItem(ACTIVE_USER_KEY);
+    if (activeUser) {
+      candidateKeys.push(getWorkspaceStorageKey(activeUser));
+    }
+  } catch {}
+
+  const uniqueKeys = Array.from(new Set(candidateKeys));
+
+  for (const key of uniqueKeys) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object") {
+        const { migrated, state: migratedState } = migrateOwnerEducationIfNeeded(parsed as ProfileState);
+        if (migrated) {
+          localStorage.setItem(key, JSON.stringify(migratedState));
+          anyMigrated = true;
+        }
+      }
+    } catch {}
+  }
+
+  return anyMigrated;
+}
+
 export const VALID_COMPETENCY_AREAS: readonly CompetencyArea[] = [
   "Frontend",
   "Backend",

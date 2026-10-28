@@ -214,7 +214,7 @@ export function Hero() {
               <div className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 font-medium text-xs">
                 <GraduationCap className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 shrink-0" aria-hidden="true" />
                 <span>
-                  {state.tagline || (state.resume?.education?.[0]?.degree || (isBlank ? "Engineering Portfolio" : "M.Tech CSE Scholar"))}
+                  {state.tagline || (state.resume?.education?.[0]?.degree || (isBlank ? "Engineering Portfolio" : "Integrated M.Tech CSE (2025–2030) • Pursuing"))}
                 </span>
               </div>
             </div>

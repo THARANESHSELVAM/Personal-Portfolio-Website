@@ -136,6 +136,7 @@ export function SkillsView() {
     degree: state.resume?.education?.[0]?.degree || "",
     institution: state.resume?.education?.[0]?.institution || "",
     year: state.resume?.education?.[0]?.year || "",
+    honors: state.resume?.education?.[0]?.honors || "",
   });
 
   const openEditModal = useCallback(() => {
@@ -152,22 +153,40 @@ export function SkillsView() {
       degree: state.resume?.education?.[0]?.degree || "",
       institution: state.resume?.education?.[0]?.institution || "",
       year: state.resume?.education?.[0]?.year || "",
+      honors: state.resume?.education?.[0]?.honors || "",
     });
     setIsEditModalOpen(true);
   }, [state]);
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
+    const isOwner = (state.name || "").trim().toLowerCase() === "tharanesh selvam";
+
+    // Filter out any obsolete records from secondary entries
+    const filteredRemaining = (state.resume?.education?.slice(1) || []).filter(
+      (edu) =>
+        !edu.degree.toLowerCase().includes("bachelor") &&
+        !edu.degree.toLowerCase().includes("b.tech") &&
+        !edu.degree.toLowerCase().includes("b.e.") &&
+        !edu.year.includes("2020") &&
+        !edu.year.includes("2024 - 2026") &&
+        !edu.year.includes("2024–2026") &&
+        !edu.institution.toLowerCase().includes("engineering college")
+    );
+
     const updatedEducation = profileForm.degree.trim()
       ? [
           {
             degree: profileForm.degree.trim(),
-            institution: profileForm.institution.trim() || "University / College",
-            year: profileForm.year.trim() || "2026",
+            institution:
+              profileForm.institution.trim() ||
+              (isOwner ? "Sri Krishna College of Engineering and Technology" : "University / College"),
+            year: profileForm.year.trim() || (isOwner ? "2025–2030" : "2026"),
+            ...(profileForm.honors.trim() ? { honors: profileForm.honors.trim() } : {}),
           },
-          ...(state.resume?.education?.slice(1) || []),
+          ...(isOwner ? [] : filteredRemaining),
         ]
-      : state.resume?.education || [];
+      : [];
 
     updateProfile({
       name: profileForm.name.trim(),
@@ -1242,7 +1261,7 @@ export function SkillsView() {
             ) : (
               <>
                 <p>
-                  Hello! I am <strong className="text-slate-900 dark:text-white font-semibold">{state.name || "Tharanesh Selvam"}</strong>, a Full-Stack Software Engineer &amp; Cloud Architect pursuing an M.Tech in Computer Science and Engineering. I build scalable, high-performance web applications and cloud architectures with clean code principles.
+                  Hello! I am <strong className="text-slate-900 dark:text-white font-semibold">{state.name || "Tharanesh Selvam"}</strong>, a Full-Stack Software Engineer &amp; Cloud Architect pursuing a Five-Year Integrated M.Tech in Computer Science and Engineering at Sri Krishna College of Engineering and Technology (2025–2030). I build scalable, high-performance web applications and cloud architectures with clean code principles.
                 </p>
                 <p>
                   My technical foundation spans React 19, TypeScript, Node.js, and cloud systems like AWS. I love tackling complex software engineering challenges, integrating geospatial pipelines (Land Stack), designing machine learning experiments, and building accessible UI systems.
@@ -1369,7 +1388,8 @@ export function SkillsView() {
                     <label className="text-slate-600 dark:text-slate-400">Degree</label>
                     <input
                       type="text"
-                      placeholder="e.g. B.S. in Computer Science"
+                      name="degree"
+                      placeholder="e.g. Integrated M.Tech in Computer Science"
                       value={profileForm.degree}
                       onChange={(e) => setProfileForm({ ...profileForm, degree: e.target.value })}
                       className="w-full px-3 py-1.5 rounded-xl bg-slate-100 text-slate-900 border border-slate-300 dark:bg-[#040711] dark:border-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
@@ -1379,22 +1399,37 @@ export function SkillsView() {
                     <label className="text-slate-600 dark:text-slate-400">Institution</label>
                     <input
                       type="text"
-                      placeholder="e.g. MIT / Stanford / University"
+                      name="institution"
+                      placeholder="e.g. Sri Krishna College of Engineering and Technology"
                       value={profileForm.institution}
                       onChange={(e) => setProfileForm({ ...profileForm, institution: e.target.value })}
                       className="w-full px-3 py-1.5 rounded-xl bg-slate-100 text-slate-900 border border-slate-300 dark:bg-[#040711] dark:border-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                     />
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-slate-600 dark:text-slate-400">Year / Graduation Status</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 2026 or Expected 2027"
-                    value={profileForm.year}
-                    onChange={(e) => setProfileForm({ ...profileForm, year: e.target.value })}
-                    className="w-full px-3 py-1.5 rounded-xl bg-slate-100 text-slate-900 border border-slate-300 dark:bg-[#040711] dark:border-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <label className="text-slate-600 dark:text-slate-400">Year / Duration</label>
+                    <input
+                      type="text"
+                      name="year"
+                      placeholder="e.g. 2025–2030"
+                      value={profileForm.year}
+                      onChange={(e) => setProfileForm({ ...profileForm, year: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-xl bg-slate-100 text-slate-900 border border-slate-300 dark:bg-[#040711] dark:border-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-slate-600 dark:text-slate-400">Status / Programme Type</label>
+                    <input
+                      type="text"
+                      name="honors"
+                      placeholder="e.g. Pursuing • Five-Year Integrated Programme"
+                      value={profileForm.honors}
+                      onChange={(e) => setProfileForm({ ...profileForm, honors: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-xl bg-slate-100 text-slate-900 border border-slate-300 dark:bg-[#040711] dark:border-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                    />
+                  </div>
                 </div>
               </div>
 

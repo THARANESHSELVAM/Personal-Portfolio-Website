@@ -19,6 +19,8 @@ import {
   importWorkspaceFromJSON,
   createBlankWorkspace,
   createStarterWorkspace,
+  migrateOwnerEducationIfNeeded,
+  migrateStoredOwnerWorkspacesInLocalStorage,
 } from "@/lib/datasetLoader";
 import {
   AUTH_SESSION_KEY,
@@ -277,8 +279,11 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   // Initial client hydration from user-scoped localStorage
   useEffect(() => {
     try {
-      // 1. Interpret initial URL hash and initialize history state
       if (typeof window !== "undefined") {
+        // Idempotently migrate any existing owner workspace in localStorage to correct education
+        migrateStoredOwnerWorkspacesInLocalStorage();
+
+        // 1. Interpret initial URL hash and initialize history state
         const resolved = resolveTabFromHash(window.location.hash);
         const initialTab = resolved || "home";
         activeTabRef.current = initialTab;
@@ -353,9 +358,16 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         try {
           const parsed = JSON.parse(existing);
           if (parsed && Array.isArray(parsed.learnings) && Array.isArray(parsed.projects)) {
-            let resolvedProjects = parsed.projects;
-            if (!parsed.isBlankSlate && !isBlank) {
-              resolvedProjects = parsed.projects.map((proj: Project) => {
+            const { migrated, state: migratedEducationState } = migrateOwnerEducationIfNeeded(parsed, rawId);
+            const baseState = migrated ? migratedEducationState : parsed;
+            if (migrated) {
+              try {
+                localStorage.setItem(storageKey, JSON.stringify(migratedEducationState));
+              } catch {}
+            }
+            let resolvedProjects = baseState.projects;
+            if (!baseState.isBlankSlate && !isBlank) {
+              resolvedProjects = baseState.projects.map((proj: Project) => {
                 const initial = INITIAL_PROJECTS.find((p: Project) => p.id === proj.id);
                 if (initial && initial.caseStudy) {
                   return {
@@ -382,17 +394,17 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
               });
             }
             setState({
-              ...parsed,
+              ...baseState,
               projects: resolvedProjects,
-              name: identity.name || parsed.name,
-              title: identity.title || parsed.title,
+              name: identity.name || baseState.name,
+              title: identity.title || baseState.title,
               contact: {
-                ...parsed.contact,
-                email: identity.email || parsed.contact?.email,
-                location: identity.location || parsed.contact?.location,
-                github: identity.github || parsed.contact?.github,
-                linkedin: identity.linkedin || parsed.contact?.linkedin,
-                phone: identity.phone || parsed.contact?.phone,
+                ...baseState.contact,
+                email: identity.email || baseState.contact?.email,
+                location: identity.location || baseState.contact?.location,
+                github: identity.github || baseState.contact?.github,
+                linkedin: identity.linkedin || baseState.contact?.linkedin,
+                phone: identity.phone || baseState.contact?.phone,
               },
             });
             const targetTab = (typeof window !== "undefined" && resolveTabFromHash(window.location.hash)) || activeTabRef.current || "home";
@@ -453,14 +465,21 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         try {
           const parsed = JSON.parse(saved);
           if (parsed && Array.isArray(parsed.learnings) && Array.isArray(parsed.projects)) {
-            let resolvedProjects = parsed.projects;
-            if (!parsed.isBlankSlate) {
-              resolvedProjects = parsed.projects.map((proj: Project) => {
+            const { migrated, state: migratedEducationState } = migrateOwnerEducationIfNeeded(parsed, target.userId);
+            const baseState = migrated ? migratedEducationState : parsed;
+            if (migrated) {
+              try {
+                localStorage.setItem(storageKey, JSON.stringify(migratedEducationState));
+              } catch {}
+            }
+            let resolvedProjects = baseState.projects;
+            if (!baseState.isBlankSlate) {
+              resolvedProjects = baseState.projects.map((proj: Project) => {
                 const initial = INITIAL_PROJECTS.find((p: Project) => p.id === proj.id);
                 return initial && initial.caseStudy ? { ...initial, ...proj } : proj;
               });
             }
-            setState({ ...parsed, projects: resolvedProjects });
+            setState({ ...baseState, projects: resolvedProjects });
           }
         } catch (e) {
           console.error("Error loading workspace for switched user:", e);
