@@ -19,7 +19,7 @@ Explore the live portfolio deployment on Vercel:
 
 ## Project Overview
 
-This repository houses the personal software engineering portfolio of **Tharanesh Selvam**, a Software Developer and Integrated M.Tech Computer Science and Engineering scholar at Sri Krishna College of Engineering and Technology (2025–2030). The platform is designed to provide technical recruiters and engineering hiring managers with immediate, transparent insight into practical engineering capabilities, architecture decisions, and verified proof-of-work.
+This repository houses the personal software engineering portfolio of **Tharanesh S**, a Software Developer and Integrated M.Tech Computer Science and Engineering scholar at Sri Krishna College of Engineering and Technology (2025–2030). The platform is designed to provide technical recruiters and engineering hiring managers with immediate, transparent insight into practical engineering capabilities, architecture decisions, and verified proof-of-work.
 
 Unlike static one-page templates, this portfolio features:
 1. **Recruiter-First Public Landing Page (`/`)**: Displays candidate identity, strongest projects, verified technical skills, engineering journey milestones, dynamic ATS résumé, and direct contact details immediately—without any PIN, login, or workspace onboarding gate.
