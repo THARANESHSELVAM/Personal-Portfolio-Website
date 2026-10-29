@@ -1,4 +1,13 @@
-export const INITIAL_LEARNINGS = [
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PROFILE = exports.INITIAL_PROFILE_STATE = exports.INITIAL_PROJECTS = exports.INITIAL_LEARNINGS = void 0;
+exports.classifyDomainCategory = classifyDomainCategory;
+exports.parseCanonicalSkills = parseCanonicalSkills;
+exports.extractCanonicalSkills = extractCanonicalSkills;
+exports.getProfileSkillsEvidence = getProfileSkillsEvidence;
+exports.extractSkillsFromState = extractSkillsFromState;
+exports.generateDynamicPlainTextResume = generateDynamicPlainTextResume;
+exports.INITIAL_LEARNINGS = [
     {
         id: "learn-1",
         technology: "Next.js & React 19 App Router",
@@ -60,7 +69,7 @@ export const INITIAL_LEARNINGS = [
         tags: ["Accessibility", "WCAG", "HTML5", "a11y"],
     },
 ];
-export const INITIAL_PROJECTS = [
+exports.INITIAL_PROJECTS = [
     {
         id: "personal-portfolio",
         title: "Personal Portfolio Website",
@@ -163,7 +172,7 @@ export const INITIAL_PROJECTS = [
         },
     },
 ];
-export const INITIAL_PROFILE_STATE = {
+exports.INITIAL_PROFILE_STATE = {
     name: "Tharanesh Selvam",
     preferredName: "Tharanesh",
     title: "Full-Stack Software Engineer & Cloud Architect",
@@ -175,11 +184,11 @@ export const INITIAL_PROFILE_STATE = {
         badgeText: "Open to Opportunities",
     },
     contact: {
-        email: "tharanesh.selvam@gmail.com",
+        email: "",
         location: "India / Open to Remote & Relocation",
         phone: "",
         github: "https://github.com/THARANESHSELVAM",
-        linkedin: "https://linkedin.com/in/tharanesh-selvam",
+        linkedin: "",
         twitter: "",
         calendlyUrl: "",
     },
@@ -189,21 +198,17 @@ export const INITIAL_PROFILE_STATE = {
         { label: "Major Domains", value: "3", detail: "Web Systems, GIS & Applied AI" },
         { label: "Learning Mode", value: "100%", detail: "Continuous skill development" },
     ],
-    learnings: INITIAL_LEARNINGS,
-    projects: INITIAL_PROJECTS,
+    learnings: exports.INITIAL_LEARNINGS,
+    projects: exports.INITIAL_PROJECTS,
     resume: {
-        summary: "Full-Stack Software Engineer & Cloud Architect with hands-on experience building modern, responsive web applications using Next.js, React, TypeScript, Node.js, and cloud platforms. Eager to solve real-world problems through clean code.",
+        summary: "Integrated M.Tech in Computer Science and Engineering candidate at Sri Krishna College of Engineering and Technology (2025–2030) with hands-on experience building modern, responsive web applications using Next.js, React, TypeScript, Node.js, and cloud platforms. Eager to solve real-world problems through clean code, robust architecture, and continuous learning.",
         experience: [],
         education: [
             {
-                degree: "M.Tech in Computer Science and Engineering",
-                institution: "Engineering College / University",
-                year: "2024 - 2026",
-            },
-            {
-                degree: "Bachelor of Technology / Engineering in Computer Science",
-                institution: "Engineering College / University",
-                year: "2020 - 2024",
+                degree: "Integrated M.Tech in Computer Science and Engineering",
+                institution: "Sri Krishna College of Engineering and Technology",
+                year: "2025–2030",
+                honors: "Pursuing • Five-Year Integrated Programme",
             },
         ],
         certifications: [
@@ -225,11 +230,11 @@ export const INITIAL_PROFILE_STATE = {
         },
     ],
 };
-export const PROFILE = INITIAL_PROFILE_STATE;
+exports.PROFILE = exports.INITIAL_PROFILE_STATE;
 /**
  * Classifies any technology keyword into its authoritative CompetencyArea
  */
-export function classifyDomainCategory(tech) {
+function classifyDomainCategory(tech) {
     const lower = tech.toLowerCase().trim();
     // Data & AI keywords (explicitly mapping Pandas, Scikit-learn, etc. to Data & AI)
     if (lower.includes("pandas") ||
@@ -334,7 +339,7 @@ export function classifyDomainCategory(tech) {
 /**
  * Normalizes raw/compound skill strings into canonical, discrete skills with version retention.
  */
-export function parseCanonicalSkills(raw, preferredCategory) {
+function parseCanonicalSkills(raw, preferredCategory) {
     if (!raw || typeof raw !== "string")
         return [];
     const trimmed = raw.trim();
@@ -630,7 +635,7 @@ export function parseCanonicalSkills(raw, preferredCategory) {
 /**
  * Backward-compatible helper for legacy consumers expecting array of { name, category }.
  */
-export function extractCanonicalSkills(raw, preferredCategory) {
+function extractCanonicalSkills(raw, preferredCategory) {
     return parseCanonicalSkills(raw, preferredCategory).map((item) => ({
         name: item.displayName,
         category: preferredCategory || item.suggestedCategory,
@@ -641,7 +646,7 @@ export function extractCanonicalSkills(raw, preferredCategory) {
  * Scans active profile's learning diary entries and project tech stacks,
  * normalizes skill identities, and maps each skill to its tangible evidence.
  */
-export function getProfileSkillsEvidence(state) {
+function getProfileSkillsEvidence(state) {
     const recordMap = new Map();
     // 1. Ingest evidence from Learning Diary entries
     if (Array.isArray(state?.learnings)) {
@@ -813,7 +818,7 @@ export function getProfileSkillsEvidence(state) {
  * Dynamically extract categorized, deduplicated skills from verified learning logs and project tech stacks.
  * Fully backward-compatible with ATS resume generation, ProfileContext, and Hero.
  */
-export function extractSkillsFromState(state) {
+function extractSkillsFromState(state) {
     const evidence = getProfileSkillsEvidence(state);
     return {
         Frontend: evidence.byCategory.Frontend.map((s) => s.displayName),
@@ -826,7 +831,7 @@ export function extractSkillsFromState(state) {
 /**
  * Generate dynamically compiled plain text resume for legacy ATS systems
  */
-export function generateDynamicPlainTextResume(state) {
+function generateDynamicPlainTextResume(state) {
     const { name, title, contact, resume } = state;
     const categorizedSkills = extractSkillsFromState(state);
     const activeDomains = Object.keys(categorizedSkills).filter((k) => categorizedSkills[k].length > 0);
@@ -853,9 +858,9 @@ ${state.learnings.map((l) => `* [${l.masteryLevel.toUpperCase()}] ${l.technology
 ${name.toUpperCase()}
 ${title.toUpperCase()}
 ================================================================================
-Email: ${contact.email} | Phone: ${contact.phone || "Available Upon Request"}
+Email: ${contact.email || "Available Upon Request"} | Phone: ${contact.phone || "Available Upon Request"}
 Location: ${contact.location}
-GitHub: ${contact.github} | LinkedIn: ${contact.linkedin}
+GitHub: ${contact.github}${contact.linkedin ? ` | LinkedIn: ${contact.linkedin}` : ""}
 
 --------------------------------------------------------------------------------
 PROFESSIONAL SUMMARY

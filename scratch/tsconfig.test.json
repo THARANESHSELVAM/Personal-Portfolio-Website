@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2022",
+    "moduleResolution": "node",
+    "baseUrl": "..",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "outDir": "./compiled",
+    "skipLibCheck": true,
+    "esModuleInterop": true
+  },
+  "include": ["../src/data/profile.ts", "../src/lib/datasetLoader.ts"]
+}
