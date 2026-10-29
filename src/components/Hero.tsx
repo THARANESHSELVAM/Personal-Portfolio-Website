@@ -229,7 +229,7 @@ export function Hero() {
                 <span className="font-semibold text-slate-900 dark:text-white shrink-0">{state.name || "Tharanesh Selvam"}</span>
                 <span className="text-slate-400 dark:text-slate-600 hidden xs:inline" aria-hidden="true">—</span>
                 <span className="text-cyan-700 dark:text-cyan-400 font-medium break-words">
-                  {state.title || "Full-Stack Software Engineer & Cloud Architect"}
+                  {state.title || "Software Developer & Integrated M.Tech CSE Student"}
                 </span>
               </div>
             </div>
@@ -237,7 +237,7 @@ export function Hero() {
             {/* Editorial Narrative Subtitle */}
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl font-normal text-pretty">
               {state.elevatorPitch || 
-                "M.Tech CSE candidate architecting resilient web platforms, geospatial GIS infrastructure, and end-to-end data pipelines. Driven by clean types, distributed systems, and continuous learning."
+                "M.Tech CSE student exploring software engineering, modern web applications, and foundational computing concepts with AI-assisted workflows. Driven by hands-on development, clean types, and continuous learning."
               }
             </p>
 
@@ -711,11 +711,11 @@ export function Hero() {
                 }
               }}
               className="sm:pr-4 space-y-1 group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 rounded-xl min-h-[44px]"
-              aria-label={`View ${projectCountDisplay} applied projects`}
+              aria-label={`View ${projectCountDisplay} featured projects and concepts`}
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-slate-500 dark:text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                  Applied Projects
+                  Featured Work
                 </span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" aria-hidden="true" />
               </div>
@@ -723,7 +723,7 @@ export function Hero() {
                 {projectCountDisplay}
               </div>
               <div className="text-xs text-slate-500 dark:text-slate-400">
-                Full-stack web &amp; cloud builds <span className="text-cyan-600 dark:text-cyan-400 font-medium group-hover:underline">• View all →</span>
+                1 live app, 2 concepts &amp; studies <span className="text-cyan-600 dark:text-cyan-400 font-medium group-hover:underline">• View all →</span>
               </div>
             </div>
 

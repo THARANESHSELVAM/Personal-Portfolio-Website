@@ -75,7 +75,7 @@ export function LandStackCadastralPreview({ project }: LandStackCadastralPreview
               <span>Cadastral Boundary Index</span>
             </div>
             <div className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
-              EPSG:4326 PostGIS Geometry
+              Conceptual Boundary Schema
             </div>
           </div>
         </div>
@@ -193,7 +193,7 @@ export function LandStackCadastralPreview({ project }: LandStackCadastralPreview
         </div>
 
         <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono leading-relaxed">
-          * Illustrative cadastral boundary geometry for architectural demonstration. Does not reflect real property records or live GIS survey data.
+          * Illustrative cadastral boundary geometry for architectural concept exploration. Does not reflect real property records or live GIS survey data.
         </p>
       </div>
     </div>

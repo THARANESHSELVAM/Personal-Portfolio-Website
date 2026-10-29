@@ -51,19 +51,19 @@ The project relies strictly on the modern, production-grade dependencies defined
 - **Direct Action CTAs**: "Explore My Projects", "View My Resume", and direct external link to verified GitHub profile.
 - **Verified Contact Coordinates**: Verified GitHub profile ([github.com/THARANESHSELVAM](https://github.com/THARANESHSELVAM)), academic institution (Sri Krishna College of Engineering and Technology), and location (`India / Open to Remote & Relocation`). Direct email and LinkedIn available upon request.
 
-### 2. Strongest Projects Showcase
-- **Personal Portfolio Website**: Full-stack Next.js 16 App Router application with atomic local state persistence, accessible design tokens, dynamic ATS plain-text resume generation, and GitHub REST API integration.
-- **Land Stack**: GIS-based digital platform for land records governance and parcel title verification in India, utilizing React, Node.js, and PostgreSQL with PostGIS spatial indexing.
-- **AI/ML Projects**: Machine learning models and automated data science pipelines implementing regression, classification, cross-validation metrics, and exploratory data analysis (EDA).
-- **Interactive Case Study Modals**: In-depth technical articles for each project covering problem analysis, technical challenges, benchmarks, and key learnings.
+### 2. Featured Projects & Conceptual Studies
+- **Personal Portfolio Website (Live Application)**: Full-stack Next.js 16 App Router application with atomic local state persistence, accessible design tokens, dynamic ATS plain-text resume generation, and client-side GitHub REST API integration. Developed with AI-assisted engineering.
+- **Land Stack (Early-Stage Concept)**: An architectural concept exploring how geographic information systems (GIS) and digital parcel records could improve land governance and title verification in India.
+- **AI & Machine Learning Studies (Learning Focus)**: A structured study curriculum exploring mathematical foundations, statistics, Python data science libraries, and core machine learning concepts.
+- **Interactive Case Study Modals**: In-depth technical articles for each project covering problem analysis, conceptual workflows, design decisions, and candidate learnings.
 
-### 3. Technical Skills Competency Matrix
-- Cleanly grouped across 5 engineering domains:
-  - **Frontend Engineering**: Next.js 16, React 19, TypeScript, Tailwind CSS v4, JavaScript (ES6+), HTML5 & CSS3, Web Accessibility (WCAG).
-  - **Backend & APIs**: Node.js, Express, PostgreSQL, REST APIs, GitHub REST API.
-  - **Cloud & DevOps**: Git & GitHub, Branching Strategies, Docker, Vercel Edge.
-  - **Data Science & AI**: Python, Pandas, Scikit-learn, NumPy, Automated EDA.
-  - **System Design & Geospatial**: GIS / PostGIS, Spatial Database Indexing, Cadastral Governance.
+### 3. Technical Skills & Learning Areas
+Categorized into practical implementations, tools used with AI assistance, and active learning areas:
+  - **Frontend (Used in Portfolio Project)**: Next.js 16, React 19, TypeScript, Tailwind CSS v4, JavaScript (ES6+), HTML5 & CSS3, Web Accessibility (WCAG).
+  - **Development Tools & Workflows (With AI Assistance)**: Git & GitHub (version control with AI-assisted guidance), Antigravity (AI-assisted engineering environment), VS Code, Vercel Edge Deployment, npm.
+  - **Backend & Systems (Learning & Foundations)**: GitHub REST API integration, RESTful API design concepts, Node.js fundamentals, SQL & relational database basics.
+  - **Data Science & AI (Study Areas)**: Python programming fundamentals, basic statistics, NumPy & Pandas foundations, core machine learning concepts.
+  - **System Design & Geospatial (Concepts)**: Component-driven UI architecture, client-side state persistence, geospatial GIS concepts, conceptual land tenure workflows.
 
 ### 4. Engineering Journey & Learning Diary
 - Chronological timeline of verified learning milestones from the codebase, demonstrating continuous skill acquisition across React 19 transitions, TypeScript generics, accessible design systems, and Git version control.
@@ -119,6 +119,12 @@ src/
 The client-side passcode gate at `/workspace` is a **demonstration presentation mechanism** designed to showcase local multi-profile switching and browser storage isolation (`localStorage`). It is **not server-enforced authentication** and does not protect confidential or private backend data.
 
 Visitors and peer developers should **not enter sensitive passwords, private credentials, or confidential business information** into this client-side demo sandbox.
+
+---
+
+## Development Methodology & AI Disclosure
+
+This project was developed with the assistance of **Antigravity**, an AI-assisted development environment. The workflow emphasizes iterative prompting, code review, architectural design, state validation, and deepening understanding of modern web framework conventions. Technical claims throughout this repository reflect verified project implementations and candidate study areas honestly without overstating independent low-level authorship or production-scale enterprise experience.
 
 ---
 

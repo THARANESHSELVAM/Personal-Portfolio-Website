@@ -70,7 +70,7 @@ export const SITE_METADATA = {
   titleTemplate: "%s | Tharanesh Selvam",
   defaultTitle: "Tharanesh Selvam | Software Developer | M.Tech CSE",
   description:
-    "Personal engineering portfolio of Tharanesh Selvam (Software Developer | M.Tech CSE). Interactive web applications, GIS & cloud systems, applied machine learning, verified technical skills, and dynamic ATS résumé.",
+    "Personal engineering portfolio of Tharanesh Selvam (Software Developer | M.Tech CSE). Interactive Next.js web application, architectural concepts, learning milestones, and dynamic ATS résumé.",
   keywords: [
     "Tharanesh Selvam",
     "Software Developer",

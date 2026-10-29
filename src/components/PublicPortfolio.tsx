@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -337,15 +337,15 @@ export function PublicPortfolio() {
                   Engineering Portfolio
                 </div>
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                  Strongest Projects
+                  Featured Work &amp; Concepts
                 </h2>
                 <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
-                  Real engineering implementations addressing tangible problems, documented design decisions, and architectural trade-offs.
+                  Active software applications, early architectural concepts, and exploratory study areas documenting practical skills and learning progress.
                 </p>
               </div>
 
               <span className="text-xs font-mono px-3 py-1 rounded-full bg-slate-100 dark:bg-white/[0.04] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/[0.08] self-start md:self-auto shrink-0">
-                {projects.length} Verified Projects
+                Featured Work &amp; Concepts
               </span>
             </div>
 
@@ -372,7 +372,7 @@ export function PublicPortfolio() {
                         )}
                         {project.id !== "personal-portfolio" && (
                           <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 font-medium">
-                            Prototype
+                            {project.id === "land-stack" ? "Early-Stage Concept" : "Learning Focus"}
                           </span>
                         )}
                       </div>
@@ -402,7 +402,7 @@ export function PublicPortfolio() {
                       {/* What I Implemented */}
                       <div className="space-y-1.5 text-xs sm:text-sm">
                         <span className="font-semibold text-slate-800 dark:text-slate-200 block text-[11px] uppercase tracking-wider font-mono">
-                          What I Implemented:
+                          {project.id === "personal-portfolio" ? "What I Implemented:" : (project.id === "land-stack" ? "Conceptual Architecture:" : "Study Focus:")}
                         </span>
                         <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
                           {project.solution}
@@ -424,7 +424,7 @@ export function PublicPortfolio() {
                       {/* Technologies Used */}
                       <div className="space-y-2">
                         <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
-                          Technologies Used:
+                          {project.id === "personal-portfolio" ? "Technologies Used:" : "Focus Areas / Concepts:"}
                         </span>
                         <div className="flex flex-wrap gap-1.5">
                           {project.techStack.map((tech) => (
@@ -520,7 +520,7 @@ export function PublicPortfolio() {
                   </div>
                   <div>
                     <h3 className="font-bold text-sm text-slate-900 dark:text-white">Frontend Engineering</h3>
-                    <p className="text-[10px] text-slate-500 font-mono">Client-side platforms &amp; interfaces</p>
+                    <p className="text-[10px] text-slate-500 font-mono">Used in this portfolio application</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
@@ -550,17 +550,17 @@ export function PublicPortfolio() {
                     <Server className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-slate-900 dark:text-white">Backend &amp; APIs</h3>
-                    <p className="text-[10px] text-slate-500 font-mono">Server services &amp; data pipelines</p>
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-white">Backend &amp; Systems (Foundations)</h3>
+                    <p className="text-[10px] text-slate-500 font-mono">API communication &amp; database basics</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {[
-                    "Node.js",
-                    "Express",
-                    "PostgreSQL",
-                    "REST APIs",
-                    "GitHub REST API"
+                    "GitHub REST API (Used in project)",
+                    "RESTful APIs (Concepts)",
+                    "Node.js (Foundations)",
+                    "SQL & Relational Databases (Learning)",
+                    "Client-Server Protocols"
                   ].map((s) => (
                     <span
                       key={s}
@@ -579,16 +579,16 @@ export function PublicPortfolio() {
                     <Cloud className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-slate-900 dark:text-white">Cloud &amp; DevOps</h3>
-                    <p className="text-[10px] text-slate-500 font-mono">Version control &amp; infrastructure</p>
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-white">Tools &amp; Workflows</h3>
+                    <p className="text-[10px] text-slate-500 font-mono">AI-assisted version control &amp; platforms</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {[
-                    "Git & GitHub",
-                    "Branching Strategies",
-                    "Docker Fundamentals",
-                    "Vercel Edge Deployment"
+                    "Git & GitHub (AI-assisted)",
+                    "Antigravity (AI environment)",
+                    "VS Code & Developer Tools",
+                    "Vercel Edge & npm"
                   ].map((s) => (
                     <span
                       key={s}
@@ -607,18 +607,18 @@ export function PublicPortfolio() {
                     <Cpu className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-slate-900 dark:text-white">Data Science &amp; Applied ML</h3>
-                    <p className="text-[10px] text-slate-500 font-mono">Pipelines &amp; model evaluation</p>
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-white">Data Science &amp; AI (Study Areas)</h3>
+                    <p className="text-[10px] text-slate-500 font-mono">Academic coursework &amp; study topics</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {[
-                    "Python",
-                    "Pandas",
-                    "Scikit-learn",
-                    "NumPy",
-                    "Automated EDA",
-                    "Cross-Validation"
+                    "Python Fundamentals (Learning)",
+                    "Data Analysis Concepts (Exploring)",
+                    "Machine Learning Principles (Study)",
+                    "NumPy & Pandas Foundations",
+                    "Statistical Principles (Coursework)",
+                    "Algorithm Concepts (Foundations)"
                   ].map((s) => (
                     <span
                       key={s}
@@ -637,17 +637,17 @@ export function PublicPortfolio() {
                     <Layers className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-slate-900 dark:text-white">System Architecture &amp; Geospatial Engineering</h3>
-                    <p className="text-[10px] text-slate-500 font-mono">Spatial databases &amp; software design</p>
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-white">System Design &amp; Conceptual Studies</h3>
+                    <p className="text-[10px] text-slate-500 font-mono">Architectural research &amp; component design</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {[
-                    "GIS / PostGIS",
-                    "Spatial Database Indexing",
-                    "Cadastral Parcel Governance",
-                    "Component Architecture",
-                    "Local-First State Sync"
+                    "Component-Driven Architecture (Used in project)",
+                    "Local State Persistence (Used in project)",
+                    "Geospatial GIS Concepts (Exploration)",
+                    "Spatial Data Structures (Study)",
+                    "Land Governance Workflows (Concept)"
                   ].map((s) => (
                     <span
                       key={s}

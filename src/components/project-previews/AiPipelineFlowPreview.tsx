@@ -18,27 +18,27 @@ interface PipelineStage {
 const PIPELINE_STAGES: PipelineStage[] = [
   {
     step: "01",
-    name: "Data Ingestion & Cleaning",
-    description: "Automated missing-value handling, outlier detection & data type enforcement.",
-    tools: "Pandas • NumPy"
+    name: "Mathematical & Python Foundations",
+    description: "Studying linear algebra, calculus, statistics, and Python fundamentals with NumPy array operations.",
+    tools: "Python • Mathematics • NumPy"
   },
   {
     step: "02",
-    name: "Feature Pipeline & Scaling",
-    description: "StandardScaler feature normalization, categorical encoding & train-test splitting.",
-    tools: "Scikit-Learn Preprocessing"
+    name: "Exploratory Data Concepts",
+    description: "Understanding data distributions, missing-value strategies, and data cleaning principles.",
+    tools: "Pandas Concepts • Data Analysis"
   },
   {
     step: "03",
-    name: "Model Training & Cross-Validation",
-    description: "Estimator selection, k-fold cross validation & hyperparameter search.",
-    tools: "Scikit-Learn Estimators"
+    name: "Core Machine Learning Algorithms",
+    description: "Studying linear/logistic regression, classification mechanics, and standard model architectures.",
+    tools: "Supervised & Unsupervised Theory"
   },
   {
     step: "04",
-    name: "Evaluation & Metric Analysis",
-    description: "Precision-recall curves, classification reports & inference latency profiling.",
-    tools: "Matplotlib • Scikit-Learn Metrics"
+    name: "Evaluation & Validation Principles",
+    description: "Studying precision-recall metrics, train-test validation splits, and metric trade-offs.",
+    tools: "Evaluation Metrics Theory"
   }
 ];
 
@@ -60,16 +60,16 @@ export function AiPipelineFlowPreview({ project }: AiPipelineFlowPreviewProps) {
           </div>
           <div>
             <div className="text-xs font-bold text-slate-900 dark:text-white">
-              Data Pipeline Workflow
+              Foundational ML Study Roadmap
             </div>
             <div className="text-[10px] font-mono text-violet-600 dark:text-violet-400">
-              Scikit-Learn Architecture Specification
+              Core Conceptual Study Milestones
             </div>
           </div>
         </div>
 
         <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full bg-slate-200/60 dark:bg-white/5 border border-slate-300/60 dark:border-white/10">
-          Workflow Concept
+          Study Roadmap
         </span>
       </div>
 
@@ -105,7 +105,7 @@ export function AiPipelineFlowPreview({ project }: AiPipelineFlowPreviewProps) {
       {/* Workflow Architecture Disclaimer */}
       <div className="pt-2 border-t border-slate-200/70 dark:border-white/10">
         <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono leading-relaxed">
-          * Illustrative Scikit-Learn pipeline stages demonstrating reproducible model engineering workflows without fabricated evaluation claims.
+          * Illustrative study progression outlining foundational machine learning coursework and topics prior to standalone model implementation.
         </p>
       </div>
     </div>

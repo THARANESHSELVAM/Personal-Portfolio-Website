@@ -190,60 +190,60 @@ export const INITIAL_LEARNINGS: LearningEntry[] = [
     id: "learn-1",
     technology: "Next.js & React 19 App Router",
     category: "Frontend",
-    keyTakeaway: "Built dynamic client and server component hierarchies, understanding React 19 transitions, action hooks, and streaming SSR for fast LCP.",
+    keyTakeaway: "Explored Next.js 16 App Router component structure, React 19 hooks, client-side rendering, and responsive UI composition with AI assistance.",
     repoOrDemoUrl: "https://github.com/THARANESHSELVAM/Personal-Portfolio-Website",
     dateLogged: "2026-10-18",
-    masteryLevel: "Production Ready",
-    tags: ["Next.js", "React 19", "AppRouter", "WebPerf"],
+    masteryLevel: "Built Demo",
+    tags: ["Next.js", "React 19", "AppRouter", "Frontend"],
   },
   {
     id: "learn-2",
-    technology: "TypeScript Strict Mode & Generics",
+    technology: "TypeScript Strict Mode & Interfaces",
     category: "Frontend",
-    keyTakeaway: "Designed strictly-typed interfaces, discriminative unions, and generic helper utilities for resilient API consumption and zero runtime null errors.",
+    keyTakeaway: "Applied strict TypeScript compiler settings, interface definitions, and utility types for robust state handling and avoiding runtime errors.",
     repoOrDemoUrl: "https://github.com/THARANESHSELVAM/Personal-Portfolio-Website",
     dateLogged: "2026-10-12",
-    masteryLevel: "Production Ready",
-    tags: ["TypeScript", "Generics", "TypeSafety"],
+    masteryLevel: "Built Demo",
+    tags: ["TypeScript", "TypeSafety", "Interfaces"],
   },
   {
     id: "learn-3",
-    technology: "Tailwind CSS & Modern Design Systems",
+    technology: "Tailwind CSS & Responsive Layouts",
     category: "Frontend",
-    keyTakeaway: "Crafted accessible design tokens, dark charcoal palettes, and restrained lime micro-interactions with responsive mobile-first utilities.",
+    keyTakeaway: "Designed responsive mobile-first layouts, dark mode color tokens, and clean typography using Tailwind utility classes.",
     repoOrDemoUrl: "https://github.com/THARANESHSELVAM/Personal-Portfolio-Website",
     dateLogged: "2026-10-05",
-    masteryLevel: "Production Ready",
-    tags: ["TailwindCSS", "CSS3", "DesignSystem", "Responsive"],
+    masteryLevel: "Built Demo",
+    tags: ["TailwindCSS", "CSS", "Responsive", "UI"],
   },
   {
     id: "learn-4",
-    technology: "GitHub REST API & External Integration",
+    technology: "REST API Integration & Async JS",
     category: "Backend",
-    keyTakeaway: "Implemented client-side REST API consumers with URL sanitization, rate-limit resilience, and automatic repository metadata mapping.",
+    keyTakeaway: "Integrated client-side GitHub REST API endpoints with error handling, URL validation, and dynamic data mapping.",
     repoOrDemoUrl: "https://github.com/THARANESHSELVAM/Personal-Portfolio-Website",
     dateLogged: "2026-09-26",
-    masteryLevel: "Production Ready",
-    tags: ["RESTAPIs", "GitHubAPI", "AsyncJS", "JSON"],
+    masteryLevel: "Built Demo",
+    tags: ["RESTAPIs", "GitHubAPI", "AsyncJS"],
   },
   {
     id: "learn-5",
-    technology: "Git & Collaborative Version Control",
+    technology: "Git & GitHub Version Control",
     category: "Cloud & DevOps",
-    keyTakeaway: "Practiced branching strategies, semantic commit conventions, rebase workflows, and GitHub PR reviews for maintainable codebases.",
+    keyTakeaway: "Used Git and GitHub for version control during portfolio development with AI-assisted guidance, practicing branching, commits, and remote synchronization.",
     repoOrDemoUrl: "https://github.com/THARANESHSELVAM/Personal-Portfolio-Website",
     dateLogged: "2026-09-15",
-    masteryLevel: "Production Ready",
-    tags: ["Git", "GitHub", "DevOps", "VersionControl"],
+    masteryLevel: "Built Demo",
+    tags: ["Git", "GitHub", "VersionControl"],
   },
   {
     id: "learn-6",
-    technology: "Web Accessibility (WCAG) & Semantic HTML",
+    technology: "Web Accessibility & Semantic HTML",
     category: "Frontend",
-    keyTakeaway: "Implemented semantic HTML5 tags, ARIA attributes, keyboard navigation focus rings, and high-contrast color tokens for inclusive web design.",
+    keyTakeaway: "Structured accessible markup using semantic HTML5 elements, ARIA attributes, keyboard focus states, and high-contrast color styling.",
     repoOrDemoUrl: "https://github.com/THARANESHSELVAM/Personal-Portfolio-Website",
     dateLogged: "2026-09-02",
-    masteryLevel: "Production Ready",
+    masteryLevel: "Built Demo",
     tags: ["Accessibility", "WCAG", "HTML5", "a11y"],
   },
 ];
@@ -295,59 +295,81 @@ export const INITIAL_PROJECTS: Project[] = [
   {
     id: "land-stack",
     title: "Land Stack",
-    category: "Full-Stack Web",
-    domainTag: "GIS & Cloud Systems",
+    category: "System Design & Architecture",
+    domainTag: "Geospatial Concept",
     featured: true,
-    noveltySnippet: "GIS-based Digital Platform for Land Governance in India",
-    problemSolved: "Fragmented land records and lack of geospatial transparency complicate land governance and verification processes.",
-    solution: "GIS-based digital platform for land governance in India integrating geospatial visualization, secure document pipelines, and scalable APIs.",
-    techStack: ["React", "Node.js", "PostgreSQL"],
+    noveltySnippet: "Early-Stage Concept: Architectural exploration of GIS-based land records governance",
+    problemSolved: "Investigating how fragmented land records and paper-based verification in India could be addressed through modern geospatial architecture.",
+    solution: "An early-stage architectural exploration and concept studying how GIS mapping and digital record verification could improve land governance.",
+    techStack: ["System Architecture", "Geospatial Concepts", "Relational Models"],
     metrics: [
-      "🗺️ Interactive GIS mapping layer",
-      "🔒 End-to-end data auditability",
-      "⚡ Sub-second query response time",
+      "🗺️ Geospatial architecture concept",
+      "📐 Boundary verification workflow study",
+      "💡 Early-stage exploratory research",
     ],
-    liveUrl: "https://github.com/THARANESHSELVAM",
-    repoUrl: "https://github.com/THARANESHSELVAM",
+    liveUrl: "",
+    repoUrl: "",
     caseStudy: {
-      overview: "GIS-based digital platform for land governance in India, integrating geospatial visualization, secure document pipelines, and scalable APIs.",
-      projectUse: "Geospatial land governance and title verification platform.",
-      targetUsers: "Land administrators, survey departments, public citizens.",
-      problemStatement: "Paper-based and disjointed digital land records lead to property disputes and slow verification cycles.",
-      expertSolution: "Engineered a React and Node.js platform with PostgreSQL geospatial extensions (PostGIS) for spatial queries and interactive parcel mapping.",
-      novelty: "Unified spatial queries with document verification workflows.",
-      architectureNotes: "React Frontend -> Node.js/Express API Gateway -> PostGIS Spatial Database -> Geospatial Boundary Processing.",
-      challenges: ["Handling large GIS geojson polygons with low browser memory footprint."],
-      keyLearnings: ["Spatial indexing in PostgreSQL drastically optimizes geometric bounds queries."],
+      overview: "An early-stage architectural concept exploring how geographic information systems (GIS) and digital records could improve land governance and parcel title verification in India.",
+      projectUse: "Conceptual study and architectural research into digital land administration workflows.",
+      targetUsers: "Land administrators, public citizens, survey researchers (Target Audience).",
+      problemStatement: "Paper-based and disjointed digital land records lead to property disputes and slow verification cycles in many regions.",
+      expertSolution: "Designed a conceptual architecture outlining how a web client, API layer, and spatial database schema could interact to verify parcel boundaries and title authenticity.",
+      novelty: "Conceptual exploration of unified spatial visualization with title provenance verification.",
+      noveltyHighlights: [
+        "Exploratory architecture diagram for land record workflows",
+        "Analysis of geometric polygon boundary representations",
+        "Conceptual data models for transparent title verification",
+      ],
+      keyFeatures: [
+        "Exploratory case study examining digital parcel tracking",
+        "Architectural review of spatial data handling",
+        "Concept design for transparent land records",
+      ],
+      benchmarks: [],
+      architectureNotes: "Conceptual Architecture: Client Interface -> API Gateway -> Spatial Database Schema (PostgreSQL/PostGIS concept) -> Boundary Processing Engine.",
+      challenges: ["Designing scalable schemas capable of handling complex geometric boundary representations conceptually."],
+      keyLearnings: ["Studied spatial database principles and the complexities of real-world land tenure data."],
     },
   },
   {
     id: "ai-ml-projects",
-    title: "AI/ML Projects",
+    title: "AI & Machine Learning Studies",
     category: "AI & Data Science",
-    domainTag: "Machine Learning",
+    domainTag: "Learning Focus",
     featured: true,
-    noveltySnippet: "Machine Learning Models & Data Analysis Experiments",
-    problemSolved: "Raw datasets require exploratory analysis, preprocessing, and model benchmarking to extract actionable predictive insights.",
-    solution: "Machine learning models and data analysis experiments implementing regression, classification, pipelines, and visual performance metrics.",
-    techStack: ["Python", "Pandas", "Scikit-learn"],
+    noveltySnippet: "Academic Study & Future Direction: Core concepts in data science and machine learning",
+    problemSolved: "Building foundational knowledge in linear algebra, statistics, Python data libraries, and standard modeling algorithms before undertaking standalone production projects.",
+    solution: "A structured self-study curriculum and conceptual research into core machine learning workflows, data preprocessing, and algorithm fundamentals.",
+    techStack: ["Python (Learning)", "Data Science Foundations", "Algorithm Concepts"],
     metrics: [
-      "📊 Cross-validation & evaluation metrics",
-      "📈 Automated EDA pipelines",
-      "🧪 Reproducible notebook workflows",
+      "📚 Foundational machine learning coursework",
+      "🐍 Python & mathematical fundamentals",
+      "🎯 Target for future standalone experiments",
     ],
-    liveUrl: "https://github.com/THARANESHSELVAM",
-    repoUrl: "https://github.com/THARANESHSELVAM",
+    liveUrl: "",
+    repoUrl: "",
     caseStudy: {
-      overview: "Machine learning models and data analysis experiments implementing regression, classification, data pipelines, and visual performance metrics.",
-      projectUse: "Data science experiments and machine learning predictive modeling.",
-      targetUsers: "Data scientists, researchers, software engineers.",
-      problemStatement: "Creating reproducible and benchmarked predictive models from messy real-world datasets.",
-      expertSolution: "Built scikit-learn training pipelines with feature scaling, cross-validation, hyperparameter tuning, and metric visualization.",
-      novelty: "Automated feature engineering and model comparison pipelines.",
-      architectureNotes: "Raw Datasets -> Automated EDA Pipelines -> Scikit-learn Feature Engineering -> Model Evaluation & Metric Plots.",
-      challenges: ["Managing class imbalance in training datasets."],
-      keyLearnings: ["Feature engineering often contributes more to model precision than raw model complexity."],
+      overview: "A dedicated study track exploring the mathematical principles and foundational libraries behind modern machine learning and data science.",
+      projectUse: "Academic exploration and preparation for future practical, reproducible data science experiments.",
+      targetUsers: "Peer learners, mentors, academic reviewers.",
+      problemStatement: "Understanding the theoretical mathematics and implementation fundamentals of data science before building complex models.",
+      expertSolution: "Studying Python data manipulation concepts, basic statistical models, and algorithm mechanics through coursework and reference documentation.",
+      novelty: "Curriculum roadmap focused on foundational understanding prior to standalone implementation.",
+      noveltyHighlights: [
+        "Study of core mathematical foundations (calculus, linear algebra, statistics)",
+        "Exploration of Python data science ecosystem libraries",
+        "Conceptual analysis of supervised vs. unsupervised learning",
+      ],
+      keyFeatures: [
+        "Structured learning roadmap for applied AI",
+        "Conceptual notes on regression, classification, and evaluation",
+        "Preparation for upcoming reproducible project experiments",
+      ],
+      benchmarks: [],
+      architectureNotes: "Study Pipeline: Raw Concepts -> Mathematical Foundations -> Python Implementation Practice -> Future Experimentation.",
+      challenges: ["Bridging abstract mathematical theory with practical software implementation."],
+      keyLearnings: ["A firm grasp of data fundamentals is essential before training or deploying predictive models."],
     },
   },
 ];
@@ -355,12 +377,12 @@ export const INITIAL_PROJECTS: Project[] = [
 export const INITIAL_PROFILE_STATE: ProfileState = {
   name: "Tharanesh Selvam",
   preferredName: "Tharanesh",
-  title: "Full-Stack Software Engineer & Cloud Architect",
-  tagline: "I build scalable web applications, work with modern technologies, and love solving real-world problems through code.",
-  elevatorPitch: "Full-Stack Software Engineer & Cloud Architect passionate about scalable web systems, clean architecture, and modern cloud technologies. Continuous learning is the key to growth.",
+  title: "Software Developer & Integrated M.Tech CSE Student",
+  tagline: "I build modern web applications, explore foundational software systems, and enjoy solving real-world problems through code.",
+  elevatorPitch: "Integrated M.Tech CSE student passionate about software development, modern web applications, and continuous learning. Developing projects with hands-on experimentation and AI-assisted workflows.",
   availability: {
     status: "available",
-    type: "Full-Stack & Cloud Architecture Roles",
+    type: "Software Engineering & Internship Roles",
     badgeText: "Open to Opportunities",
   },
   contact: {
@@ -373,15 +395,15 @@ export const INITIAL_PROFILE_STATE: ProfileState = {
     calendlyUrl: "",
   },
   stats: [
-    { label: "Projects", value: "3", detail: "Applied engineering projects" },
-    { label: "Skills", value: "13", detail: "Core technologies & tools" },
-    { label: "Major Domains", value: "3", detail: "Web Systems, GIS & Applied AI" },
+    { label: "Featured Work", value: "3", detail: "1 live app, 2 exploratory concepts" },
+    { label: "Skills Matrix", value: "13", detail: "Core technologies & learning areas" },
+    { label: "Focus Areas", value: "3", detail: "Web Development, Systems & Applied AI" },
     { label: "Learning Mode", value: "100%", detail: "Continuous skill development" },
   ],
   learnings: INITIAL_LEARNINGS,
   projects: INITIAL_PROJECTS,
   resume: {
-    summary: "Integrated M.Tech in Computer Science and Engineering candidate at Sri Krishna College of Engineering and Technology (2025–2030) with hands-on experience building modern, responsive web applications using Next.js, React, TypeScript, Node.js, and cloud platforms. Eager to solve real-world problems through clean code, robust architecture, and continuous learning.",
+    summary: "Integrated M.Tech in Computer Science and Engineering candidate at Sri Krishna College of Engineering and Technology (2025–2030) with hands-on experience building modern, responsive web applications using Next.js, React, TypeScript, and Tailwind CSS with AI-assisted workflows. Eager to solve real-world problems through clean code, structured learning, and engineering fundamentals.",
     experience: [],
     education: [
       {
@@ -393,20 +415,19 @@ export const INITIAL_PROFILE_STATE: ProfileState = {
     ],
     certifications: [
       "Modern Web Development (Next.js, React, TypeScript)",
-      "Cloud Architecture & System Design",
       "Git & GitHub Version Control Fundamentals",
     ],
   },
   goals: [
     {
       id: "goal-1",
-      title: "Full-Stack & Cloud Architecture Opportunities",
+      title: "Software Engineering & Internship Opportunities",
       category: "Target Role",
-      description: "Build scalable web applications and cloud services in modern engineering teams.",
+      description: "Build robust web applications and learn from experienced engineering teams.",
       status: "In Progress",
       targetDate: "2026",
-      progressPercent: 95,
-      tags: ["FullStack", "Cloud", "Architecture"],
+      progressPercent: 90,
+      tags: ["SoftwareEngineering", "WebDevelopment", "Internship"],
     },
   ],
 };
@@ -1072,12 +1093,8 @@ export function generateDynamicPlainTextResume(state: ProfileState): string {
   const { name, title, contact, resume } = state;
   const categorizedSkills = extractSkillsFromState(state);
   
-  const activeDomains = (Object.keys(categorizedSkills) as CompetencyArea[]).filter(
-    (k) => categorizedSkills[k].length > 0
-  );
-  
   const autoSummary = resume.summary?.trim() || 
-    `${title} with verified engineering competencies across ${activeDomains.length > 0 ? activeDomains.join(", ") : "Full-Stack Software Engineering"}. Actively maintaining ${state.learnings.length} verified technical diary milestones and ${state.projects.length} architectural projects demonstrating tangible performance optimizations and enterprise scalability.`;
+    `${title} pursuing an Integrated M.Tech in Computer Science and Engineering at Sri Krishna College of Engineering and Technology (2025–2030). Exploring modern web development, foundational computing systems, and hands-on projects with AI-assisted engineering workflows.`;
 
   const experienceText = resume.experience && resume.experience.length > 0
     ? `--------------------------------------------------------------------------------
@@ -1124,15 +1141,15 @@ DYNAMICALLY EXTRACTED TECHNICAL COMPETENCIES (Derived from Logs & Projects)
 ${experienceText}
 
 --------------------------------------------------------------------------------
-APPLIED ARCHITECTURAL PROJECTS & IMPACT
+FEATURED PROJECTS & ARCHITECTURAL CONCEPTS
 --------------------------------------------------------------------------------
 ${state.projects.length > 0 ? state.projects
   .map(
-    (p) => `* ${p.title.toUpperCase()} (${p.domainTag})
-  Problem Solved: ${p.problemSolved}
-  Architecture: ${p.solution}
-  Stack: ${p.techStack.join(", ")}
-  Quantifiable Metrics: ${p.metrics.join("; ")}`
+    (p) => `* ${p.title.toUpperCase()} [${p.domainTag}]
+  Description: ${p.problemSolved}
+  Scope: ${p.solution}
+  Focus / Stack: ${p.techStack.join(", ")}
+  Highlights: ${p.metrics.join("; ")}`
   )
   .join("\n\n") : "* No projects logged yet."}
 

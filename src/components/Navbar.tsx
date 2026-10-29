@@ -114,7 +114,7 @@ export function Navbar({ isWorkspace = false }: NavbarProps = {}) {
                   )}
                 </div>
                 <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 -mt-0.5 hidden xl:block truncate max-w-[220px]">
-                  {currentUser?.title || state.title || "Software Engineer & Cloud Architect"}
+                  {currentUser?.title || state.title || "Software Developer & M.Tech CSE Student"}
                 </span>
               </div>
             </button>

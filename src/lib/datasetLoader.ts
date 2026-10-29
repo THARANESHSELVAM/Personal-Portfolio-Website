@@ -35,7 +35,7 @@ export const CANONICAL_INTEGRATED_MTECH_EDUCATION = {
 };
 
 export const CANONICAL_MTECH_SUMMARY =
-  "Integrated M.Tech in Computer Science and Engineering candidate at Sri Krishna College of Engineering and Technology (2025–2030) with hands-on experience building modern, responsive web applications using Next.js, React, TypeScript, Node.js, and cloud platforms. Eager to solve real-world problems through clean code, robust architecture, and continuous learning.";
+  "Integrated M.Tech in Computer Science and Engineering candidate at Sri Krishna College of Engineering and Technology (2025–2030) with hands-on experience building modern, responsive web applications using Next.js, React, TypeScript, and Tailwind CSS with AI-assisted workflows. Eager to solve real-world problems through clean code, structured learning, and engineering fundamentals.";
 
 /**
  * Checks if a given ProfileState or user ID belongs to the owner/demo profile (Tharanesh Selvam)
@@ -436,7 +436,7 @@ export function validateAndNormalizeWorkspace(
     },
     stats: [
       { label: "Engineering Milestones", value: `${normalizedLearnings.length} Logged`, detail: "Verified concept and prototype entries" },
-      { label: "Applied Projects", value: `${normalizedProjects.length} Built`, detail: "Architectural prototypes and implementations" },
+      { label: "Featured Work", value: `${normalizedProjects.length} Logged`, detail: "Active projects and architectural concepts" },
       { label: "Competency Areas", value: "5 Domains", detail: "Frontend, Backend, Cloud, AI, Systems" },
       { label: "Resume Status", value: "Auto-Synced", detail: "Directly compiled from diary entries" },
     ],
@@ -491,7 +491,7 @@ export function createBlankWorkspace(identity: UserIdentity): ProfileState {
     },
     stats: [
       { label: "Engineering Milestones", value: "0 Logged", detail: "Verified concept and prototype entries" },
-      { label: "Applied Projects", value: "0 Built", detail: "Interactive applications and source code" },
+      { label: "Featured Work", value: "0 Logged", detail: "Active projects and architectural concepts" },
       { label: "Competency Areas", value: "0 Domains", detail: "Frontend, Backend, Cloud, AI, Systems" },
       { label: "Resume Status", value: "Blank Slate", detail: "Ready to add entries" },
     ],

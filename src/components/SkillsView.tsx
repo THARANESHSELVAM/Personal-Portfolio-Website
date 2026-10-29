@@ -69,27 +69,27 @@ const COMPETENCY_AREAS: CompetencyAreaConfig[] = [
   },
   {
     key: "Backend",
-    displayTitle: "Backend & Distributed Systems",
+    displayTitle: "Backend & Systems (Foundations)",
     icon: Server,
-    description: "Server-side services, relational databases, geospatial data processing, and resilient REST APIs.",
+    description: "Server concepts, API communication, foundational database querying, and backend protocols.",
   },
   {
     key: "Cloud & DevOps",
-    displayTitle: "Cloud Architecture & DevOps",
+    displayTitle: "Tools, Version Control & Cloud",
     icon: Cloud,
-    description: "Version control workflows, cloud infrastructure, CI/CD automation, and edge deployment pipelines.",
+    description: "Git version control with AI assistance, edge deployment, package management, and developer tools.",
   },
   {
     key: "Data & AI",
-    displayTitle: "Data Science & AI / ML",
+    displayTitle: "Data Science & AI/ML (Study Areas)",
     icon: Cpu,
-    description: "Exploratory data analysis, machine learning pipelines, predictive modeling, and model evaluation.",
+    description: "Exploratory studies in Python, basic statistics, machine learning principles, and mathematical foundations.",
   },
   {
     key: "System Design",
-    displayTitle: "System Architecture & Design",
+    displayTitle: "System Design & Architecture Concepts",
     icon: Layers,
-    description: "Scalable system topologies, spatial database indexing, caching strategies, and data governance.",
+    description: "Conceptual architecture exploration, component design, state sync patterns, and geospatial data concepts.",
   },
 ];
 
@@ -1261,13 +1261,13 @@ export function SkillsView() {
             ) : (
               <>
                 <p>
-                  Hello! I am <strong className="text-slate-900 dark:text-white font-semibold">{state.name || "Tharanesh Selvam"}</strong>, a Full-Stack Software Engineer &amp; Cloud Architect pursuing a Five-Year Integrated M.Tech in Computer Science and Engineering at Sri Krishna College of Engineering and Technology (2025–2030). I build scalable, high-performance web applications and cloud architectures with clean code principles.
+                  Hello! I am <strong className="text-slate-900 dark:text-white font-semibold">{state.name || "Tharanesh Selvam"}</strong>, a computer science student pursuing a Five-Year Integrated M.Tech in Computer Science and Engineering at Sri Krishna College of Engineering and Technology (2025–2030). I am passionate about software engineering, modern web applications, and foundational computer science principles.
                 </p>
                 <p>
-                  My technical foundation spans React 19, TypeScript, Node.js, and cloud systems like AWS. I love tackling complex software engineering challenges, integrating geospatial pipelines (Land Stack), designing machine learning experiments, and building accessible UI systems.
+                  My current focus spans Next.js, React, TypeScript, and Tailwind CSS developed with AI-assisted engineering workflows. I am also exploring early architectural concepts (such as Land Stack) and studying core mathematical and machine learning fundamentals.
                 </p>
                 <p>
-                  I am actively open to <strong className="text-cyan-700 dark:text-cyan-300 font-semibold">software engineering internships, full-stack development, and cloud architecture opportunities</strong>.
+                  I am actively seeking <strong className="text-cyan-700 dark:text-cyan-300 font-semibold">software development internships and engineering opportunities</strong> where I can apply my skills and continue learning.
                 </p>
               </>
             )}

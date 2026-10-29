@@ -34,7 +34,7 @@ export const DEFAULT_OWNER_PROFILE: RegisteredProfile = {
   username: "THARANESHSELVAM",
   email: "",
   name: "Tharanesh Selvam",
-  title: "Full-Stack Software Engineer & Cloud Architect",
+  title: "Software Developer & Integrated M.Tech CSE Student",
   location: "India / Open to Remote & Relocation",
   github: "https://github.com/THARANESHSELVAM",
   linkedin: "",
